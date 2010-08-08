@@ -51,11 +51,10 @@ def sample_multinomial(weighted_outcomes):
 	sample_idx = bisect.bisect(cdf, r)
 	return outcomes[sample_idx]
 					
-class PositionalNGramMarkov(object):
+class TrieSampler(object):
 	'''
 	Attempt #1
-	Markov chain sampler for ngrams, each state in the 
-	chain corresponds to a position and an ngram.  
+	Samples words by randomly walking down a trie.  
 	Every word produced by this must have been observed
 	already.
 	'''
@@ -65,6 +64,9 @@ class PositionalNGramMarkov(object):
 		self.trie = CountingTrie()
 	
 	def count_transitions(self, text):
+		'''
+		Adds all of the words in text it the sampler's trie.
+		'''
 		tnorm = text.lower()
 		tclean = re.sub(r'[^a-z ]','',tnorm)
 		tokens = tclean.split()
@@ -72,6 +74,9 @@ class PositionalNGramMarkov(object):
 			self.trie.add_chain(n for n in ngrams(tok,self.N))
 	
 	def sampler(self):
+		'''
+		Generator that produces a series of n-grams from this.
+		'''
 		sample = 0
 		trie = self.trie
 		while sample is not None:
@@ -80,6 +85,9 @@ class PositionalNGramMarkov(object):
 			yield sample
 			
 	def sample(self):
+		'''
+		Produces one sample word.
+		'''
 		ngrams = [s for s in self.sampler() if s is not None]
 		if len(ngrams) == 0:
 			return ''
@@ -96,10 +104,17 @@ class NGramMarkov(object):
 	EOW = None
 	
 	def __init__(self, N):
+		'''
+		Initializes an empty sampler.  N is the length of n-gram to use.
+		'''
 		self.N = N
 		self.transitions = defaultdict(lambda: defaultdict(int))
 		
 	def count_transitions(self, text):
+		'''
+		Counts all of the n-gram transitions in text and update
+		the transition weights for this sampler.
+		'''
 		tnorm = text.lower()
 		tclean = re.sub(r'[^a-z ]','',tnorm)
 		tokens = tclean.split()
@@ -113,6 +128,9 @@ class NGramMarkov(object):
 			self.transitions[last][self.EOW] += 1
 		
 	def sampler(self):
+		'''
+		Generator that produces a series of n-grams from this.
+		'''
 		states = self.transitions.keys()
 		state = states[np.random.randint(len(states))]
 		while state is not None:
@@ -125,6 +143,9 @@ class NGramMarkov(object):
 			
 				
 	def sample(self):
+		'''
+		Produces one sample word.
+		'''
 		ngrams = [s for s in self.sampler() if s is not None]
 		if len(ngrams) == 0:
 			return ''
