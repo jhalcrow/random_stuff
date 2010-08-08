@@ -24,19 +24,25 @@ class CountingTrie(object):
 		self.children = defaultdict(CountingTrie)
 		
 	def add_chain(self, sequence):
-		if len(sequence) > 0:
-			(next,rest) = (sequence[0], sequence[1:])
-			self.counts[next] += 1
-			child = self.children[next]
-			child.add_chain(rest)
-		else:
-			self.counts[self.EOW] += 1
+		cur = self
+		for next in sequence:
+			cur.counts[next] += 1
+			cur = cur.children[next]
+		cur.counts[self.EOW] += 1
 			
 def ngrams(word, N):
+	'''
+	Iterator over the n-grams of length N in a word.
+	If len(word) < N, then the iterator is empty.
+	'''
 	for w in range(len(word) - N + 1):
 		yield word[w:w+N]			
 
 def sample_multinomial(weighted_outcomes):
+	'''
+	Samples from a set of outcomes with weights
+	given by a dict mapping outcomes to weights.
+	'''
 	outcomes = weighted_outcomes.keys()
 	pdf = [weighted_outcomes[o] for o in outcomes]
 	cdf = np.cumsum(pdf)
@@ -63,7 +69,7 @@ class PositionalNGramMarkov(object):
 		tclean = re.sub(r'[^a-z ]','',tnorm)
 		tokens = tclean.split()
 		for tok in tokens:
-			self.trie.add_chain([n for n in ngrams(tok,self.N)])
+			self.trie.add_chain(n for n in ngrams(tok,self.N))
 	
 	def sampler(self):
 		sample = 0
@@ -78,7 +84,7 @@ class PositionalNGramMarkov(object):
 		if len(ngrams) == 0:
 			return ''
 
-		return ''.join([ng[0] for ng in ngrams[:-1]]) + ngrams[-1]
+		return ''.join(ng[0] for ng in ngrams[:-1]) + ngrams[-1]
 					
 	
 class NGramMarkov(object):
@@ -123,7 +129,7 @@ class NGramMarkov(object):
 		if len(ngrams) == 0:
 			return ''
 
-		return ''.join([ng[0] for ng in ngrams[:-1]]) + ngrams[-1]
+		return ''.join(ng[0] for ng in ngrams[:-1]) + ngrams[-1]
 					
 
 # Produce 20 random words
