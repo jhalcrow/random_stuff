@@ -14,12 +14,13 @@ def generate_mondrian_1D(budget, interval = (0,1)):
     From Roy and Teh "The Mondrian Process"
     budget corresponds to lambda in that paper
     """
-    cost = stats.expon.rvs(size=1, scale = 1./ budget)[0]
+    ilen = interval[1] - interval[0]
+    cost = stats.expon.rvs(1./ ilen)
     if cost > budget:
         return [interval]
     else:
         new_budget = budget - cost
-        cut = np.random.random() * (interval[1] - interval[0]) + interval[0]
+        cut = np.random.random() * (ilen) + interval[0]
         return [generate_mondrian_1D(new_budget, (interval[0], cut))] + \
                [generate_mondrian_1D(new_budget, (cut, interval[1]))]
 
@@ -29,7 +30,8 @@ def generate_mondrian(budget, domain = [(0,1), (0,1)]):
     From Roy and Teh "The Mondrian Process"
     budget corresponds to lambda in that paper
     """
-    cost = stats.expon.rvs(size=1, scale = 1./ budget)[0]
+    len_cumsum = [0,] + list(np.cumsum([i[1] - i[0] for i in domain]))
+    cost = stats.expon.rvs(1./ len_cumsum[-1])
     if cost > budget:
         return [domain]
     else:
