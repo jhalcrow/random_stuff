@@ -5,3 +5,6 @@ Random bits of code written by Jonathan Halcrow
 ngram_markov.py
 	A script that generates random words using a Markov chain over ngrams
 	of characters.
+
+mondrian.py
+      Some functions implementing the Mondrian Process
