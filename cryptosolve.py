@@ -1,11 +1,12 @@
-from string import maketrans, ascii_letters
+from __future__ import division
+from string import maketrans, ascii_letters, lowercase
 from collections import Counter
-from math import log
+from math import log, exp
 from operator import add
-from random import randint
+from random import randint, random
 from copy import copy
 import re
-from numpy import sum
+#from numpy import sum
 from collections import defaultdict
 import sys
 
@@ -15,7 +16,8 @@ class CryptoSolver(object):
         self.gram_counts = Counter()
         self.letter_counts = Counter()
         self.gram_len = gram_len
-        self.chars = ascii_letters + '.'
+        self.chars = ascii_letters# + '.'
+        #self.chars = lowercase
         self.alpha = alpha
 
     def make_grams(self, src):
@@ -85,6 +87,8 @@ class CryptoSolver(object):
         cur_ll = self.likelihood(cur, crypt)
         C = len(self.chars)
 
+        best_guess = cur
+        best_ll = cur_ll
         print 'Initial likelihood: %f' % self.likelihood(cur, crypt)
         for n in xrange(iters):
             guess = list(cur)
@@ -93,15 +97,34 @@ class CryptoSolver(object):
                 guess[i], guess[j] = guess[j], guess[i]
             guess = ''.join(guess)
             guess_ll = self.likelihood(guess, crypt)
-            if log_accept < guess_ll - cur_ll:
+            P = accept_prob(-cur_ll, -guess_ll, n, iters)
+            if P > random():
                 cur = guess
                 cur_ll = guess_ll
+            if cur_ll > best_ll:
+                print cur_ll
+                best_ll = cur_ll
+                best_guess = cur
             if n % 1000 == 0:
                 print 'Iteration %d: %f' % (n, self.likelihood(cur, crypt))
+                print '\tTemperature: %f\tAccept prob: %f' % (temperature(n, iters), P)
+                #cur = best_guess
+                #cur_ll = best_ll
 
-        print 'Final likelihood: %f' % self.likelihood(cur, crypt)
-        print 'Translation: %s' %  crypt.translate(maketrans(cur, self.chars))
-        return guess
+        print 'Final likelihood: %f' % best_ll
+        print 'Translation: %s' %  crypt.translate(maketrans(best_guess, self.chars))
+        return best_guess
+
+def exp_temperature(it, it_max):
+    return 200 * exp( -3 *  it / it_max)
+
+def lin_temperature(it, it_max):
+    return 500 * (1 - it / it_max)
+
+temperature = exp_temperature
+
+def accept_prob(l0, l, it, it_max):
+    return exp(-max(0, l - l0) / temperature(it, it_max))
 
 if __name__ == '__main__':
     crypt = '''
@@ -114,4 +137,4 @@ if __name__ == '__main__':
     '''
     solver = CryptoSolver()
     solver.train(open(sys.argv[1]).read())
-    print 'Translation %s' % solver.solve(crypt, iters=50000)
+    print 'Translation %s' % solver.solve(crypt, iters=100000)
