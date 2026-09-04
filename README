@@ -8,3 +8,8 @@ ngram_markov
 
 mondrian
       Some functions implementing the Mondrian Process
+
+oldschool_12bolt
+	A Monte Carlo "playtest" simulator for an Atlantic 93/94 Old School
+	12 Bolt (URw Lion Dib Bolt) deck, used to pick the flex slots for
+	the LOBSTERCON 2026 main event. Decklist and results in DECK.md.
