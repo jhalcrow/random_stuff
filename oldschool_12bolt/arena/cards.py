@@ -92,7 +92,7 @@ add(
     C("Sol Ring", "artifact", "1", produces="CC"),
     # ---- creatures ----
     C("Savannah Lions", "creature", "W", 2, 1),
-    C("Serendib Efreet", "creature", "2U", 3, 1, ["flying"], text="upkeep: 1 damage to you"),
+    C("Serendib Efreet", "creature", "2U", 3, 4, ["flying"], text="upkeep: 1 damage to you"),
     C("White Knight", "creature", "WW", 2, 2, ["first strike", "pro-black"]),
     C("Order of Leitbur", "creature", "WW", 2, 2, ["pro-black"], text="W: first strike until end of turn (auto in combat)"),
     C("Serra Angel", "creature", "3WW", 4, 4, ["flying", "vigilance"]),

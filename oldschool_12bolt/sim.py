@@ -59,7 +59,7 @@ CARDS = {
     "Sol Ring": Card("Sol Ring", "mana", cost=1, produces="CC"),
     # creatures
     "Savannah Lions": Card("Savannah Lions", "creature", 1, "W", 2, 1),
-    "Serendib Efreet": Card("Serendib Efreet", "creature", 3, "U", 3, 1, flying=True),
+    "Serendib Efreet": Card("Serendib Efreet", "creature", 3, "U", 3, 4, flying=True),
     # burn
     "Lightning Bolt": Card("Lightning Bolt", "burn", 1, "R", dmg=3),
     "Chain Lightning": Card("Chain Lightning", "burn", 1, "R", dmg=3),
@@ -219,7 +219,7 @@ def erhnam_burnem():
         "Erhnam Burn'em / Zoo (Kird Ape, Erhnam, bolts)",
         schedule={1: [OppCreature("Kird Ape", 2, 3)],
                   2: [OppCreature("Kird Ape", 2, 3)],
-                  3: [OppCreature("Serendib Efreet", 3, 1, flying=True)],
+                  3: [OppCreature("Serendib Efreet", 3, 4, flying=True)],
                   4: [OppCreature("Erhnam Djinn", 4, 5, big=True)],
                   6: [OppCreature("Erhnam Djinn", 4, 5, big=True)]},
         creature_prob=0.8,
