@@ -127,10 +127,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send("unknown endpoint", 404)
 
 
-def run_series(deck_a, deck_b, pol_a, pol_b, games, seed, out_path, verbose=False):
+def run_series(deck_a, deck_b, pol_a, pol_b, games, seed, out_path, verbose=False, first_side=0):
     results = []
     for i in range(games):
-        first = i % 2
+        first = (i + first_side) % 2
         g = engine.Game(deck_a, deck_b, pol_a, pol_b, seed=seed + i, first=first)
         winner = g.run()
         rec = {"game": i + 1, "on_the_play": g.players[first].name, "winner": winner.name if winner else "draw",
@@ -167,6 +167,7 @@ def main():
     ap.add_argument("--bots", action="store_true", help="both sides local bots")
     ap.add_argument("--out", default="")
     ap.add_argument("--verbose", action="store_true")
+    ap.add_argument("--first", default="a", help="which side is on the play in game 1: a or b")
     args = ap.parse_args()
     assert args.a in DECKS and args.b in DECKS, list(DECKS)
     agents = set(x.strip() for x in args.agents.split(",") if x.strip()) if not args.bots else set()
@@ -178,7 +179,7 @@ def main():
         srv = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
         threading.Thread(target=srv.serve_forever, daemon=True).start()
         print(f"listening on http://127.0.0.1:{args.port}  tokens: {list(Handler.remotes)}", flush=True)
-    run_series(args.a, args.b, pol_a, pol_b, args.games, args.seed, out, args.verbose)
+    run_series(args.a, args.b, pol_a, pol_b, args.games, args.seed, out, args.verbose, 1 if args.first == "b" else 0)
     if agents:
         time.sleep(30)   # let the agents collect the final summary
 
