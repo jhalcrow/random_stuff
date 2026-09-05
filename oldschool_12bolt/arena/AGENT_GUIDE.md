@@ -51,7 +51,7 @@ already happened. Fix the rest and submit again.
   (`activate #strip target #land`), Library of Alexandria (draw with exactly 7 in hand),
   Chaos Orb (costs 1, sorcery speed, 90% hit), Nevinyrral's Disk (costs 1), Jayemdae Tome
   (costs 4), Order of Leitbur (W: first strike).
-- `lotus R` sacrifice Black Lotus for RRR floating (or just cast something the Lotus is
+- `lotus R` sacrifice a Black Lotus that is already on the battlefield (cast it first) for RRR floating (or just cast something the Lotus is
   needed for; the engine cracks it automatically, floating the rest).
 - `tap #id [colour]` to float mana manually (rarely needed).
 - `sac atog #artifact` pump Atog.
