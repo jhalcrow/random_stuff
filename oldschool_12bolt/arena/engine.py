@@ -981,9 +981,16 @@ class Game:
         if name == "Mishra's Factory":
             if o.animated:
                 raise IllegalAction("already animated")
-            self.pay(p, "1")
-            self.commit_pool(p)
+            if o.tapped:
+                raise IllegalAction("that Factory is tapped")
+            # the Factory must not pay for its own animation
             o.animated = True
+            try:
+                self.pay(p, "1")
+            except IllegalAction:
+                o.animated = False
+                raise
+            self.commit_pool(p)
             self.log_event(f"{p.name} animates Mishra's Factory")
         elif name == "Strip Mine":
             if o.tapped:
