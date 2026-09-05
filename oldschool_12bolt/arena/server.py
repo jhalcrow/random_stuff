@@ -44,6 +44,8 @@ class Remote:
 
     def decide(self, game, p, window, error):
         text = game.render(p, window, error)
+        if window == "mulligan" and self.last_result:
+            text = "PREVIOUS GAME: " + self.last_result + "\n\n" + text
         text += "\n" + WINDOW_HELP.get(window, "")
         with self.cond:
             self.pending = text
