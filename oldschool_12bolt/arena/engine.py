@@ -363,7 +363,10 @@ class Game:
         remaining.sort(key=lambda a: (a[0] == "lotus", a[0] != "pool", a[2] != "", -a[3], len(a[2])))
         gen_chosen = []
         while need_generic > 0 and remaining:
-            a = remaining.pop(0)
+            # prefer a source that does not overpay (Sol Ring for a 1-cost spell burns a mana)
+            fits = [a for a in remaining if a[3] <= need_generic]
+            a = fits[0] if fits else remaining[0]
+            remaining.remove(a)
             gen_chosen.append(a)
             need_generic -= a[3]
         if need_generic > 0:
@@ -796,7 +799,7 @@ class Game:
         card = obj.card
         eff = card.effect
         # target legality on resolution
-        if isinstance(t, Obj) and t.controller is None:
+        if isinstance(t, Obj) and t.controller is None and card.targets != "gycard":
             self.log_event(f"{card.name} fizzles (target gone)")
             p.graveyard.append(obj)
             return
