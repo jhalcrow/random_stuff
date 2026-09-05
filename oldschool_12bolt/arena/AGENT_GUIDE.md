@@ -32,7 +32,9 @@ already happened. Fix the rest and submit again.
   the turn without attacking (there is no separate main 2 if you do not attack).
 - `BLOCK`: opponent attacked. Lines: `block #attacker with #blocker` (one blocker per
   attacker), and instants such as `cast #x target #attacker`, or `activate #factory`
-  to animate a Factory and then block with it. `pass` = no blocks.
+  to animate a Factory and then block with it, all in ONE script. `pass` = no blocks.
+  A script with only setup lines (tap/activate/cast) is not a complete answer; the
+  engine asks again for your block lines.
 - `COMBAT`: after blocks, before damage. Your instants, `sac atog #artifact`
   (+2/+2 each), or `pass`.
 - `MAIN2`: after combat. Same actions as MAIN1 minus attack; end with `done`.

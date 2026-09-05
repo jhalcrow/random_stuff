@@ -443,10 +443,8 @@ class Game:
         self.upkeep(p)
         if self.over:
             return
-        # draw
-        if not (self.turn == 1):
-            p.draw()
-        elif self.turn == 1 and p is not self.players[0] and self.active is p:
+        # draw (the player on the play skips the first draw)
+        if self.turn != 1:
             p.draw()
         # main 1
         self.phase = "main1"
@@ -1108,9 +1106,13 @@ class Game:
             script = d.policy.decide(self, d, "block", error)
             try:
                 self.execute_script(d, script, "block")
-                break
             except IllegalAction as e:
                 error = str(e)
+                continue
+            verbs = {l.strip().split(" ")[0].lower() for l in script.replace(";", "\n").splitlines() if l.strip()}
+            if verbs & {"block", "pass", "no", "done"} or not verbs:
+                break
+            error = "No blocks declared yet: add 'block <attacker> with <blocker>' lines, or 'pass' for no blocks"
         if self.over:
             return
         self.attackers = [a for a in self.attackers if a.controller is p and a.attacking]
