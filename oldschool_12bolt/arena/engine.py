@@ -396,7 +396,7 @@ class Game:
             self.damage_player(p, n, "mana burn")
 
     # ------------------------------------------------------------------ turn
-    def run(self, max_turns=30):
+    def run(self, max_turns=50):
         for p in self.players:
             p.draw(7)
             self.mulligan(p)
@@ -412,7 +412,7 @@ class Game:
         if not self.over:
             self.over = True
             self.winner = None
-            self.log_event("Turn limit reached: draw")
+            self.log_event(f"Turn limit ({max_turns} player-turns) reached: draw")
         return self.winner
 
     def mulligan(self, p):
@@ -504,13 +504,32 @@ class Game:
                 o.attacking = False
                 o.blocking = None
             self.mana_burn(q)
-        while len(p.hand) > 7:
-            # discard: excess lands first, then most expensive
-            lands = [c for c in p.hand if c.card.is_land]
-            victim = lands[0] if len(lands) > 2 else max(p.hand, key=lambda c: c.card.cmc)
-            p.hand.remove(victim)
-            p.graveyard.append(victim)
-            self.log_event(f"{p.name} discards {victim.name} to hand size")
+        if len(p.hand) > 7:
+            n = len(p.hand) - 7
+            chosen = []
+            error = f"Discard {n} card(s) to hand size."
+            for _ in range(2):
+                script = p.policy.decide(self, p, "discard", error)
+                refs = [r.strip() for r in script.replace("discard", "").replace(";", ",").replace("\n", ",").split(",") if r.strip()]
+                try:
+                    picked = []
+                    for r in refs:
+                        c = p.find(r, [c for c in p.hand if c not in picked])
+                        picked.append(c)
+                    if len(picked) >= n:
+                        chosen = picked[:n]
+                        break
+                    error = f"Name {n} cards to discard (you named {len(picked)})."
+                except IllegalAction as e:
+                    error = str(e)
+            while len(chosen) < n:
+                lands = [c for c in p.hand if c.card.is_land and c not in chosen]
+                auto = lands[0] if len(lands) > 2 else max((c for c in p.hand if c not in chosen), key=lambda c: c.card.cmc)
+                chosen.append(auto)
+            for victim in chosen:
+                p.hand.remove(victim)
+                p.graveyard.append(victim)
+                self.log_event(f"{p.name} discards {victim.name} to hand size")
         self.state_based()
 
     # ------------------------------------------------------------------ decision windows
@@ -529,6 +548,9 @@ class Game:
                 return False
             if result == "attack":
                 return True
+            if result == "continue":
+                error = "Your tutor resolved; the rest of that script was not run. Continue this main phase."
+                continue
             if result == "done":
                 self.mana_burn(p)
                 return False
@@ -543,6 +565,10 @@ class Game:
         for line in lines:
             if self.over:
                 return "done"
+            if getattr(self, "_interrupt", False):
+                # a tutor resolved: stop here so the player can see the new card and continue
+                self._interrupt = False
+                return "continue"
             verb, _, rest = line.partition(" ")
             verb = verb.lower()
             rest = rest.strip()
@@ -571,6 +597,10 @@ class Game:
                 pass
             else:
                 raise IllegalAction(f"unknown or out-of-window action: '{line}'")
+        if getattr(self, "_interrupt", False):
+            self._interrupt = False
+            if window in ("main1", "main2"):
+                return "continue"
         if window in ("main1", "main2"):
             return "done"
         return "pass"
@@ -969,6 +999,7 @@ class Game:
                     p.hand.append(c)
                     self.rng.shuffle(p.library)
                     self.log_event(f"{p.name} tutors for a card")
+                    self._interrupt = True
                     return
             error = f"'{choice}' is not in your library."
         c = p.library.pop()

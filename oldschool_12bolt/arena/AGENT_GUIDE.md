@@ -41,7 +41,9 @@ already happened. Fix the rest and submit again.
 - `RESPOND`: the opponent cast a spell (shown in STACK). `cast #counter target #spellid`,
   another instant, or `pass`.
 - `EOT`: end of opponent's turn. Instants (`cast Lightning Bolt target opp`) or `pass`.
-- `TUTOR`: reply with a card name from the list shown.
+- `TUTOR`: reply with a card name from the list shown. After it resolves you get
+  a fresh MAIN decision (the rest of the script that cast the tutor is not run).
+- `DISCARD`: end of your turn with more than 7 cards: `discard #a, #b`.
 
 ## Actions
 
@@ -75,7 +77,7 @@ burn: 1 life per point) at the end of the phase. City of Brass costs 1 life per 
 - Balance, Timetwister, Wheel, Armageddon work as printed (Balance choices are
   automatic: extra lands/cards/creatures are sacrificed from the worst up).
 - Mana Drain is just a Counterspell here. Recall is X=1.
-- Paris mulligan. No ante. The game is a draw after 30 turns.
+- Paris mulligan. No ante. The game is a draw after 50 player-turns (25 each).
 
 ## Playing well
 

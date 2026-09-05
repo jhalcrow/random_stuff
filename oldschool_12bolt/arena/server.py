@@ -82,6 +82,7 @@ WINDOW_HELP = {
     "respond": "A spell is on the stack. Reply 'cast <counter> target #<spell id>' or another instant, or 'pass'.",
     "eot": "End of opponent's turn. Reply with instants (e.g. 'cast Lightning Bolt target opp') or 'pass'.",
     "tutor": "Reply with the exact name of the card to fetch.",
+    "discard": "Cleanup: you have more than 7 cards. Reply with the cards to discard, e.g. 'discard #12, #15'.",
 }
 
 
