@@ -360,7 +360,10 @@ class Game:
             chosen.append((c, pip))
             remaining.remove(c)
         # generic: prefer pool, colourless, sol ring, then single-colour lands, then flexible
-        remaining.sort(key=lambda a: (a[0] == "lotus", a[0] != "pool", a[2] != "", -a[3], len(a[2])))
+        def is_factory(a):
+            return a[0] == "src" and getattr(a[1], "name", "") == "Mishra's Factory"
+        # generic mana: pool first, then plain colourless, Sol Ring, single-colour, flexible; Factories last so they can attack
+        remaining.sort(key=lambda a: (a[0] == "lotus", is_factory(a), a[0] != "pool", a[2] != "", -a[3], len(a[2])))
         gen_chosen = []
         while need_generic > 0 and remaining:
             # prefer a source that does not overpay (Sol Ring for a 1-cost spell burns a mana)
