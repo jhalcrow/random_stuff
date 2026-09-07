@@ -45,3 +45,37 @@ So the tree is bought in waves of "all 13 techs to level N".
 
 Tier III+ needs War Academy TG7 and Tempered Truegold (Tier III alone: 14.6k
 dust, 416 Tempered Truegold, 343 days).
+
+# Battle simulator (castle attack / garrison defense)
+
+`sim.py` is a round-by-round battle engine using the reverse-engineered State of Survival
+model that Kingshot shares (kingshotguides.com / kingshotsimulator.com, Absy Labs, the
+open-source `request-laurent/sos.battle` and `ryo-HIT-1589/wos-simulator` engines):
+
+    per-troop attack   A_u = base_atk * (1 + atk%) * base_leth * (1 + leth%) / 100
+    per-troop defense  D_v = base_hp  * (1 + hp%)  * base_def  * (1 + def%)  / 100
+    kills per round    ceil( sqrt(n_u * army_min) * A_u / D_v / 100 * SkillMod(u,v) )
+    SkillMod = DamageUp * OppDefenseDown / (OppDamageDown * DefenseUp)
+
+Every troop type hits the enemy's infantry first, then cavalry, then archers (cavalry has a
+20% chance to bypass to archers); counters give +10% damage; both sides act simultaneously.
+`troops_base.json` holds the hidden base stats (Def and Leth are 10 for every tier; Attack and
+Health scale) for T1-T11 x TG0-5; TG6-8 are extrapolated at +5% per level.
+`bear_check()` reproduces the published Bear Trap worked example exactly (16,797).
+
+`heroes.py` encodes every legendary through Gen 7 plus the Gen 1 combat epics: expedition
+skills at level 5 as SkillMod effect ops (same op adds, different ops multiply; chance-based
+skills as expected value), exclusive-weapon widget (rally-only or defender-only +15% special
+bonus) and the weapon's +62.5% Lethality/Health for the hero's troop type.
+
+    python3 run.py              # rank all 3,654 trios for rally attack, solo attack, garrison
+    python3 analyze.py          # picks vs community meta, ratio search, reinforcement skills
+    PROC_SCALE=0.5 python3 ...  # discount chance-based skills to half their expected value
+
+Account stats are the `USER_STATS` block in `sim.py` (from the Bonus Overview screenshot).
+The opponent is a mirror of those stats against a panel of meta lineups.
+
+Model caveats: TG6-8 troop skills are not modelled (symmetric on both sides); Sophia's
+Terror and Alcar's infantry skills carry large expected values and drive several results, so
+compare the PROC_SCALE=1.0 / 0.75 / 0.5 rankings before trusting a lineup; rally and garrison
+sizes are set equal to your march (144,200), and only ratios were searched.
