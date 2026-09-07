@@ -7,11 +7,14 @@ ratio, centred so the mean is 1500).
 
   python3 kingshot/elo.py [N]      # default N = 300 battles per pairing
 """
-import math, random, sys
+import math, os, random, sys
 from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops, score,
                  ATTACK_JOINERS, DEFENSE_JOINERS)
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
+SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side
+ATT_SCALE = float(os.environ.get('ATT_SCALE', '1.0'))    # attacker stats relative to yours
+DEF_SCALE = float(os.environ.get('DEF_SCALE', '1.0'))    # defender stats relative to yours
 rng = random.Random(2026)
 
 ATTACKERS = [
@@ -35,8 +38,10 @@ DEFENDERS = [
 
 
 def fight(att, dfn):
-    a = Side('A', USER_STATS, ratio_troops(MARCH, *att[2]), heroes=att[1], role='rally', joiners=ATTACK_JOINERS)
-    d = Side('D', USER_STATS, ratio_troops(MARCH, *dfn[2]), heroes=dfn[1], role='garrison', joiners=DEFENSE_JOINERS)
+    sa = {t: {k: v * ATT_SCALE for k, v in USER_STATS[t].items()} for t in TYPES}
+    sd = {t: {k: v * DEF_SCALE for k, v in USER_STATS[t].items()} for t in TYPES}
+    a = Side('A', sa, ratio_troops(SIZE, *att[2]), heroes=att[1], role='rally', joiners=ATTACK_JOINERS)
+    d = Side('D', sd, ratio_troops(SIZE, *dfn[2]), heroes=dfn[1], role='garrison', joiners=DEFENSE_JOINERS)
     wins = draws = 0
     ratios = []
     for _ in range(N):
@@ -67,7 +72,7 @@ def bradley_terry(players, games, iters=2000):
 
 
 if __name__ == '__main__':
-    print(f'{N} Monte Carlo battles per pairing, mirror stats, march {MARCH:,} each side\n')
+    print(f'{N} Monte Carlo battles per pairing, {SIZE:,} troops each side, attacker stats x{ATT_SCALE}, defender stats x{DEF_SCALE}\n')
     names = [a[0] for a in ATTACKERS] + [d[0] for d in DEFENDERS]
     games = []
     table = {}

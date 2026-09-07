@@ -8,12 +8,14 @@ attacker losses inflicted, and expected garrison remaining after 3 waves.
 
   python3 kingshot/waves.py [N] [garrison_size_multiple]     # default 200 runs, garrison = 1 rally
 """
-import random, sys, statistics
+import os, random, sys, statistics
 from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops,
                  ATTACK_JOINERS, DEFENSE_JOINERS)
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 200
 GAR_MULT = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0   # garrison size as a multiple of one rally
+RALLY = int(os.environ.get('RALLY_SIZE', MARCH))
+SCALES = [float(x) for x in os.environ.get('ATT_SCALES', '1.0,0.85').split(',')]
 WAVES = 3
 rng = random.Random(7)
 
@@ -22,7 +24,6 @@ ATTACKERS = [
     ('Charles / Sophia / Yang 60/40/0', ['Charles', 'Sophia', 'Yang'], (60, 40, 0)),
     ('Charles / Ava / Yang 45/30/25', ['Charles', 'Ava', 'Yang'], (45, 30, 25)),
 ]
-SCALES = [1.0, 0.85]     # attacker stats relative to yours: equal, and a typical weaker rally leader
 
 GARRISONS = [
     ('Charles / Sophia / Wee & Woo 60/15/25', ['Charles', 'Sophia', 'Wee & Woo'], (60, 15, 25)),
@@ -43,11 +44,11 @@ def run(gar, att, scale):
     att_lost = []
     left = []
     for _ in range(N):
-        troops = ratio_troops(int(MARCH * GAR_MULT), *gar[2])
+        troops = ratio_troops(int(RALLY * GAR_MULT), *gar[2])
         lost = 0
         w = 0
         while w < WAVES and sum(troops.values()) > 0:
-            a = Side('A', stats, ratio_troops(MARCH, *att[2]), heroes=att[1], role='rally', joiners=ATTACK_JOINERS)
+            a = Side('A', stats, ratio_troops(RALLY, *att[2]), heroes=att[1], role='rally', joiners=ATTACK_JOINERS)
             d = Side('D', USER_STATS, dict(troops), heroes=gar[1], role='garrison', joiners=DEFENSE_JOINERS)
             r = battle_mc(a, d, rng)
             lost += r['a_lost']
@@ -63,7 +64,7 @@ def run(gar, att, scale):
 
 
 if __name__ == '__main__':
-    print(f'{N} runs per pairing; each wave a fresh {MARCH:,}-troop rally; garrison starts at {int(MARCH*GAR_MULT):,} and is not refilled\n')
+    print(f'{N} runs per pairing; each wave a fresh {RALLY:,}-troop rally; garrison starts at {int(RALLY*GAR_MULT):,} and is not refilled\n')
     summary = {}
     for scale in SCALES:
         print(f'=== attacker stats x{scale} ===')
