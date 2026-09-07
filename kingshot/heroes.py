@@ -19,8 +19,7 @@ Widget: exclusive-weapon expedition skill.  ('rally'|'defender', stat, 15).  Ral
 apply when the hero is in the lineup of a player INITIATING a rally; defender widgets only when
 the hero is in a garrison lineup.  They are Special Bonuses: they multiply (100 + stat%).
 
-weapon_type: the hero's troop type; a maxed exclusive weapon adds +62.5% Lethality and +62.5%
-Health to that troop type (ordinary additive stat).
+Per-hero expedition stats (star ATK/DEF %, weapon Lethality/Health %) live in hero_stats.json.
 """
 
 EPIC = 'epic'
@@ -176,6 +175,13 @@ HEROES = {
 }
 
 LEGENDARIES = [h for h, d in HEROES.items() if d['rarity'] == LEG]
+BY_TYPE = {t: [h for h, d in HEROES.items() if d['type'] == t and h != 'Diana'] for t in ('inf', 'cav', 'arch')}
+
+
+def trios():
+    """Every legal lineup: exactly one infantry, one cavalry and one archer hero."""
+    import itertools
+    return [t for t in itertools.product(BY_TYPE['inf'], BY_TYPE['cav'], BY_TYPE['arch'])]
 EPICS = [h for h, d in HEROES.items() if d['rarity'] == EPIC]
 COMBAT_HEROES = LEGENDARIES + [h for h in EPICS if h not in ('Fahd',)] + ['Fahd']
 

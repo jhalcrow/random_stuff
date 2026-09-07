@@ -9,22 +9,22 @@ from run import (eval_attack, eval_defense, summarize, ratio_search, DEF_PANEL, 
 from sim import ATTACK_JOINERS, DEFENSE_JOINERS
 
 ATTACK_TRIOS = {
-    'sim pick A   Ava / Sophia / Petra': ['Ava', 'Sophia', 'Petra'],
-    'sim pick B   Ava / Sophia / Amadeus': ['Ava', 'Sophia', 'Amadeus'],
-    'sim pick C   Ava / Charles / Amadeus': ['Ava', 'Charles', 'Amadeus'],
-    'sim pick D   Ava / Eric / Amadeus': ['Ava', 'Eric', 'Amadeus'],
-    'meta Gen7    Ava / Wee & Woo / Amadeus': ['Ava', 'Wee & Woo', 'Amadeus'],
-    'meta Gen7    Ava / Wee & Woo / Charles': ['Ava', 'Wee & Woo', 'Charles'],
+    'sim pick A   Charles / Ava / Wee & Woo': ['Charles', 'Ava', 'Wee & Woo'],
+    'sim pick B   Charles / Sophia / Wee & Woo': ['Charles', 'Sophia', 'Wee & Woo'],
+    'sim pick C   Charles / Sophia / Marlin': ['Charles', 'Sophia', 'Marlin'],
+    'sim pick D   Charles / Ava / Yang': ['Charles', 'Ava', 'Yang'],
+    'sim pick E   Charles / Sophia / Yang': ['Charles', 'Sophia', 'Yang'],
+    'meta Gen7    Amadeus / Ava / Wee & Woo': ['Amadeus', 'Ava', 'Wee & Woo'],
     'meta Gen6    Triton / Thrud / Yang': ['Triton', 'Thrud', 'Yang'],
     'meta Gen5    Long Fei / Thrud / Rosa': ['Long Fei', 'Thrud', 'Rosa'],
     'meta Gen4    Amadeus / Petra / Rosa': ['Amadeus', 'Petra', 'Rosa'],
 }
 DEFENSE_TRIOS = {
-    'sim pick A   Alcar / Eric / Wee & Woo': ['Alcar', 'Eric', 'Wee & Woo'],
+    'sim pick A   Charles / Sophia / Wee & Woo': ['Charles', 'Sophia', 'Wee & Woo'],
     'sim pick B   Alcar / Sophia / Wee & Woo': ['Alcar', 'Sophia', 'Wee & Woo'],
-    'sim pick C   Alcar / Eric / Charles': ['Alcar', 'Eric', 'Charles'],
-    'sim pick D   Alcar / Charles / Wee & Woo': ['Alcar', 'Charles', 'Wee & Woo'],
-    'meta Gen7    Charles / Sophia / Wee & Woo': ['Charles', 'Sophia', 'Wee & Woo'],
+    'sim pick C   Charles / Ava / Wee & Woo': ['Charles', 'Ava', 'Wee & Woo'],
+    'sim pick D   Long Fei / Sophia / Wee & Woo': ['Long Fei', 'Sophia', 'Wee & Woo'],
+    'sim pick E   Charles / Jabel / Wee & Woo': ['Charles', 'Jabel', 'Wee & Woo'],
     'meta Gen6    Triton / Sophia / Vivian': ['Triton', 'Sophia', 'Vivian'],
     'meta Gen5    Alcar / Margot / Vivian': ['Alcar', 'Margot', 'Vivian'],
     'meta Gen4    Alcar / Margot / Jaeger': ['Alcar', 'Margot', 'Jaeger'],
@@ -56,12 +56,13 @@ for label, trio in DEFENSE_TRIOS.items():
     print(f'  {label:42s} {g:6.3f}   {w}/4   ' + ' '.join(f'{r[0]:5.2f}' for r in res))
 print('  enemy rallies: ' + ' | '.join('/'.join(p) for p in ATT_PANEL))
 
-print('\n=== Which reinforcement first-skills to ask for (garrison Alcar / Eric / Wee & Woo) ===')
+print('\n=== Which reinforcement first-skills to ask for (garrison Charles / Sophia / Wee & Woo) ===')
 for label, js in JOINER_SETS.items():
-    g, w = summarize(eval_defense(['Alcar', 'Eric', 'Wee & Woo'], joiners=js))
+    g, w = summarize(eval_defense(['Charles', 'Sophia', 'Wee & Woo'], joiners=js))
     print(f'  {label:48s} {g:6.3f}   {w}/4')
 
-ratio_search(eval_attack, ['Ava', 'Sophia', 'Petra'], 'CASTLE ATTACK rally')
-ratio_search(eval_attack, ['Ava', 'Charles', 'Amadeus'], 'CASTLE ATTACK rally')
-ratio_search(eval_defense, ['Alcar', 'Eric', 'Wee & Woo'], 'GARRISON DEFENSE')
-ratio_search(eval_defense, ['Alcar', 'Sophia', 'Wee & Woo'], 'GARRISON DEFENSE')
+ratio_search(eval_attack, ['Charles', 'Ava', 'Wee & Woo'], 'CASTLE ATTACK rally')
+ratio_search(eval_attack, ['Charles', 'Sophia', 'Wee & Woo'], 'CASTLE ATTACK rally')
+ratio_search(eval_attack, ['Charles', 'Sophia', 'Marlin'], 'CASTLE ATTACK rally')
+ratio_search(eval_defense, ['Charles', 'Sophia', 'Wee & Woo'], 'GARRISON DEFENSE')
+ratio_search(eval_defense, ['Charles', 'Ava', 'Wee & Woo'], 'GARRISON DEFENSE')

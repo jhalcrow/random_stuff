@@ -52,7 +52,14 @@ USER_TYPE = {
 }
 USER_STATS = {t: {k: SQUADS[k] + USER_TYPE[t][k] for k in SQUADS} for t in TYPES}
 MARCH = 144_200          # Deployment Capacity from the Bonus Overview
-WEAPON_BONUS = 62.5      # maxed exclusive weapon: +62.5% Lethality and Health to the hero's troop type
+# Per-hero expedition stats at max star (31) and exclusive weapon strength 10, scraped from
+# kingshotdata.com hero pages: exp_atk/exp_def apply to the hero's own troop type; the weapon adds
+# Lethality and Health % to the same type.  These are NOT in the profile Bonus Overview.
+HERO_STATS = json.load(open(os.path.join(os.path.dirname(__file__), 'hero_stats.json')))
+# Max hero gear (verified in-game on two generations): +200% Attack/Defense and +600%
+# Lethality/Health to the hero's troop type, the same on every hero.
+GEAR_EXP_ATK = float(os.environ.get('GEAR_ATK', '200'))
+GEAR_EXP_LETH = float(os.environ.get('GEAR_LETH', '600'))
 
 
 @dataclass
@@ -66,7 +73,7 @@ class Side:
     tier: int = 10
     tg: int = 8
     special: dict = field(default_factory=dict)  # extra special bonus % per stat (pets, city, appointments)
-    weapon_bonus: float = WEAPON_BONUS
+    hero_stats: bool = True                      # add per-hero expedition stats + weapon to the hero's troop type
     triangle: float = 10.0                       # innate counter bonus % (archers>infantry etc.)
     ambusher: float = 0.20                       # cavalry chance to bypass the front line and hit archers
 
@@ -94,10 +101,25 @@ class Side:
                 sp[w[1]] += w[2]
         return sp
 
+    def hero_stat(self, ttype, key):
+        """Additive % from lineup heroes of this troop type: star stats (atk/def), weapon + gear (leth/hp)."""
+        s = 0.0
+        if not self.hero_stats:
+            return s
+        for h in self.heroes:
+            if HEROES[h]['type'] != ttype:
+                continue
+            hs = HERO_STATS[h]
+            if key == 'attack':
+                s += hs['exp_atk'] + GEAR_EXP_ATK
+            elif key == 'defense':
+                s += hs['exp_def'] + GEAR_EXP_ATK
+            else:   # lethality / health
+                s += hs['weapon_lv10'] + GEAR_EXP_LETH
+        return s
+
     def stat(self, ttype, key):
-        s = self.stats[ttype][key]
-        if key in ('lethality', 'health'):
-            s += self.weapon_bonus * sum(1 for h in self.heroes if HEROES[h]['type'] == ttype)
+        s = self.stats[ttype][key] + self.hero_stat(ttype, key)
         return (100 + s) * (1 + self.special_bonus()[key] / 100) / 100   # multiplier form
 
 
@@ -203,7 +225,7 @@ def score(res, me):
 def bear_check():
     """Reproduce kingshotguides.com's worked Bear Trap example: expected 16,797 damage."""
     stats = {t: dict(attack=25, defense=0, lethality=0, health=0) for t in TYPES}
-    me = Side('me', stats, {'inf': 6000, 'cav': 6000, 'arch': 6000}, tier=6, tg=0, weapon_bonus=0)
+    me = Side('me', stats, {'inf': 6000, 'cav': 6000, 'arch': 6000}, tier=6, tg=0, hero_stats=False)
     total = 0.0
     army_min = 5000
     for t in TYPES:

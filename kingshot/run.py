@@ -11,9 +11,10 @@ Scores are kill ratios (enemy troops lost / your troops lost) averaged over the 
 import itertools, sys, statistics
 from sim import (Side, USER_STATS, MARCH, TYPES, battle, ratio_troops, score, HEROES,
                  LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS)
+from heroes import trios
 
 QUICK = '--quick' in sys.argv
-CANDIDATES = [h for h in HEROES if h != 'Diana']          # 22 legendaries + 7 combat epics
+TRIOS = trios()          # one infantry + one cavalry + one archer (the game's march rule)
 
 # Enemy garrison lineups you may run into when attacking (meta defensive trios).
 DEF_PANEL = [
@@ -68,7 +69,7 @@ def summarize(res):
 
 def rank(evalfn, label, **kw):
     rows = []
-    for trio in itertools.combinations(CANDIDATES, 3):
+    for trio in TRIOS:
         g, wins = summarize(evalfn(trio, **kw))
         rows.append((g, wins, trio))
     rows.sort(reverse=True)

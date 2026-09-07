@@ -65,11 +65,19 @@ Health scale) for T1-T11 x TG0-5; TG6-8 are extrapolated at +5% per level.
 
 `heroes.py` encodes every legendary through Gen 7 plus the Gen 1 combat epics: expedition
 skills at level 5 as SkillMod effect ops (same op adds, different ops multiply; chance-based
-skills as expected value), exclusive-weapon widget (rally-only or defender-only +15% special
-bonus) and the weapon's +62.5% Lethality/Health for the hero's troop type.
+skills as expected value) and the exclusive-weapon widget (rally-only or defender-only +15%
+special bonus).  `hero_stats.json` (scraped from kingshotdata.com, checked against the in-game
+Hero Stats panel) holds each hero's max-star expedition Attack/Defense % and the level-10
+weapon's Lethality/Health %.  Max hero gear adds a flat +200% Attack/Defense and +600%
+Lethality/Health on top (verified in-game).  All of it applies to the hero's own troop type and
+is NOT in the profile Bonus Overview.  Base values scale hard by generation: Gen 1 epics 140%,
+Amadeus 260%, Gen 4 370%, Gen 6 540%, Gen 7 650% Attack/Defense; weapon Lethality/Health 62.5%
+(Gen 1) to 160.5% (Gen 7).  A march holds exactly one infantry, one cavalry and one archer
+hero, so `heroes.trios()` enumerates the 900 legal lineups.
 
     python3 run.py              # rank all 3,654 trios for rally attack, solo attack, garrison
     python3 analyze.py          # picks vs community meta, ratio search, reinforcement skills
+    python3 joint.py 40         # optimise trio and troop ratio together
     PROC_SCALE=0.5 python3 ...  # discount chance-based skills to half their expected value
 
 Account stats are the `USER_STATS` block in `sim.py` (from the Bonus Overview screenshot).
