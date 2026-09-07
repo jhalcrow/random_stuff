@@ -6,13 +6,14 @@ The garrison starts at MARCH troops in its ratio; whatever survives a wave (per 
 fights the next wave.  Reports the probability of holding through 1, 2 and 3 waves, expected
 attacker losses inflicted, and expected garrison remaining after 3 waves.
 
-  python3 kingshot/waves.py [N]     # default 200 runs per pairing
+  python3 kingshot/waves.py [N] [garrison_size_multiple]     # default 200 runs, garrison = 1 rally
 """
 import random, sys, statistics
 from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops,
                  ATTACK_JOINERS, DEFENSE_JOINERS)
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 200
+GAR_MULT = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0   # garrison size as a multiple of one rally
 WAVES = 3
 rng = random.Random(7)
 
@@ -42,7 +43,7 @@ def run(gar, att, scale):
     att_lost = []
     left = []
     for _ in range(N):
-        troops = ratio_troops(MARCH, *gar[2])
+        troops = ratio_troops(int(MARCH * GAR_MULT), *gar[2])
         lost = 0
         w = 0
         while w < WAVES and sum(troops.values()) > 0:
@@ -62,7 +63,7 @@ def run(gar, att, scale):
 
 
 if __name__ == '__main__':
-    print(f'{N} runs per pairing; each wave a fresh {MARCH:,}-troop rally; garrison starts at {MARCH:,} and is not refilled\n')
+    print(f'{N} runs per pairing; each wave a fresh {MARCH:,}-troop rally; garrison starts at {int(MARCH*GAR_MULT):,} and is not refilled\n')
     summary = {}
     for scale in SCALES:
         print(f'=== attacker stats x{scale} ===')
