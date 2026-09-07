@@ -224,3 +224,10 @@ COMBAT_HEROES = LEGENDARIES + [h for h in EPICS if h not in ('Fahd',)] + ['Fahd'
 # Meta joiner picks (their FIRST skill is what a joiner contributes).
 ATTACK_JOINERS = ['Vivian', 'Ava', 'Chenko', 'Amane']            # one per skill category: +25% enemy taken, -25% enemy def, +25% leth, +25% atk
 DEFENSE_JOINERS = ['Triton', 'Ava', 'Alcar', 'Petra']          # +25% def, -25% enemy def, -70% inf/arch taken 2 of 5 turns, 50% chance +50% enemy taken
+
+# Overrides for experiments, e.g. JOINERS_ATT="Chenko,Chenko,Chenko,Chenko" JOINERS_DEF="Gordon,Gordon,Gordon,Gordon"
+import os as _os
+if _os.environ.get('JOINERS_ATT'):
+    ATTACK_JOINERS = [x.strip() for x in _os.environ['JOINERS_ATT'].split(',')]
+if _os.environ.get('JOINERS_DEF'):
+    DEFENSE_JOINERS = [x.strip() for x in _os.environ['JOINERS_DEF'].split(',')]
