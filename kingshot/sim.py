@@ -24,7 +24,7 @@ import itertools, json, math, os, sys
 from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
-from heroes import HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS
+from heroes import HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC, proc_uptime
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -207,6 +207,91 @@ def battle(a: Side, d: Side, max_rounds=5000, wear=0.0, verbose=False):
     return dict(rounds=rnd, a_lost=a_lost, d_lost=d_lost, a_left=na, d_left=nd,
                 winner=(a.name if sum(nd.values()) == 0 and sum(na.values()) > 0 else
                         d.name if sum(na.values()) == 0 else 'draw'))
+
+
+
+def _split_effects(effs):
+    """Flat effects (always on) and proc skills grouped by skill name with full magnitudes."""
+    flat, procs = [], {}
+    for kind, v, scope, name in effs:
+        if kind.startswith('proc'):
+            sname = name.split(':', 1)[1]
+            mag = v / proc_uptime(sname)
+            procs.setdefault(sname, []).append((kind, mag, scope, name))
+        else:
+            flat.append((kind, v, scope, name))
+    return flat, procs
+
+
+def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
+    """Monte Carlo battle: chance skills are rolled once per round at squad level, periodic skills
+    fire on their schedule.  Same engine as battle() otherwise."""
+    global PROC_SCALE
+    saved, PROC_SCALE = PROC_SCALE, 1.0     # magnitudes here are full values, not scaled EVs
+    try:
+        A, D = {}, {}
+        for s in (a, d):
+            for t in TYPES:
+                ba, bd, bl, bh = base_stats(t, s.tier, s.tg)
+                A[(s.name, t)] = ba * s.stat(t, 'attack') * bl * s.stat(t, 'lethality') / 100
+                D[(s.name, t)] = bh * s.stat(t, 'health') * bd * s.stat(t, 'defense') / 100
+        fa, pa = _split_effects(a.effects())
+        fd, pd = _split_effects(d.effects())
+        active = {}          # (side, skill) -> rounds remaining
+        na, nd = dict(a.troops), dict(d.troops)
+        army_min = min(sum(na.values()), sum(nd.values()))
+        army_sqrt = math.sqrt(army_min)
+        rnd = 0
+        while rnd < max_rounds and sum(na.values()) > 0 and sum(nd.values()) > 0:
+            rnd += 1
+            # decide which procs are live this round
+            live = {'a': list(fa), 'd': list(fd)}
+            for side, procs in (('a', pa), ('d', pd)):
+                for sname, effs in procs.items():
+                    mode, p, dur = PROC_SPEC[sname]
+                    key = (side, sname)
+                    if mode == 'always':
+                        on = True
+                    elif mode == 'periodic':
+                        if rnd % p == 0:
+                            active[key] = dur
+                        on = active.get(key, 0) > 0
+                    else:
+                        if rng.random() < p:
+                            active[key] = dur
+                        on = active.get(key, 0) > 0
+                    if on:
+                        live[side].extend(effs)
+                    if key in active and active[key] > 0:
+                        active[key] -= 1
+            ae, de = live['a'], live['d']
+            ta = next((v for v in TYPES if nd[v] > 0), None)
+            td = next((v for v in TYPES if na[v] > 0), None)
+            kills_on_d = {t: 0.0 for t in TYPES}
+            kills_on_a = {t: 0.0 for t in TYPES}
+            for src, n_src, n_tgt, target, kills, my_effs, their_effs, other in (
+                    (a, na, nd, ta, kills_on_d, ae, de, d), (d, nd, na, td, kills_on_a, de, ae, a)):
+                for u in TYPES:
+                    if n_src[u] <= 0:
+                        continue
+                    army = math.sqrt(n_src[u]) * army_sqrt
+                    shares = [(target, 1.0)]
+                    if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
+                        shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
+                    for tgt, share in shares:
+                        mod = skill_mod(src, my_effs, u, other, their_effs, tgt)
+                        dead = share * army * A[(src.name, u)] / D[(other.name, tgt)] / 100 * mod
+                        kills[tgt] += math.ceil(dead)
+            for t in TYPES:
+                nd[t] = max(0, nd[t] - kills_on_d[t])
+                na[t] = max(0, na[t] - kills_on_a[t])
+        a_lost = sum(a.troops.values()) - sum(na.values())
+        d_lost = sum(d.troops.values()) - sum(nd.values())
+        return dict(rounds=rnd, a_lost=a_lost, d_lost=d_lost, a_left=na, d_left=nd,
+                    winner=(a.name if sum(nd.values()) == 0 and sum(na.values()) > 0 else
+                            d.name if sum(na.values()) == 0 else 'draw'))
+    finally:
+        PROC_SCALE = saved
 
 
 def ratio_troops(total, inf, cav, arch):

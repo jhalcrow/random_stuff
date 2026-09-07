@@ -78,10 +78,14 @@ hero, so `heroes.trios()` enumerates the 900 legal lineups.
     python3 run.py              # rank all 3,654 trios for rally attack, solo attack, garrison
     python3 analyze.py          # picks vs community meta, ratio search, reinforcement skills
     python3 joint.py 40         # optimise trio and troop ratio together
+    python3 elo.py 300          # Monte Carlo round-robin of top lineups, Elo by Bradley-Terry
     PROC_SCALE=0.5 python3 ...  # discount chance-based skills to half their expected value
 
 Account stats are the `USER_STATS` block in `sim.py` (from the Bonus Overview screenshot).
 The opponent is a mirror of those stats against a panel of meta lineups.
+
+`battle_mc()` rolls chance skills once per round at squad level and fires timed skills on their
+schedule (`heroes.PROC_SPEC`), instead of using expected values.
 
 Model caveats: TG6-8 troop skills are not modelled (symmetric on both sides); Sophia's
 Terror and Alcar's infantry skills carry large expected values and drive several results, so

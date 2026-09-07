@@ -174,6 +174,42 @@ HEROES = {
     ]),
 }
 
+# How each chance-based / timed skill actually triggers, for the Monte Carlo engine.
+#   ('chance', p, dur)      one squad-level roll per round with probability p; effect lasts dur rounds
+#   ('periodic', N, dur)    fires every N rounds (rounds N, 2N, ...) and lasts dur rounds
+#   ('always', 1, 1)        per-attack effects over thousands of troops: treated as deterministic
+# The active magnitude is the encoded expected value divided by the steady-state uptime.
+PROC_SPEC = {
+    'Unrighteous Strike': ('chance', 0.4, 1), 'Oath of Guardian': ('chance', 0.4, 1),
+    'Rally Flag': ('chance', 0.4, 1), "Hero's Domain": ('chance', 0.5, 1),
+    'Precision Shot': ('chance', 0.5, 1), 'Sundering Wound': ('chance', 0.2, 3),
+    'Infinite Arsenal': ('chance', 0.5, 1), 'Elixir of Strength': ('chance', 0.25, 1),
+    'Trial by Fire': ('chance', 0.4, 1), 'Wild Card': ('chance', 0.4, 1),
+    'Rumhead': ('chance', 0.2, 2), 'Dynamo': ('chance', 0.5, 1), 'Evil Eye': ('chance', 0.5, 1),
+    'The Favor': ('chance', 0.5, 1), 'The Shield': ('chance', 0.4, 1),
+    'The Tempest': ('chance', 0.2, 3), 'The Resistance': ('chance', 0.2, 2),
+    'Rescuing Hands': ('periodic', 5, 2), 'Carpe Diem': ('always', 1, 1),
+    'Subterfuge': ('always', 1, 1), 'Sleight Hand': ('always', 1, 1),
+    'Chaos Gambit': ('chance', 0.4, 1), 'Mighty Paragon': ('chance', 0.4, 1),
+    'Art of War': ('chance', 0.25, 1), 'Reckless Charge': ('chance', 0.2, 1),
+    'Ancestral Guidance': ('periodic', 4, 2), 'Focus Fire': ('periodic', 4, 1),
+    'Trap of Greed': ('periodic', 4, 1), 'Warfare of Power': ('always', 1, 1),
+    'Arcane Pact': ('chance', 0.4, 1), 'Terror Deathblow': ('periodic', 2, 1),
+    'Terror Annihilation': ('periodic', 2, 1), 'Avalanche': ('periodic', 4, 1),
+    'Ice Zone': ('chance', 0.4, 1), 'Ambush': ('chance', 0.4, 1),
+    'Chiaroscuro': ('periodic', 4, 2), 'Boom Boom': ('chance', 0.5, 1),
+}
+
+
+def proc_uptime(name):
+    mode, p, dur = PROC_SPEC[name]
+    if mode == 'chance':
+        return 1 - (1 - p) ** dur
+    if mode == 'periodic':
+        return dur / p
+    return 1.0
+
+
 LEGENDARIES = [h for h, d in HEROES.items() if d['rarity'] == LEG]
 BY_TYPE = {t: [h for h, d in HEROES.items() if d['type'] == t and h != 'Diana'] for t in ('inf', 'cav', 'arch')}
 
