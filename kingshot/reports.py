@@ -41,9 +41,12 @@ REPORTS = [
      {'inf': 6004, 'cav': 4000, 'arch': 0},  894),
     ('Ava 50/20/30',   'Ava',    ME_AVA,    {'inf': 5006, 'cav': 2000, 'arch': 3000},
      {'inf': 6004, 'cav': 4000, 'arch': 0}, 1573),
-    # Only two Chenko joiners landed on this one, and the infantry had just been upgraded a tier
-    # (icon badge 7 -> 8, worth ~20% on infantry base attack and health), so if anything it was
-    # favoured.  It still came last by a wide margin -- see the interaction note below.
+    # Only two Chenko joiners landed on this one.  The infantry icon reads Lv 11.0 here against
+    # Lv 10.9 in the other three, which is NOT a troop upgrade: the leader's own 10,000 are TG8
+    # T11 in every report, and the icon shows a weighted AVERAGE tier, so it only moves with the
+    # handful of joiner troops (6 of them, some below T11, drag it to 10.9; 2, both T11, leave it
+    # at 11.0).  Troop quality is therefore constant across all four -- and the reading doubles as
+    # an independent check on the joiner counts.
     ('Sophia 50/20/30', 'Sophia', ME_SOPHIA, {'inf': 5002, 'cav': 2000, 'arch': 3000},
      {'inf': 6004, 'cav': 4000, 'arch': 0},  580, 2),
 ]
