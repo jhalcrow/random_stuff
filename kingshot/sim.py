@@ -56,10 +56,16 @@ MARCH = 144_200          # Deployment Capacity from the Bonus Overview
 # kingshotdata.com hero pages: exp_atk/exp_def apply to the hero's own troop type; the weapon adds
 # Lethality and Health % to the same type.  These are NOT in the profile Bonus Overview.
 HERO_STATS = json.load(open(os.path.join(os.path.dirname(__file__), 'hero_stats.json')))
-# Max hero gear (verified in-game on two generations): +200% Attack/Defense and +600%
-# Lethality/Health to the hero's troop type, the same on every hero.
-GEAR_EXP_ATK = float(os.environ.get('GEAR_ATK', '200'))
-GEAR_EXP_LETH = float(os.environ.get('GEAR_LETH', '600'))
+# Max hero gear + expedition-stat calibration, fitted to the Stat Bonuses panel of two live
+# battle reports (2026-09-08, mail 223407017193981 and its Sophia twin: identical target, squad,
+# ratio and lineup except the cavalry hero, so Charles/Yang appear twice as a consistency check).
+#   lethality/health contribution = weapon_lv10 + 690.0   (fit slope 1.000, constant 690.0 in all
+#     six observations -> the weapon table is exact and max gear is +690%, not the +600% assumed)
+#   attack/defense  contribution = 0.833 * exp_atk + 58.7 (all six within 3.6 points; the raw
+#     exp_atk scrape overstates the in-battle number, so a flat +200% gear term was ~230 too high)
+GEAR_EXP_LETH = float(os.environ.get('GEAR_LETH', '690'))
+EXP_SCALE = float(os.environ.get('EXP_SCALE', '0.833'))
+EXP_OFFSET = float(os.environ.get('EXP_OFFSET', '58.7'))
 
 
 @dataclass
@@ -111,9 +117,9 @@ class Side:
                 continue
             hs = HERO_STATS[h]
             if key == 'attack':
-                s += hs['exp_atk'] + GEAR_EXP_ATK
+                s += EXP_SCALE * hs['exp_atk'] + EXP_OFFSET
             elif key == 'defense':
-                s += hs['exp_def'] + GEAR_EXP_ATK
+                s += EXP_SCALE * hs['exp_def'] + EXP_OFFSET
             else:   # lethality / health
                 s += hs['weapon_lv10'] + GEAR_EXP_LETH
         return s
