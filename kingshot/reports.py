@@ -53,6 +53,20 @@ def observed(kills):
     return kills * WOUND_SCALE / SENT
 
 
+def match_buffs(stats, pct=20.0):
+    """Strip a multiplicative buff stack of pct% off every line of a stat panel.
+
+    All three reports were fought while the defender had roughly a 20% buff-and-pet stack up
+    and the attacker had none, so the raw panels describe a badly one-sided fight.  Because the
+    engine's kill term is super-linear in the stat ratio, conclusions drawn from that regime do
+    not transfer to an even one -- run comparisons through here before trusting them.  A uniform
+    multiplicative buff applied to all four lines of BOTH sides cancels out of the kill ratio,
+    so this also stands in for "we both have our buffs up".
+    """
+    return {t: {k: (100 + v) / (1 + pct / 100) - 100 for k, v in s.items()}
+            for t, s in stats.items()}
+
+
 def replay(n=400, seed=31):
     rng = random.Random(seed)
     rows = []
