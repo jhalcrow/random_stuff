@@ -9,9 +9,11 @@ Two structural facts fall straight out of it:
    direct-damage channel is missing.  Charles is pure buff; Vivian deals damage on row 2;
    Sophia and Ava on row 5; Yang on rows 1, 2 and 5.
 
-2. Trigger counts are largely deterministic -- Vivian's row 2 fires exactly 12 times in every
-   report -- while her kills swing 321/432/562.  Fixed cadence with variable output is the
-   signature of a nuke whose damage is computed from stats, not a proc-chance multiplier.
+2. Trigger CADENCE looks deterministic even though battle outcomes are not: Vivian's row 2 fires
+   exactly 12 times in every report and Charles' first three rows exactly once, while Vivian's
+   kills swing 321/432/562.  Fixed cadence with variable output is the signature of a nuke whose
+   damage is computed from stats, not a proc-chance multiplier -- and it is a cheap structural
+   check, since a model with the right cadence must reproduce those counts exactly.
 
 Open question the current data cannot settle: Yang scored 203 kills with ZERO archers and 588
 with 3,000 next to Ava, but only 103 with 3,000 next to Sophia.  His nukes therefore do not
@@ -52,11 +54,18 @@ LOG = {
 # Skills the model currently has, against the row count the reports show.
 COVERAGE = {'Charles': (3, 4), 'Sophia': (3, 6), 'Ava': (3, 6), 'Yang': (3, 5), 'Vivian': (3, 3)}
 
+# What field testing can and cannot settle, at the simulator's own ~9% per-rally CV.
+# Repeats needed per arm to call an effect at 95%: 30% gap -> 1, 20% -> 2, 10% -> 7,
+# 5% -> 27, 2% -> 159.  The 900-trio ranking in run.py separates its top lineups by 2-5%,
+# so that ordering is NOT empirically checkable -- it has to come from a correct model.
+# The three big findings survive a single pair of rallies even if the real engine is twice
+# as noisy as the model: they stay 2-sigma up to a CV of 17% (Terror), 20% (archers) and
+# 42% (the hero x composition interaction).
 CALIBRATION_TESTS = [
-    ('noise floor', 'Repeat one config byte-for-byte (same heroes, ratio, joiners, target). '
-                    'Identical kills means the engine is deterministic and every report is worth '
-                    'a full Monte Carlo sweep; scatter tells us the noise floor, which no '
-                    'conclusion so far has accounted for.'),
+    ('noise floor', 'Repeat one config 4-5 times (same heroes, ratio, joiners, target) and record '
+                    'every kill count. The engine is known to be nondeterministic, so this measures '
+                    'the spread rather than testing for it -- and every error bar below depends on '
+                    'it. The simulator\'s own spread is ~9% CV; the real number is unmeasured.'),
     ('nuke scaling', 'Send 0/0/100 all-archer, then repeat at a different march size. Yang is the '
                      'only hero with three damage rows, so this isolates the direct-damage channel '
                      'and shows whether it scales with march size, troop count or neither.'),
