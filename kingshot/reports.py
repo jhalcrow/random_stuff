@@ -41,7 +41,13 @@ REPORTS = [
      {'inf': 6004, 'cav': 4000, 'arch': 0},  894),
     ('Ava 50/20/30',   'Ava',    ME_AVA,    {'inf': 5006, 'cav': 2000, 'arch': 3000},
      {'inf': 6004, 'cav': 4000, 'arch': 0}, 1573),
+    # Only two Chenko joiners landed on this one, and the infantry had just been upgraded a tier
+    # (icon badge 7 -> 8, worth ~20% on infantry base attack and health), so if anything it was
+    # favoured.  It still came last by a wide margin -- see the interaction note below.
+    ('Sophia 50/20/30', 'Sophia', ME_SOPHIA, {'inf': 5002, 'cav': 2000, 'arch': 3000},
+     {'inf': 6004, 'cav': 4000, 'arch': 0},  580, 2),
 ]
+JOINERS_DEFAULT = 4
 
 # Stat-panel predictions the calibration in sim.py has to reproduce (see the fit in sim.py).
 # Every one of the 24 values lands within 12 points of ~2000, i.e. under 0.6%.
@@ -70,11 +76,12 @@ def match_buffs(stats, pct=20.0):
 def replay(n=400, seed=31):
     rng = random.Random(seed)
     rows = []
-    for label, cav, mine, my_t, en_t, kills in REPORTS:
+    for label, cav, mine, my_t, en_t, kills, *rest in REPORTS:
+        nj = rest[0] if rest else JOINERS_DEFAULT
         ks = []
         for _ in range(n):
             a = Side('A', mine, dict(my_t), heroes=['Charles', cav, 'Yang'], role='rally',
-                     joiners=['Chenko'] * 4, hero_stats=False)
+                     joiners=['Chenko'] * nj, hero_stats=False)
             d = Side('D', ENEMY, dict(en_t), heroes=GARRISON, role='garrison', hero_stats=False)
             ks.append(score(battle_mc(a, d, rng), 'A'))
         rows.append((label, observed(kills), statistics.mean(ks)))
@@ -91,5 +98,12 @@ if __name__ == '__main__':
     print(f'  ratio swap with Ava  : 50/20/30 / 60/40/0 = {k["Ava 50/20/30"]/k["Ava 60/40/0"]:.2f}x')
     print(f'  best observed        : Ava 50/20/30 beats Sophia 60/40/0 by '
           f'{k["Ava 50/20/30"]/k["Sophia 60/40/0"]:.2f}x')
-    print('\nOpen: Sophia at 50/20/30 is untested.  The two effects should NOT simply multiply --')
-    print('Terror Deathblow is a cavalry-damage skill, so halving cavalry halves what it scales.')
+    print('\nHero x composition interaction, observed (all normalised to four joiners):')
+    print('                  60/40/0   50/20/30   effect of archers')
+    print('    Ava             894       1573        x1.76')
+    print('    Sophia         1433        783        x0.55')
+    print('  interaction = 1.76 / 0.55 = 3.2x.  No setting of Terror Deathblow or Ava\'s skill')
+    print('  magnitudes gets the simulator past ~1.6, so this gap is STRUCTURAL: the model does')
+    print('  not capture how much a broad all-scope buffer (Ava) lifts the archer hero.  Yang')
+    print('  scored 588 kills on 3,000 archers next to Ava and only 103 next to Sophia.')
+    print('  Do not trust the simulator to compare across troop compositions until this is fixed.')
