@@ -29,22 +29,32 @@ Truegold Provisions I L3/L6/L10, which needs all three Health I techs at that
 level, which chain back through Lethality -> Defense -> Attack of each troop.
 So the tree is bought in waves of "all 13 techs to level N".
 
-## Wave plan (cumulative)
+## Wave plan (cumulative) -- War Academy TG8, all tiers unlocked
 
-| Wave                          | dust | days | cum dust | cum days |
-|-------------------------------|-----:|-----:|---------:|---------:|
-| Econ: 7 economy nodes to L10  | 2330 |   41 |     2330 |       41 |
-| A: Tier I  x13 to L3          | 1794 |   26 |     4124 |       67 |
-| B: Tier I  x13 to L6          | 2301 |   34 |     6425 |      101 |
-| C: Tier II x13 to L3          | 2847 |   39 |     9272 |      140 |
-| D: Tier I  x13 to L9          | 3042 |   46 |    12314 |      185 |
-| E: Tier II x13 to L6          | 3666 |   50 |    15980 |      236 |
-| F: Tier I  x13 to L10         | 1352 |   21 |    17332 |      256 |
-| G: Tier II x13 to L9          | 4875 |   67 |    22207 |      323 |
-| H: Tier II x13 to L10         | 2158 |   30 |    24365 |      353 |
+Bands sorted by dust per +3% step.  At TG8 the cheap early levels of Tier III undercut the
+late levels of Tier I and II, so the tiers interleave instead of completing one at a time.
 
-Tier III+ needs War Academy TG7 and Tempered Truegold (Tier III alone: 14.6k
-dust, 416 Tempered Truegold, 343 days).
+| Band                 | dust/step | dust | days | Tempered | cum dust | cum days |
+|----------------------|----------:|-----:|-----:|---------:|---------:|---------:|
+| Economy: 7 nodes L10 |         - | 2330 |   41 |        0 |     2330 |       41 |
+| Tier I   x13 L1-3    |        46 | 1794 |   26 |        0 |     4124 |       67 |
+| Tier I   x13 L4-6    |        59 | 2301 |   34 |        0 |     6425 |      101 |
+| Tier II  x13 L1-3    |        73 | 2847 |   39 |        0 |     9272 |      140 |
+| Tier I   x13 L7-9    |        78 | 3042 |   46 |        0 |    12314 |      185 |
+| Tier III x12 L1-3    |        86 | 3096 |   66 |       72 |    15410 |      251 |
+| Tier II  x13 L4-6    |        94 | 3666 |   50 |        0 |    19076 |      302 |
+| Tier III x12 L4-6    |        98 | 3528 |   86 |      108 |    22604 |      387 |
+| Tier I   x13 L10     |       104 | 1352 |   21 |        0 |    23956 |      408 |
+| Tier II  x13 L7-9    |       125 | 4875 |   67 |        0 |    28831 |      474 |
+| Tier III x12 L7-9    |       130 | 4680 |  114 |      144 |    33511 |      588 |
+| Tier IV  x12 L1-3    |       135 | 4860 |  126 |      144 |    38371 |      714 |
+| Tier II  x13 L10     |       166 | 2158 |   30 |        0 |    40529 |      744 |
+
+Later bands (Tier IV L4+, Tier V, Tier VI) run 178 to 1032 dust per step; the full tree is
+172K dust, 4044 Tempered and 3573 days.
+
+Tier III+ needs War Academy TG7 and Tempered Truegold; Tier V/VI need TG8.  Tempered Truegold
+is also spent on TG9/TG10 building upgrades, so the two compete for the same stock.
 
 # Battle simulator (castle attack / garrison defense)
 

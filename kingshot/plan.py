@@ -66,13 +66,14 @@ while True:
         if not reqs_ok(t, l): continue
         L = t['levels'][l-1]; c = L['cost']
         d = c.get('Truegold Dust', 0); ttc = c.get('Tempered Truegold', 0)
+        if dust + d > DUST_BUDGET or days + L['hours']/24 > DAY_BUDGET or tt + ttc > TT_BUDGET:
+            continue                      # unaffordable: skip, don't end the plan
         v = stat_value(t)
         if v <= 0: v = 0.3
         score = d / v
         if best is None or score < best[0]: best = (score, n, l, d, L['hours']/24, ttc)
     if best is None: break
     score, n, l, d, dd, ttc = best
-    if dust + d > DUST_BUDGET or days + dd > DAY_BUDGET or tt + ttc > TT_BUDGET: break
     dust += d; days += dd; tt += ttc; lvl[n] = l
     plan.append(('combat', n, l, d, dd))
 
