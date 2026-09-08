@@ -110,3 +110,41 @@ if __name__ == '__main__':
     print('  not capture how much a broad all-scope buffer (Ava) lifts the archer hero.  Yang')
     print('  scored 588 kills on 3,000 archers next to Ava and only 103 next to Sophia.')
     print('  Do not trust the simulator to compare across troop compositions until this is fixed.')
+
+
+# ---------------------------------------------------------------- solo attacks
+# Two solo marches on the same Lv30 Gilded Baron 52 seconds apart, byte-identical setup.
+# Uniquely useful because the Baron's hero slots all read "Vacant" (no defender skills at all)
+# and because running the same config twice measures the engine's noise directly.
+SOLO_PANEL = {'inf': dict(attack=1960.8, defense=1933.2, lethality=1802.9, health=1799.0),
+              'cav': dict(attack=1828.7, defense=1801.7, lethality=1722.6, health=1725.4),
+              'arch': dict(attack=1831.5, defense=1801.4, lethality=1741.1, health=1736.7)}
+BARON = {t: dict(attack=3150.0, defense=3150.0, lethality=3150.0, health=3150.0)
+         for t in ('inf', 'cav', 'arch')}
+SOLO_TROOPS = {'inf': 101_805, 'cav': 40_722, 'arch': 61_083}     # 50/20/30, 203,610 total
+BARON_TROOPS = {'inf': 178_000, 'cav': 178_000, 'arch': 178_000}  # 534,000, flat thirds
+
+# (label, defender losses, my losses, hero-attributed kills)
+SOLO_RUNS = [('Baron solo A', 180_529, 203_610, 54_601),
+             ('Baron solo B', 159_421, 203_610, 49_435)]
+
+# What these two settled:
+#  * NOISE: kills 159,421 vs 180,529 -> CV 8.8% on n=2, against the simulator's 7.6% for this
+#    config.  My own casualties were byte-identical both times (409 injured, 203,201 lightly),
+#    so only the damage DEALT varies.
+#  * WIDGETS: the solo panel's infantry lethality reads 1802.9%, and 1802.87% is what the rally
+#    panel gives once the +15% rally widget is divided out.  Rally widgets do not fire on a solo
+#    march, confirmed to 0.03 points.
+#  * RESEARCH DRIFT since the rallies: attack and defense up 317-343 points on every type,
+#    lethality and health unchanged to 0.1.  Any comparison across that boundary must use each
+#    report's own panel.
+#  * ENGINE TERM: observed damage minus the hero-attributed kills is 117,957 on average; the
+#    simulator, which has no direct-damage channel at all, predicts 111,000 -- within 6%, against
+#    a different opponent, in solo role, at 20x the march size of every other report.  The core
+#    kills formula is sound; the entire shortfall is the missing nuke channel (30-31% of damage).
+#  * NUKES: per-trigger damage is stable run to run (Sophia 715 vs 731, Yang row5 819 vs 806),
+#    while trigger COUNTS swing hard (Sophia row5 fired 7 times then 3).  So model nuke magnitude
+#    as a deterministic function of state and the trigger count as the random variable.
+#  * CORRECTION to the note in skill_log.py: trigger cadence is NOT generally deterministic.
+#    Only some rows are fixed (Charles rows 1-3 and Yang row 1 were identical across both runs);
+#    the rest vary.  Vivian's 12/12/12 across three rallies was a fixed row, not a general rule.

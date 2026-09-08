@@ -9,11 +9,13 @@ Two structural facts fall straight out of it:
    direct-damage channel is missing.  Charles is pure buff; Vivian deals damage on row 2;
    Sophia and Ava on row 5; Yang on rows 1, 2 and 5.
 
-2. Trigger CADENCE looks deterministic even though battle outcomes are not: Vivian's row 2 fires
-   exactly 12 times in every report and Charles' first three rows exactly once, while Vivian's
-   kills swing 321/432/562.  Fixed cadence with variable output is the signature of a nuke whose
-   damage is computed from stats, not a proc-chance multiplier -- and it is a cheap structural
-   check, since a model with the right cadence must reproduce those counts exactly.
+2. SOME rows have fixed cadence and others do not.  Two identical solo attacks (see SOLO_RUNS in
+   reports.py) fired Charles' rows 1-3 and Yang's row 1 exactly the same number of times, while
+   Sophia's row 5 fired 7 times then 3 and Charles' row 4 fired 35 then 30.  Vivian's 12/12/12
+   across three rallies is one of the fixed rows, not evidence that cadence is deterministic in
+   general -- an earlier note here claimed the latter and was wrong.  What IS stable is per-trigger
+   damage (Sophia 715 vs 731 kills per trigger across those two runs), so a nuke should be modelled
+   as a deterministic magnitude with a random trigger count.
 
 Open question the current data cannot settle: Yang scored 203 kills with ZERO archers and 588
 with 3,000 next to Ava, but only 103 with 3,000 next to Sophia.  His nukes therefore do not
