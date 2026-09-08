@@ -89,6 +89,7 @@ hero, so `heroes.trios()` enumerates the 900 legal lineups.
     python3 analyze.py          # picks vs community meta, ratio search, reinforcement skills
     python3 joint.py 40         # optimise trio and troop ratio together
     python3 elo.py 300          # Monte Carlo round-robin of top lineups, Elo by Bradley-Terry
+    python3 research_value.py   # score a planner end state's stat gains in the battle sim
     PROC_SCALE=0.5 python3 ...  # discount chance-based skills to half their expected value
 
 Account stats are the `USER_STATS` block in `sim.py` (from the Bonus Overview screenshot).
