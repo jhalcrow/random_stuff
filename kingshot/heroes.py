@@ -152,8 +152,11 @@ HEROES = {
         ('Terror Annihilation', [('proc', 37.5, 'all')]),        # +75% vs terrified (1 of 2 turns)
     ]),
     'Yang': dict(gen=6, rarity=LEG, type='arch', widget=('rally', 'lethality', 15), skills=[
-        ('Avalanche', [('proc', 25, 'all')]),                    # extra 100% strike every 4 turns
+        # Order verified in game by the player: Ice Zone, Avalanche, Ambush.  Order is load
+        # bearing -- a JOINER contributes only skills[0], and it is how the Battle Details rows
+        # are numbered, which is what the nuke analysis in reports.py indexes by.
         ('Ice Zone', [('proc', 40, 'arch')]),                    # 40% chance +100%
+        ('Avalanche', [('proc', 25, 'all')]),                    # extra 100% strike every 4 turns
         ('Ambush', [('proc', 20, 'all')]),                       # 40% chance +50%
     ]),
     # ---------------- Gen 7 ----------------
