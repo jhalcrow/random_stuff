@@ -872,3 +872,30 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 #     and Charles is in every one of my lineups
 #   * composition interactions -- the mixed cells (2.04, 1.66) are worse than the single-type
 #     ones (1.47, 1.84), and Ambusher plus the archer abilities only bite on mixed marches
+
+
+# ------------------------------------------------- Charles verified: 9 for 9 on my own lineup
+#   Intimidation Lv.5   "reduces enemy Squad's Total Lethality by 20%"   -> e_leth 20, all   MATCH
+#   Iron Bodies Lv.5    "reducing Squad's Damage Taken by 20%"           -> taken 20, all    MATCH
+#   Great Justice Lv.5  "increasing Squad's total Health by 25%"         -> hp 25, all       MATCH
+# None of the three carries a chance or a duration, which independently confirms the PERMANENT
+# reclassification rather than resting on the single-trigger observation alone.
+#
+# Charles + Sophia + Yang is the entire lineup in every fitted cell, and all nine skills now match
+# the in-game text on kind, magnitude, scope AND schedule.  MY SIDE'S HERO DATA IS CLOSED.  What
+# remains unverified is the opponents' heroes -- Triton, Ava, Wee & Woo -- which are still prose
+# scrapes, and the composition interactions.
+#
+# STATE OF THE MODEL after a day of this:
+#   engine (formula, targeting, scale, tier/TG, attrition)     validated, k = 1 with skills off
+#   stat panel reconstruction                                   24/24 lines within 12 of ~2000
+#   widget stacking and special bonuses                         confirmed to 0.03 points
+#   troop abilities (5, incl. the restored Ambusher)            tooltip-sourced
+#   my heroes' 9 skills                                         tooltip-verified, 9/9
+#   per-rally noise                                             measured, 8.8% CV
+#   REMAINING: k = 2.04 / 1.47 / 1.84 / 1.66 across the sweep
+#
+# The mixed cells are the worst two, and every mechanic that bites only on mixed marches -- the
+# Ambusher redirect, and how Volley and Howling Wind compose with it -- is implemented from
+# tooltips but never validated as a SYSTEM.  That is the next place to look, and it is a code
+# question rather than a data-collection one.
