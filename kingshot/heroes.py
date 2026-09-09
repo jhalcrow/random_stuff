@@ -372,3 +372,47 @@ if _os.environ.get('JOINERS_ATT'):
     ATTACK_JOINERS = [x.strip() for x in _os.environ['JOINERS_ATT'].split(',')]
 if _os.environ.get('JOINERS_DEF'):
     DEFENSE_JOINERS = [x.strip() for x in _os.environ['JOINERS_DEF'].split(',')]
+
+
+# ---------------------------------------------------------------- SKILL LEVEL PROVENANCE
+# EVERY VERIFIED MAGNITUDE ABOVE WAS READ OFF A SPECIFIC ACCOUNT'S HERO AT A SPECIFIC SKILL LEVEL,
+# and skill level is per-account.  Narses has NOT fully upgraded his, so Long Fei's and Rosa's
+# tooltips read Lv. 4 while Jabel's read Lv. 5.  Those Lv. 4 numbers are correct for scoring the
+# Narses fights in reports.py and WRONG as canonical hero data: Belisarius has every hero fully
+# upgraded, so ranking his own march options against a Lv. 4 Long Fei under-rates that hero.
+#
+# Long Fei, Jabel and Rosa are all in LEGENDARIES, which run.py, elo.py, gear.py, waves.py and
+# research_value.py draw on to rank Belisarius' lineups.  Two of the three are under-levelled here.
+SKILL_LEVEL = {
+    # read at Lv. 5 -- believed max, so usable as canonical
+    'Command of Power': 5, 'Warfare of Power': 5, 'Oath of Power': 5,          # Triton
+    'Dissolution': 5, 'Chiaroscuro': 5, 'Light and Cold': 5,                   # Ava
+    'Rally Flag': 5, "Hero's Domain": 5, 'Youthful Rage': 5,                   # Jabel
+    # read at Lv. 4 on Narses' account -- BELOW MAX, do not treat as canonical
+    'Mighty Paragon': 4, 'Celestial Sustenance': 4, 'Art of War': 4,           # Long Fei
+    'Chaos Gambit': 4, 'Enchanting Dance': 4, 'Golden Rhythm': 4,              # Rosa
+}
+MAX_SKILL_LEVEL = 5
+UNDERLEVELLED = {h for h, d in HEROES.items()
+                 for n, _ in d['skills']
+                 if SKILL_LEVEL.get(n, MAX_SKILL_LEVEL) < MAX_SKILL_LEVEL}
+
+# The Lv. 4 -> Lv. 5 step cannot be inferred from what is recorded.  The two levels are never seen
+# for the same skill, and the scraped values these replaced were wrong by inconsistent factors
+# (Chiaroscuro 25 vs a true 50, Warfare of Power 6 vs a true 30), so they carry no curve either.
+# Guessing one would be exactly the kind of fitted constant this project keeps having to retract.
+
+
+def warn_underlevelled(lineup, where=''):
+    """Return a warning string if a lineup contains a hero whose magnitudes are below max.
+
+    Use this anywhere Belisarius' OWN options are being ranked -- his heroes are all maxed, so a
+    hero carrying an opponent's Lv. 4 numbers is silently under-rated in that comparison.
+    """
+    bad = [h for h in lineup if h in UNDERLEVELLED]
+    if not bad:
+        return ''
+    verb = 'carries' if len(bad) == 1 else 'carry'
+    return (f"  !! {', '.join(bad)} {verb} Lv.4 magnitudes read off Narses' account, below max"
+            + (f" ({where})" if where else "")
+            + " -- under-rated here; see heroes.SKILL_LEVEL")

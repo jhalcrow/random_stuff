@@ -11,6 +11,7 @@ Scores are kill ratios (enemy troops lost / your troops lost) averaged over the 
 import itertools, sys, statistics
 from sim import (Side, USER_STATS, MARCH, TYPES, battle, ratio_troops, score, HEROES,
                  LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS)
+from heroes import warn_underlevelled, UNDERLEVELLED
 from heroes import trios
 
 QUICK = '--quick' in sys.argv
@@ -77,6 +78,15 @@ def rank(evalfn, label, **kw):
           f'{len(DEF_PANEL)} enemy lineups) ===')
     for g, wins, trio in rows[:15]:
         print(f'  {g:6.3f}  wins {wins}/4  {", ".join(trio)}')
+    # Some LEGENDARIES carry magnitudes read off an opponent's under-levelled hero.  Belisarius'
+    # own heroes are all maxed, so those are under-rated in any ranking of HIS options.
+    shown = {h for _, _, trio in rows[:15] for h in trio} & UNDERLEVELLED
+    if shown:
+        print(warn_underlevelled(sorted(shown), 'ranked above'))
+    missing = UNDERLEVELLED - shown
+    if missing:
+        print(f'  !! {", ".join(sorted(missing))} absent from the top 15 and also under-levelled,'
+              f' so their absence is not evidence either')
     # marginal value per hero: mean score of trios containing the hero, over the top 300
     top = rows[:300]
     per = {}

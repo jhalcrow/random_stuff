@@ -1777,3 +1777,27 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #
 # STATE: mean k 1.76, spread 0.27-3.39, rms log err 0.899.  This is a REGRESSION in fit and an
 # advance in correctness, and the two should not be confused.  The model was accidentally right.
+
+
+# ------------------------------------------------- skill level is per ACCOUNT, not per hero
+# Narses has not fully upgraded his heroes.  His tooltips read Long Fei Lv. 4, Rosa Lv. 4, Jabel
+# Lv. 5, while Triton's and Ava's on Terry's account all read Lv. 5.  So the nine magnitudes above
+# are correct for scoring the NARSES fights and wrong as canonical hero data -- Belisarius has
+# every hero maxed, and Long Fei, Jabel and Rosa are all in LEGENDARIES, which run.py, elo.py,
+# gear.py, waves.py and research_value.py draw on to rank HIS lineups.
+#
+# THIS WAS LIVE CONTAMINATION, not a hypothetical: Long Fei and Rosa both appear in run.py's top
+# 15 trios, so writing Narses' Lv. 4 numbers into heroes.py silently under-rated two legendaries
+# in every recommendation the tool would have made.  Caught only because the player said so.
+#
+# heroes.SKILL_LEVEL now records the level each verified magnitude was read at, UNDERLEVELLED
+# names the heroes below max (Long Fei, Rosa), and run.py prints a warning whenever either shows
+# up in a ranking.  The Lv.4 -> Lv.5 step is NOT guessed: the two levels are never seen for the
+# same skill, and the scraped values they replaced were wrong by inconsistent factors
+# (Chiaroscuro 25 against a true 50, Warfare of Power 6 against a true 30), so they carry no curve.
+#
+# WHAT WOULD FIX IT PROPERLY: the same nine tooltips off an account that has them maxed, or the
+# same hero at two levels so the step can be measured.  Until then those two heroes are usable for
+# scoring Narses and not for choosing Belisarius' marches.
+# NOTE the allfights scoring is unaffected -- those fights ARE against Narses at his own levels --
+# so the 0.899 regression and the per-attack proc finding stand exactly as recorded above.
