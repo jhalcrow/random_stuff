@@ -839,3 +839,36 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # rather than masked.  The mixed cells (2.04, 1.66) are the worst, which points at composition
 # interactions: Ambusher, the archer abilities, and the ambush target all touch mixed marches and
 # nothing else.
+
+
+# ------------------------------------------------- all six Yang/Sophia skills verified exact
+# Tooltips, verbatim, against what heroes.py already held:
+#   Ice Zone Lv.5      "granting Yang's archers a 40% chance of dealing 100% extra damage to the
+#                       target for each attack"            -> 0.40, EV 40, archers   MATCH
+#   Avalanche Lv.5     "an additional strike against a target by all Squads every 4 turns for
+#                       100% damage"                       -> 1-in-4, EV 25, all     MATCH
+#   Ambush Lv.5        "a 40% chance of increasing Squad's Damage Dealt by 50%"
+#                                                          -> 0.40, EV 20, all       MATCH
+#   Arcane Pact Lv.5   "a 40% chance of reducing Squad's Damage Taken by 50% every turn"
+#                                                          -> 0.40, EV 20, all       MATCH
+#   Terror-Deathblow   "Terror every 2 turns ... 200% increased Cavalry damage ... lasts 1 turn"
+#                                                          -> 1-in-2, EV 100, cav    MATCH
+#   Terror-Annihilation "All Squads deal 75% increased damage to Terrified targets"
+#                                                          -> 1-in-2, EV 37.5, all   MATCH
+# Six for six on magnitude, uptime AND scope.  Row order confirmed too (Ice Zone 1, Avalanche 2,
+# Ambush 3).  These two heroes appear in every fitted cell, so HERO SKILL DATA IS NO LONGER A
+# SUSPECT for the residual -- which was the lead named at the end of the previous note, and it is
+# now closed.
+#
+# THE ROUND COUNT WAS RIGHT ALL ALONG.  Yang's three skills independently imply ~28 rounds for the
+# Terry 20k fight (11/0.40, 7/0.25, 11/0.40) and the simulator gives 29.  The earlier inference
+# that "the real fights ran ~15" came from Sophia's counts, and those are low because her cavalry
+# died at round ~16 -- the very mechanic since implemented.  Two wrong readings in a row from the
+# same numbers: first that they measured uptime, then that they measured battle length.  They
+# measure uptime x survival, and only Yang's (whose archers lasted) isolate either.
+#
+# REMAINING SUSPECTS, now that hero skills and round count are both cleared:
+#   * the OTHER heroes' magnitudes -- Charles, Triton, Ava, Wee & Woo are still prose scrapes,
+#     and Charles is in every one of my lineups
+#   * composition interactions -- the mixed cells (2.04, 1.66) are worse than the single-type
+#     ones (1.47, 1.84), and Ambusher plus the archer abilities only bite on mixed marches
