@@ -196,3 +196,34 @@ NARSES_ROWS = {'Long Fei': [(8, 0), (1, 0), (11, 11)],
 # ABSOLUTE level of that fit rests on an unobservable, so "mean ratio 0.98" is weaker than it
 # looked.  What would settle it is any fight where the opponent's troop tier and Truegold level
 # are known rather than inferred.
+
+
+# ---------------------------------------------------------------- first defence
+# Narses attacked with his whole 123,570 (T10 TG2, confirmed by the player, not inferred).
+# I garrisoned 5,000 at 50/20/30 with Charles / Sophia / Yang and held, losing 292.
+DEFENCE = dict(my_troops={'inf': 2_500, 'cav': 1_000, 'arch': 1_500}, my_losses=292,
+               enemy=NARSES, enemy_troops=NARSES_TROOPS, enemy_losses=123_570)
+
+# DEFENDER WIDGETS DO NOT FIRE WHEN DEFENDING YOUR OWN CITY.
+# My Stat Bonuses panel is byte-identical across a solo attack and this defence
+# (inf 1960.8 / 1933.2 / 1802.9 / 1799.0), while the rally panel shows Yang's rally
+# lethality widget applied (1802.9 -> 2088.3, +15%).  Charles' defender-health and Sophia's
+# defender-lethality widgets contributed nothing here.  Either they require reinforcing
+# ANOTHER player's city, or the widget slots are misclassified in heroes.py.  Every garrison
+# recommendation made before this report assumed they fire.
+
+# COMBAT ALWAYS RUNS UNTIL ONE SIDE IS WIPED (confirmed by the player).  Nothing is ever
+# censored, so the winner's own losses are the informative quantity in every report.  Narses'
+# 123,570 wiped in both fights with an identical 43,251 / 80,319 split, which re-confirms that
+# the wound split is deterministic given a full wipe.
+
+# FIRST FULLY-SPECIFIED TWO-SIDED TESTS (both tiers and Truegold levels known):
+#   I defend with 5,000: observed 292 lost, sim 308  -> 1.05x   excellent
+#   I attack with 10,000: observed 239 lost, sim 391 -> 1.63x   over-predicts my losses
+# The asymmetry is about 5 sigma against the measured 8.8% noise but rests on one report each.
+# It is the open question a repeat of both directions would settle.
+
+# The Gilded Baron is confirmed as an event monster with a scripted stat block: a real player
+# at T10 TG2 fits the engine, while the Baron at the same nominal tier/TG gives 204,077 against
+# 117,957 observed.  The Baron-based "mean ratio 0.98" should be read as validating the SHAPE
+# of the march-size scaling only; the Narses pair is now the real absolute check.
