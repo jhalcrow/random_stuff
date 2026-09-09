@@ -728,3 +728,12 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # setting, so the residual is not uptime alone -- the skill VALUES and SCOPES in heroes.py are
 # scraped from prose and remain unverified, and the all-infantry cell (1.97) is still the separate
 # structural bug it has been all along.  Uptimes are now data; magnitudes are still guesses.
+
+# REGRESSION TO FLAG, not to bury: the four early N2DBLG rally fits got WORSE with these changes.
+#   before  1.04 / 1.14 / 0.76 / 1.74      after  1.70 / 1.75 / 3.25 / 4.09
+# Those four are the least trustworthy data in this file -- multi-player rallies, joiner skills
+# whose uptimes are still unmeasured and therefore still flat-on, and an opponent panel carrying
+# a 20% buff stack -- but that is an explanation, not an excuse.  Two candidates: the joiners
+# (4x Chenko in every one of them) are the only skills left running at flat uptime, and the
+# heterogeneous-rally problem recorded earlier is untouched.  Measuring Chenko's uptime from a
+# rally report's Battle Details is the cheap test.
