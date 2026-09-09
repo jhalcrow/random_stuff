@@ -1012,3 +1012,27 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # What it is actually good for: confirming base_stats() and sqrt(n_u * army_min) still agree with
 # a third-party worked example.  Everything else should be judged by allfights.py, which scores
 # the real engine against eight measured battles.  Docstring corrected accordingly.
+
+
+# ------------------------------------------------- next test, pre-registered
+# k measures the LOSING side's cumulative damage output.  Grouped by WHOSE output that is:
+#     Narses' output over-predicted by  1.14, 1.04, 1.13, 1.53   mean 1.21
+#     MY output over-predicted by       1.49, 1.83, 1.64, 2.01   mean 1.74
+# So this was never a win/lose effect -- it is an asymmetry between the two sides, and the side
+# whose output is over-predicted is the one sitting at 2,379% infantry attack against Narses' 521%.
+# That fits a soft cap or diminishing return on very high stat multipliers.
+#
+# BUT STATS AND WIN/LOSE ARE CONFOUNDED: I beat the weak opponent and lose to the strong ones, so
+# every fight measuring MY output is also a fight I lost.  Nothing in the set separates them.
+#
+# THE TEST: a march small enough to LOSE to Narses.  That measures MY output against a weak
+# opponent, which no existing fight does.  500 troops at 50/20/30 is comfortably past the
+# crossover (the simulator has 1,000 winning 99% of the time and 700 winning 1%), and since the
+# simulator over-predicts my output, reality will lose at 500 at least as readily.
+#
+# PRE-REGISTERED PREDICTIONS for 500 troops at 50/20/30 vs Narses' 61,785 inf + 61,785 archers:
+#     simulator says he loses 38,860 and I am wiped.
+#     if the over-prediction follows MY side (a stat-level cap):  he really loses ~22,900  (k 1.7)
+#     if it follows the OPPONENT (something about Terry/opp2):    he really loses ~32,400  (k 1.2)
+# Those are far enough apart that one report decides it.  Capture his actual army composition --
+# he has been wiped twice today, and healed troops may have changed the mix.
