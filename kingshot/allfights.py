@@ -66,6 +66,25 @@ FIGHTS = [
 ]
 
 
+# Truegold troop abilities are per-troop-type research, so a low-TG opponent lacks what a TG8
+# account has.  Keyed by fight label; anything absent is uncapped.
+#
+# ONLY THE PROVEN CAP IS APPLIED.  Narses' Long Fei shows three rows -- his skills, no Unyielding
+# Shield -- with 61,785 infantry over ~152 rounds, so his TG2 infantry demonstrably lacks it.
+# His Jabel and Rosa each show ONE troop-ability row where my TG8 cavalry shows three and archers
+# two, so he is short there too, but WHICH ability each row is cannot be read from the panel.
+# Guessing it (cav=0, arch=1) overshoots badly -- Narses' six go to mean|log| 0.132, against
+# 0.034 for the infantry cap alone and 0.096 for no cap at all.  So the guess is left out.
+ENEMY_TROOP_ABILITIES = {
+    'Narses pure-arch 5k':   {'inf': 0},
+    'Narses mixed atk 10k':  {'inf': 0},
+    'Narses mixed def 5k':   {'inf': 0},
+    'Narses inf+arch 1k':    {'inf': 0},
+    'Narses 500 solo':       {'inf': 0},
+    'Narses 1500 pure inf':  {'inf': 0},
+}
+
+
 def score(n=200, seed=1234):
     rng = random.Random(seed)
     out = []
@@ -75,7 +94,8 @@ def score(n=200, seed=1234):
             a = Side('A', mp, dict(mt), heroes=['Charles', 'Sophia', 'Yang'], role=mr, joiners=[],
                      hero_stats=False, tier=11, tg=8, widget_default=0.0)
             d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
-                     joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0)
+                     joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
+                     troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}))
             if mr == 'garrison':
                 a, d = d, a
                 r = battle_mc(a, d, rng)

@@ -133,6 +133,13 @@ class Side:
     # no counter bonus at all, and reorders targeting only on every 20th round and only for units
     # carrying the biker/sniper perk -- not a flat per-round bypass.  Defaults are now 0; the
     # fields stay so the assumption can be re-tested.
+    # Truegold troop abilities are researched PER TROOP TYPE and unlock progressively, so a TG2
+    # opponent does not field what a TG8 account does.  Measured in one report, same rounds, both
+    # sides: my TG8 shows 1 infantry / 3 cavalry / 2 archer ability rows, Narses' TG2 shows
+    # 0 / 1 / 1.  {type: n} caps how many TROOP_SKILLS entries of that type apply, in list order;
+    # a type left out is uncapped.  Ambusher is not a TROOP_SKILLS entry -- switch it off for a
+    # side that lacks it with ambusher=0.0.
+    troop_abilities: dict = field(default_factory=dict)
     triangle: float = 0.0                        # counter bonus % (archers>infantry etc.) -- unsourced
     ambusher: float = 0.20                       # cavalry 'Ambusher': 20% chance to bypass Infantry
                                                  # and hit Archers -- tooltip-confirmed, Kingshot-specific
@@ -155,14 +162,21 @@ class Side:
             sname, effs = HEROES[h]['skills'][0]
             for kind, v, scope in effs:
                 out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
-        # Truegold gear skills, carried by the account rather than a hero.  Every PvP report in
-        # reports.py shows both sides with Unyielding Shield firing, so it applies whenever the
-        # side fields any hero at all.
+        # Truegold troop abilities, carried by the account's War Academy research rather than by a
+        # hero.  This used to hand every ability to any side fielding a hero, on the grounds that
+        # "every PvP report shows both sides with Unyielding Shield firing".  That is false:
+        # Narses' Long Fei shows no Unyielding Shield row at all, with 61,785 infantry over ~152
+        # rounds, so a TG2 account simply does not have it.  See Side.troop_abilities.
         if TROOP_SKILLS_ON:
-            for sname, kind, v, _p, ttype in TROOP_SKILLS:
-                if sname in TROOP_SKILLS_OFF:
-                    continue
-                out.append((kind, v * SKILL_SCALE, ttype, f'Troop:{sname}'))
+            for ttype in TYPES:
+                avail = [x for x in TROOP_SKILLS if x[4] == ttype]
+                cap = self.troop_abilities.get(ttype)
+                if cap is not None:
+                    avail = avail[:max(0, cap)]
+                for sname, kind, v, _p, _t in avail:
+                    if sname in TROOP_SKILLS_OFF:
+                        continue
+                    out.append((kind, v * SKILL_SCALE, ttype, f'Troop:{sname}'))
         return out
 
     def special_bonus(self):

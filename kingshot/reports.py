@@ -1522,3 +1522,37 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # is the same discipline as refusing the max-widget "improvement" three entries above, and the
 # opposite of what k-chasing did for most of this session.  What the regression actually says is
 # that something else is compensating for the absent cavalry mitigation, which is a lead.
+
+
+# ------------------------------------------------- Truegold gates troop abilities (per type)
+# Reported: the sixth ability modifies the other Truegold ability and these unlock at higher TG.
+# The tooltip agrees on the first half in the game's own words -- "the REFORGED [Assault Lance]".
+# Community sources do not document the progression at all: searched, and fetched kingshot.net
+# and kingshotdata.com War Academy pages, neither of which carries ability names, chances or
+# unlock levels.  One summary gave base-unlock values of 25% / 10% / 20% for Unyielding Shield,
+# Assault Lance and Howling Wind -- exactly two-thirds of the 37.5 / 15 / 30 tooltips in this
+# file, consistent with the values scaling by TG level -- but that is an unverified summary and is
+# NOT used for anything.
+#
+# THE REPORTS PROVE IT DIRECTLY, which is better than any source.  One fight, same rounds, both
+# sides, counting troop-ability rows (rows 4+):
+#     mine, TG8    Charles inf 1     Sophia cav 3     Yang arch 2
+#     Narses, TG2  Long Fei inf 0    Jabel  cav 1     Rosa arch 1
+# Long Fei shows three rows -- his skills and nothing else -- with 61,785 infantry over ~152
+# rounds.  Unyielding Shield would have fired dozens of times.  HIS TG2 INFANTRY DOES NOT HAVE IT.
+# sim.py handed every troop ability to any side fielding a hero, on the explicit and now-falsified
+# grounds that "every PvP report shows both sides with Unyielding Shield firing".
+#
+# Side.troop_abilities now caps them per troop type.  ONLY THE PROVEN CAP IS APPLIED:
+#     variant                      Narses six mean|log|    all ten rms
+#     no gate                             0.096               0.377
+#     inf=0 only (proven)                 0.034               0.367
+#     inf=0 cav=0 arch=1 (guessed)        0.132               0.381
+# His cavalry and archer rows are short too, but the panel does not say WHICH ability each is, and
+# guessing overshoots worse than not gating at all.  Left out until a tooltip settles it.
+#
+# WHERE THAT LEAVES THE MODEL.  All six Narses fights: 0.94, 0.99, 1.06, 0.94, 0.90, 0.99.
+# Against the one opponent whose troops, tiers, buff state, heroes AND Truegold ability set are
+# all pinned down, the simulator is within 10% everywhere and within 6% in five of six.  Every
+# remaining error in the set is Terry and opponent-2 (1.49-1.99), both TG8 so ungated, both with
+# unverified scraped heroes.  The residual is now entirely on the unverified side of the data.
