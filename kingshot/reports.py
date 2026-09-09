@@ -2084,3 +2084,45 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # proc heroes are still fine and the break is at three, which the full Charles+Sophia+Yang march
 # would then pin down (simulator: 5 losses, and 5 is small enough that any real number at all
 # would settle it).
+
+
+# ------------------------------------------------- SOPHIA + YANG (mail 223407017263680)
+# Two proc heroes, Infantry slot Vacant, same 10,000 against the same heroless Narses.
+#     VICTORY: I lose 15 + 26 = 41 of 10,000.  SIMULATED 25.  k = 0.62.
+# PRE-REGISTERED PREDICTION CONFIRMED: "if the combination is the fault, reality will come in
+# well above 25".  It came in at 41, and the model is crediting Sophia with dividing losses by
+# 2.4 (60 -> 25) when she really divides them by 1.78 (73 -> 41).
+#
+# THE PANEL LANDED EXACTLY FOR A THIRD HERO: cavalry 1820.7 / 1809.7 / 1724.3 / 1726.1, predicted
+# from hero_stats.json plus the +200 / +600 gear.  Charles, Yang and Sophia now all reconstruct to
+# the decimal, on three different troop types, so the stat half of the hero layer is settled and
+# every remaining error is skills.
+#
+# SOPHIA'S WIDGET DOES NOT AFFECT THIS MEASUREMENT.  It is ('defender', 'lethality', 15) and the
+# panel carries no widget term -- cavalry lethality is exactly base + weapon + gear -- so if it
+# fires it is applied in battle rather than in the panel.  Either way +15 on a 1724.3 multiplier
+# is a rounding error here: forcing it on moves the simulated losses from 25.4 to 25.4.  It stays
+# an open question for garrison fights, where the multiplier is smaller and the gate is the one
+# that matters; it is not one for this ladder.
+#
+# ------------------------------------------------- THE HERO LADDER (ladder.py)
+# Four fights, same target, same troops, heroes added one at a time, every panel predicted before
+# the report arrived:
+#     0 heroes        observed  687   sim  726   k 1.06
+#     Charles         observed   39   sim   44   k 1.12    three auras, zero procs
+#     Yang            observed   73   sim   60   k 0.83    three procs, zero auras
+#     Sophia+Yang     observed   41   sim   25   k 0.62    two proc heroes, six procs
+# k FALLS MONOTONICALLY WITH HERO COUNT.  One hero of either kind is fine; the error appears only
+# on combining them and compounds with how many are combined.  Extrapolating the per-hero
+# over-credit lands close to where the three-hero Terry fights sit.
+#
+# THE REFERENCE COMBINATION RULE HELPS AND IS NOT ENOUGH.  Patching _prod so procs ACCUMULATE into
+# one coefficient per kind (Skill.damage(): coef = coef + value/100) instead of each contributing
+# its own factor moves every fight the right way and cuts the ladder rms from 0.264 to 0.204:
+#     0 heroes 1.06 -> 1.08   Charles 1.12 -> 1.16   Yang 0.83 -> 0.89   Sophia+Yang 0.62 -> 0.70
+# Right direction on all four, so accumulation is part of the answer, but Sophia+Yang is still
+# 0.70 and the monotone decline survives.  Something else about combining heroes is still missing.
+# NOT APPLIED YET: it is a real improvement on a clean four-point ladder, but adopting it while a
+# second combination effect is still unidentified risks the same two-errors-cancelling trap that
+# the verified magnitudes exposed.  The ladder makes that testable now -- any candidate rule has
+# to flatten k across all four, not just lower an average.
