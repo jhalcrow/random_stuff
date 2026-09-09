@@ -103,9 +103,19 @@ HERO_STATS = json.load(open(os.path.join(os.path.dirname(__file__), 'hero_stats.
 #     six observations -> the weapon table is exact and max gear is +690%, not the +600% assumed)
 #   attack/defense  contribution = 0.833 * exp_atk + 58.7 (all six within 3.6 points; the raw
 #     exp_atk scrape overstates the in-battle number, so a flat +200% gear term was ~230 too high)
-GEAR_EXP_LETH = float(os.environ.get('GEAR_LETH', '690'))
-EXP_SCALE = float(os.environ.get('EXP_SCALE', '0.833'))
-EXP_OFFSET = float(os.environ.get('EXP_OFFSET', '58.7'))
+# Hero GEAR, on top of the expedition stats and exclusive weapon in hero_stats.json.  These were
+# FITTED to two reports (0.833 * exp_atk + 58.7, and weapon + 690) and are now MEASURED directly:
+# the Charles-only report (mail 223407017263368) has one hero against a heroless baseline taken
+# 30 minutes earlier, so the panel delta IS his contribution, and it is exactly
+#     attack / defense    650.52 (his exp_atk) + 200.0
+#     lethality / health  160.50 (his weapon)  + 600.0
+# Round numbers, where the fit gave 600.58 and 850.50 -- the fitted attack was 30% low and the
+# fitted lethality 12% high, and they had the two constants the wrong way round in size.
+# CAVEAT: gear is per-hero equipment, not an account-wide constant.  This is Belisarius' Charles
+# (four +100 Lv.20 pieces and a +10).  Applying it to every hero is the same assumption the old
+# constants made, now at least anchored to a measurement instead of a two-point fit.
+GEAR_EXP_ATK = float(os.environ.get('GEAR_ATK', '200'))
+GEAR_EXP_LETH = float(os.environ.get('GEAR_LETH', '600'))
 
 
 @dataclass
@@ -218,9 +228,9 @@ class Side:
                 continue
             hs = HERO_STATS[h]
             if key == 'attack':
-                s += EXP_SCALE * hs['exp_atk'] + EXP_OFFSET
+                s += hs['exp_atk'] + GEAR_EXP_ATK
             elif key == 'defense':
-                s += EXP_SCALE * hs['exp_def'] + EXP_OFFSET
+                s += hs['exp_def'] + GEAR_EXP_ATK
             else:   # lethality / health
                 s += hs['weapon_lv10'] + GEAR_EXP_LETH
         return s

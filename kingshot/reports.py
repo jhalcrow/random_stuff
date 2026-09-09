@@ -2002,3 +2002,43 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #   Yang's 22 rounds is worth watching on its own: three procs at full magnitude end the fight six
 #   times faster than no heroes at all, which is the over-application showing up as a round count
 #   rather than as a loss total, and Avalanche's trigger count will measure it directly.
+
+
+# ------------------------------------------------- CHARLES ONLY (mail 223407017263368)
+# 10,000 at 5,000/2,000/3,000 against the same heroless Narses, 30 minutes after the baseline.
+# Cavalry and Archer slots read Vacant on both sides; only Charles is fielded.
+#     VICTORY: I lose 15 + 24 = 39 of 10,000.  He is wiped.
+#     SIMULATED 44.  k = 1.12.
+#
+# THE AURA CHANNEL IS CORRECT.  With the core at 1.05 and core-plus-three-auras at 1.12, and the
+# full lineup against Terry at 2.3-5.4, THE FAULT IS IN PROCS.  That is the outcome this test was
+# pre-registered to distinguish, and it lands on the branch that localises the bug to _prod.
+#
+# MY PANEL PREDICTION WAS WRONG, AND USEFULLY SO.  I predicted infantry attack 1752.8 from
+# hero_stats.json alone and the report reads 1952.8 -- I forgot hero GEAR.  Because this fight has
+# exactly one hero against a heroless baseline, the delta IS his whole contribution:
+#     attack / defense    1102.3 -> 1952.8   = exp_atk 650.52 + EXACTLY 200.0
+#     lethality / health  1042.4 -> 1802.9   = weapon  160.50 + EXACTLY 600.0
+#     cavalry and archer lines unchanged, as predicted
+# sim.py had these FITTED to two reports as 0.833*exp_atk + 58.7 and weapon + 690, giving 600.58
+# and 850.50.  The fitted attack was 30% low, the fitted lethality 12% high, and the two constants
+# were the wrong way round in size.  Replaced with the measured +200 / +600, which reconstructs
+# the panel exactly.  This is the last fitted constant in the project and it is now measured.
+# CAVEAT: gear is per-hero equipment (Charles carries four +100 Lv.20 pieces and a +10), so
+# applying one hero's gear to all of them is still an assumption -- the same one the fitted
+# constants made, now anchored to a measurement rather than to a two-point fit.
+# It does not touch allfights, which runs hero_stats=False against reported panels, but it does
+# touch every ranking in run.py, elo.py, gear.py and waves.py, which run hero_stats=True.
+
+# ------------------------------------------------- next test, pre-registered: YANG ONLY
+# Same 10,000 at 5,000/2,000/3,000, same target, Infantry and Cavalry slots Vacant.  Yang is three
+# procs and zero auras, the exact complement of Charles.
+#     panel must read  archer attack 1823.5, defense 1809.4, lethality 1742.7, health 1737.6
+#                      (1083.1 + 540.43 + 200, and 1009.2 + 133.5 + 600)
+#     simulator says my losses 60 in 4 ROUNDS.
+# FOUR ROUNDS IS THE PREDICTION TO WATCH, not the loss total.  Three procs at full magnitude end
+# an 84:1 fight in a quarter of the time the same troops take with Charles' three auras (10) or
+# with no heroes at all (138).  Avalanche is periodic 4, so the sim says it fires ABOUT ONCE.  If
+# the report shows Avalanche firing five or ten times, the fight really lasted 20-40 rounds and
+# the proc channel is over-applied by exactly that factor -- measured directly off the row, with
+# no fitting and no reliance on the loss total at all.
