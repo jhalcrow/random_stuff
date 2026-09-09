@@ -447,3 +447,45 @@ TERRY_ATTACK_ENEMY = {
 # every one of your infantry piles into his infantry, first in the targeting order and the worst
 # matchup, while his 68,079 archers counter yours.  Kill ratios across the three Terry fights:
 # 20,000 at 50/20/30 -> 1.13, 10,000 at 50/20/30 defending -> 0.97, 10,000 all-infantry -> 0.09.
+
+
+# ------------------------------------------------- completed Terry sweep
+# The designed sweep, run in full against one opponent with the Special Bonuses panel verified
+# identical throughout.  I was wiped in every cell, so Terry's losses are the uncensored quantity.
+TERRY_SWEEP = [
+    # (label, my troops, enemy troops, my losses, Terry's losses, Yang row1 (triggers, kills))
+    ('10,000 50/20/30 defending', {'inf': 5_000, 'cav': 2_000, 'arch': 3_000},
+     {'inf': 113_467, 'cav': 45_386, 'arch': 68_079}, 10_000, 9_734, (5, 274)),
+    ('20,000 50/20/30 attacking', {'inf': 10_000, 'cav': 4_000, 'arch': 6_000},
+     {'inf': 94_555, 'cav': 37_822, 'arch': 56_733}, 20_000, 22_570, (9, 596)),
+    ('10,000 all archer', {'inf': 0, 'cav': 0, 'arch': 10_000},
+     {'inf': 113_467, 'cav': 45_386, 'arch': 68_079}, 10_000, 1_808, (1, 53)),
+    ('10,000 all infantry', {'inf': 10_000, 'cav': 0, 'arch': 0},
+     {'inf': 113_467, 'cav': 45_386, 'arch': 68_079}, 10_000, 937, (3, 64)),
+]
+
+# RESULT 1 -- THE ENGINE STRUCTURE IS RIGHT AND ONE CONSTANT IS WRONG.
+# Simulator over-predicts my damage output in every cell by almost the same factor:
+#     20,000 50/20/30      observed 22,570   sim 45,135   2.00x
+#     10,000 all archer    observed  1,808   sim  3,002   1.66x
+#     10,000 all infantry  observed    937   sim  1,839   1.96x
+#     10,000 50/20/30 def  observed  9,734   sim 18,966   1.95x
+# Divide the whole simulator by k = 1.89 and the four land at +5.7%, -12.3%, +3.7%, +2.9%.
+# Measured single-run noise is 8.8%, so three are inside it and the fourth is just outside.
+# Pure archer, pure infantry, mixed, attacking, defending, 10k and 20k -- composition and scale
+# behaviour are all correct; a single multiplicative factor is missing.  Whether k is universal
+# or specific to this opponent is the obvious next question, and the same sweep against a
+# different player answers it directly.
+
+# RESULT 2 -- THE NUKE'S OWN-TROOP DEPENDENCE SATURATES, which is why every power-law fit failed.
+# March fixed at 10,000, same target, same buffs, Yang row 1 kills per trigger:
+#       0 archers -> 21.3      3,000 archers -> 54.8      10,000 archers -> 53.0
+# Going 0 -> 3,000 is worth ~2.5x; 3,000 -> 10,000 adds nothing.  A log-linear regression cannot
+# represent a saturating curve, so nuke_fit.py was structurally incapable of fitting this no
+# matter which drivers went in -- that, not bad luck, is why three hypotheses in a row missed.
+
+# RESULT 3 -- SINGLE-TYPE MARCHES ARE CATASTROPHIC, and it is the largest effect in the dataset.
+# Terry killed per troop sent:  50/20/30 -> 1.13,  all archer -> 0.18,  all infantry -> 0.094.
+# Mixed is 6x better than pure archer and 12x better than pure infantry.  It is not about WHICH
+# type: with one type you have no front line, everything you own is exposed to all three of his
+# types at once, and all your damage funnels into whichever type is first in his targeting order.
