@@ -204,38 +204,31 @@ PROC_SPEC = {
 }
 
 
-# Skill activation, from the reports plus in-game tooltips.
+# Skill activation.
 #
 # A skill that fires EXACTLY ONCE per battle is a permanent aura switched on at the start -- the
-# single trigger is the game recording that it turned on, not a one-round effect.  Confirmed by
-# the tooltip: "Intimidation Lv. 5 -- reduces enemy Squad's Total Lethality by 20%", with no
-# duration or chance.  Charles', Triton's, Ava's rows 1 and 3, and Wee & Woo's rows 1 and 2 all
-# behave this way.  Those keep uptime 1.0.
-#
-# Skills that fire repeatedly are true procs, and their uptime is measured as triggers / rounds
-# in the three PvP fights where the engine is validated (Terry 20k mixed, Terry 10k all-infantry,
-# opponent-2 10k mixed).  The Baron fights are excluded -- their trigger counts exceed the
-# simulator's round count outright.
-#
-# Rows 1-3 of a hero panel are the base expedition skills; rows 4+ are TG and gear skills.
-OBSERVED_UPTIME = {
-    'Arcane Pact': 0.10,        # Sophia row 1, fires 2-6 times
-    'Terror Deathblow': 0.18,   # Sophia row 2, fires 7-9 times
-    'Ice Zone': 0.24,           # Yang row 1
-    'Avalanche': 0.13,          # Yang row 2
-    'Ambush': 0.23,             # Yang row 3
-    'Chiaroscuro': 0.103,       # Ava row 2, the only one of hers that repeats
-    'Boom Boom': 0.59,          # Wee & Woo row 3
-}
-for _n, _u in OBSERVED_UPTIME.items():
-    PROC_SPEC[_n] = ('chance', _u, 1)
-
-# Permanent auras -- observed firing exactly once, so explicitly NOT proc-gated.
-PERMANENT = {'Intimidation', 'Iron Bodies', 'Great Justice', 'Terror Annihilation',
+# single trigger is the game recording that it turned on.  Tooltip confirms: "Intimidation Lv. 5 --
+# reduces enemy Squad's Total Lethality by 20%", no chance, no duration.
+PERMANENT = {'Intimidation', 'Iron Bodies', 'Great Justice',
              'Command of Power', 'Warfare of Power', 'Oath of Power',
              'Dissolution', 'Light and Cold', 'Artillerymen', 'Chain Shelling'}
-for _n in PERMANENT:
-    PROC_SPEC.pop(_n, None)
+
+# Uptimes and magnitudes read from the in-game tooltips.  Sophia's three, verbatim:
+#   Arcane Pact Lv.5         "a 40% chance of reducing Squad's Damage Taken by 50% every turn"
+#                            -> chance 0.40, EV 0.40 * 50 = 20
+#   Terror - Deathblow Lv.5  "Enemy targets suffer the effects of Terror every 2 turns and will
+#                             receive 200% increased Cavalry damage on the following turn.
+#                             Terror lasts 1 turn."   -> up 1 turn in 2, EV 0.5 * 200 = 100
+#   Terror - Annihilation    "All Squads deal 75% increased damage to Terrified targets."
+#                            -> gated on Terror, so also up 1 turn in 2, EV 0.5 * 75 = 37.5
+#
+# These match what PROC_SPEC already held.  An earlier pass in this session replaced them with
+# uptimes "measured" as triggers/rounds and made every one about 2x too low -- because the round
+# count in that denominator came from the simulator (~29) while the tooltips imply the real fights
+# ran about 15 (Arcane Pact fires at 40% and fired 6 times).  Correcting correct values with a
+# wrong denominator.  The originals are restored; only the PERMANENT reclassification above and
+# the troop abilities below survive from that pass.
+OBSERVED_UPTIME = {}
 
 # TROOP abilities.  Rows 4+ of a hero's Battle Details panel are not the hero's skills at all --
 # they belong to that hero's TROOP TYPE, and every player has them.  Tooltips, verbatim:
@@ -266,6 +259,14 @@ TROOP_SKILLS = [
 ]
 for _n, _k, _v, _p, _t in TROOP_SKILLS:
     PROC_SPEC[_n] = ('chance', _p, 1)
+
+# Tooltip-confirmed schedules (these are the file's original values, restored).
+PROC_SPEC['Arcane Pact'] = ('chance', 0.40, 1)
+PROC_SPEC['Terror Deathblow'] = ('periodic', 2, 1)
+PROC_SPEC['Terror Annihilation'] = ('periodic', 2, 1)
+PROC_SPEC['Ice Zone'] = ('chance', 0.40, 1)
+PROC_SPEC['Avalanche'] = ('periodic', 4, 1)
+PROC_SPEC['Ambush'] = ('chance', 0.40, 1)
 
 def proc_uptime(name):
     mode, p, dur = PROC_SPEC[name]

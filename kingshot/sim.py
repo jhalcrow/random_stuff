@@ -341,7 +341,26 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                         live[side].extend(effs)
                     if key in active and active[key] > 0:
                         active[key] -= 1
-            ae, de = live['a'], live['d']
+            # A hero's skills stop firing once that hero's own troop type is wiped -- the
+            # reference gates every skill on it (Skill.condition: "Si l'unite est decimee, alors
+            # le hero n'a plus d'effet").  The reports show it plainly: in the Terry 20k fight
+            # Sophia's skills imply ~16 rounds while Yang's imply ~28, because her cavalry died
+            # first.  Troop abilities are gated the same way, on their own type.
+            # The gate is "wiped DURING the battle", not "never present": the reports show Yang
+            # firing 15 times and scoring 203 kills in a march carrying ZERO archers, so a hero
+            # whose type was never brought still contributes.  Only a type that started with
+            # troops and has since been destroyed silences its hero.
+            def _alive(effs, counts, start):
+                out = []
+                for kind, v, scope, nm in effs:
+                    who = nm.split(':', 1)[0]
+                    t = scope if who == 'Troop' else (HEROES[who]['type'] if who in HEROES else None)
+                    if t in TYPES and start.get(t, 0) > 0 and counts.get(t, 0) <= 0:
+                        continue
+                    out.append((kind, v, scope, nm))
+                return out
+            ae = _alive(live['a'], na, a.troops)
+            de = _alive(live['d'], nd, d.troops)
             ta = next((v for v in TYPES if nd[v] > 0), None)
             td = next((v for v in TYPES if na[v] > 0), None)
             kills_on_d = {t: 0.0 for t in TYPES}

@@ -802,3 +802,40 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # something it interacts with is still wrong -- most likely the skill magnitudes, which remain
 # unverified prose scrapes, or the archer abilities' interaction with the ambush target.  Do not
 # resolve that by removing Ambusher again.
+
+
+# ------------------------------------------------- Sophia's tooltips: my originals were right
+# Verbatim:
+#   Arcane Pact Lv.5        "a 40% chance of reducing Squad's Damage Taken by 50% every turn"
+#   Terror - Deathblow Lv.5 "Enemy targets suffer the effects of Terror every 2 turns and will
+#                            receive 200% increased Cavalry damage on the following turn."
+#   Terror - Annihilation   "All Squads deal 75% increased damage to Terrified targets."
+# -> uptimes 0.40, 0.50, 0.50 and EVs 20, 100, 37.5, which is exactly what PROC_SPEC already held.
+#
+# The "measured uptime" pass earlier in this session made all of them about 2x too low, because
+# the denominator was the SIMULATOR's round count (~29) while the tooltips imply the real fight
+# ran ~15 (Arcane Pact fires at 40% and fired 6 times).  Correct values, corrected with a wrong
+# denominator.  Restored; only the PERMANENT reclassification and the troop abilities survive
+# from that pass.  Terror Annihilation goes back to periodic/2 -- it is gated on Terror, which
+# Deathblow keeps up one turn in two, so it is not the permanent aura its single trigger suggested.
+#
+# NEW MECHANIC the trigger counts exposed.  In one battle, Sophia's skills imply 15-18 rounds and
+# Yang's imply 27-28.  That is the reference's Skill.condition(): a hero's skills stop firing once
+# that hero's troop type is destroyed -- her cavalry (4,000 of 20,000) died first.  Implemented,
+# with one Kingshot-specific correction: the gate is "wiped DURING the battle", not "never
+# present", because Yang demonstrably fires 15 times and scores 203 kills in a march carrying zero
+# archers.  Gating on absence instead collapses the single-type cells to 0.52 and 0.73.
+#
+#   variant                                 mix   arch    inf   opp2   mean  spread
+#   everything flat-on (start of today)    1.57   1.52   2.21   1.38   1.67   1.60
+#   tooltip values, no death gate          2.15   1.45   1.84   1.74   1.79   1.48
+#   + gate on absence (over-applied)       2.04   0.52   0.73   1.67   1.24   3.92
+#   + gate on death during battle          2.04   1.47   1.84   1.66   1.75   1.38
+#
+# WHERE THIS LANDS, honestly: every input is now tooltip-verified or reference-sourced, and the
+# fit is WORSE than when several inputs were wrong (mean 1.75 vs 1.52 mid-session).  Wrong inputs
+# were cancelling each other.  That is the right trade -- verified inputs and a visible error beat
+# unverified inputs and a flattering one -- but it means a real error remains and is now isolated
+# rather than masked.  The mixed cells (2.04, 1.66) are the worst, which points at composition
+# interactions: Ambusher, the archer abilities, and the ambush target all touch mixed marches and
+# nothing else.
