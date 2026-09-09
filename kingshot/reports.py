@@ -1556,3 +1556,39 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # all pinned down, the simulator is within 10% everywhere and within 6% in five of six.  Every
 # remaining error in the set is Terry and opponent-2 (1.49-1.99), both TG8 so ungated, both with
 # unverified scraped heroes.  The residual is now entirely on the unverified side of the data.
+
+
+# ------------------------------------------------- the reforge tier, from the barracks tooltips
+#     Immortalists  (Truegold Infantry, TG8): "increasing Infantry Defense by 4%, reducing an
+#                    extra 10% damage when [Unyielding Shield] is active"
+#     Truegold Wind (Truegold Archers,  TG8): "increasing Archers' basic Attack by 4%.  Archers
+#                    can deal an extra 25% damage when [Howling Wind] is active"
+# Same shape as Warding Impaler: a flat research stat plus a CONDITIONAL MODIFIER on the base
+# ability.  That confirms the reading -- these resize an existing ability rather than being one.
+#
+# IT ALSO EXPLAINS A ROW COUNT I HAD NOT QUESTIONED.  A modifier gets no Battle Details row of its
+# own, which is why Charles shows 4 rows and Yang 5 -- exactly the base abilities -- while Sophia
+# shows 6.  Warding Impaler is the exception because it grants a distinct new proc (10% chance of
+# half damage) rather than resizing an old one, so it earns a row.  Rows count PROCS, not upgrades.
+#
+# ONLY THE CONDITIONAL HALF IS MODELLED.  The flat +4% Infantry Defense and +4% Archers' basic
+# Attack are War Academy research and are therefore already inside the Stat Bonuses panel every
+# fight is parameterised from.  Adding them would double-count exactly as granting Terry max
+# widgets would have.  The deltas apply at the base ability's own trigger, so they resize its
+# effect rather than rolling again:  Unyielding Shield .375 x 36 -> .375 x 46 (EV 13.5 -> 17.25),
+# Howling Wind .30 x 50 -> .30 x 75 (EV 15.0 -> 22.5).  Narses gets neither: a TG2 account holding
+# a top-tier reforge is not credible, though note his rows cannot confirm that either way, since
+# a reforge adds no row.
+#
+# EFFECT.  Aggregate is flat (rms log err 0.362 -> 0.360) but the structure changed, and the part
+# that matters most improved:
+#     Narses 500 solo        0.90 -> 0.99      <- these two DIRECTLY measure my own output
+#     Narses 1500 pure inf   0.99 -> 1.02      <-
+#     Narses mixed def 5k    1.06 -> 0.98
+#     Narses mixed atk 10k   0.99 -> 0.96
+#     Narses pure-arch 5k    0.94 -> 0.88
+#     Narses inf+arch 1k     0.94 -> 0.87
+# The two fights that measure MY damage output now sit on 1.00.  The four that measure HIS now
+# under-predict by 2-13%, which points at his side still being too weak in the model -- his
+# scraped hero magnitudes, or the cavalry and archer abilities his TG2 rows show him having but
+# which I declined to guess at.  That is a sharper question than "k is 1.5" ever was.

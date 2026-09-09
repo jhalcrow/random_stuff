@@ -75,6 +75,12 @@ FIGHTS = [
 # two, so he is short there too, but WHICH ability each row is cannot be read from the panel.
 # Guessing it (cav=0, arch=1) overshoots badly -- Narses' six go to mean|log| 0.132, against
 # 0.034 for the infantry cap alone and 0.096 for no cap at all.  So the guess is left out.
+# Narses at TG2 predates the reforges entirely: they sit above the base abilities he does not
+# even have on infantry.  A reforge adds no Battle Details row, so his rows cannot confirm this
+# directly -- but a TG2 account holding a top-tier reforge is not credible.
+ENEMY_NO_REFORGE = {'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+                    'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
+
 ENEMY_TROOP_ABILITIES = {
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
@@ -95,7 +101,8 @@ def score(n=200, seed=1234):
                      hero_stats=False, tier=11, tg=8, widget_default=0.0)
             d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
                      joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
-                     troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}))
+                     troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}),
+                     troop_reforges=(set() if lbl in ENEMY_NO_REFORGE else None))
             if mr == 'garrison':
                 a, d = d, a
                 r = battle_mc(a, d, rng)

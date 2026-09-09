@@ -263,6 +263,25 @@ TROOP_SKILLS = [
     # showed Sophia with six rows where the model expected four.
     ('Warding Impaler',   'proc_taken', 0.10 * 50.0,  0.10,  'cav'),   # 5.0, half damage taken
 ]
+
+# TRUEGOLD REFORGES: these MODIFY an existing troop ability rather than being abilities of their
+# own, which is why they get no row of their own in Battle Details -- Charles shows 4 rows and
+# Yang 5, exactly the base abilities.  Warding Impaler is the exception and does get a row,
+# because it grants a distinct new proc rather than resizing an old one.
+#     Immortalists   (infantry) "increasing Infantry Defense by 4%, reducing an extra 10% damage
+#                                when [Unyielding Shield] is active"
+#     Truegold Wind  (archers)  "increasing Archers' basic Attack by 4%.  Archers can deal an
+#                                extra 25% damage when [Howling Wind] is active"
+# ONLY THE CONDITIONAL HALF IS MODELLED HERE.  The flat +4% Infantry Defense and +4% Archers'
+# basic Attack are War Academy research, so they are already inside the Stat Bonuses panel (or
+# inside the Truegold base-stat scaling) that every fight is parameterised from; adding them again
+# would double-count exactly the way granting Terry max widgets would have.
+# The delta is in PERCENTAGE POINTS on the base ability's effect, applied at the same trigger --
+# one proc at the base chance with a larger effect, not a second independent roll.
+TROOP_REFORGE = {
+    'Immortalists':  ('Unyielding Shield', 10.0),   # 36% reduction -> 46%
+    'Truegold Wind': ('Howling Wind', 25.0),        # +50% damage   -> +75%
+}
 for _n, _k, _v, _p, _t in TROOP_SKILLS:
     PROC_SPEC[_n] = ('chance', _p, 1)
 

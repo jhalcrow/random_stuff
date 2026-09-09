@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
 from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
-                    proc_uptime, STRIKE, TROOP_SKILLS, PERMANENT)
+                    proc_uptime, STRIKE, TROOP_SKILLS, TROOP_REFORGE, PERMANENT)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -140,6 +140,9 @@ class Side:
     # a type left out is uncapped.  Ambusher is not a TROOP_SKILLS entry -- switch it off for a
     # side that lacks it with ambusher=0.0.
     troop_abilities: dict = field(default_factory=dict)
+    # Truegold reforges present on this account, by name.  None means all of them (a maxed TG
+    # account); pass an explicit set -- including set() -- to restrict a lower-TG opponent.
+    troop_reforges: set = None
     triangle: float = 0.0                        # counter bonus % (archers>infantry etc.) -- unsourced
     ambusher: float = 0.20                       # cavalry 'Ambusher': 20% chance to bypass Infantry
                                                  # and hit Archers -- tooltip-confirmed, Kingshot-specific
@@ -176,6 +179,13 @@ class Side:
                 for sname, kind, v, _p, _t in avail:
                     if sname in TROOP_SKILLS_OFF:
                         continue
+                    # A reforge resizes its base ability's effect at the SAME trigger, so it
+                    # scales the stored expected value (chance x effect) rather than adding a
+                    # second roll: Unyielding Shield at .375 x 36 becomes .375 x 46.
+                    for rname, (base, delta) in TROOP_REFORGE.items():
+                        if base == sname and (self.troop_reforges is None
+                                              or rname in self.troop_reforges):
+                            v = v * (1 + delta / (v / _p))
                     out.append((kind, v * SKILL_SCALE, ttype, f'Troop:{sname}'))
         return out
 
