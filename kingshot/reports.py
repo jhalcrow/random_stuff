@@ -1935,3 +1935,37 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # NO EFFECT ON allfights (hero_stats=False there -- the reported panel already contains them) and
 # none on the Elo ordering either; the corrected heroes were not near the top.  rms log err stays
 # 0.884 and the ranking is unchanged from the previous entry.
+
+
+# ------------------------------------------------- NO HEROES ON EITHER SIDE (mail 223407017262625)
+# The single most useful report in this file.  Battle Details reads "Infantry Hero: Vacant",
+# "Cavalry Hero: Vacant", "Archer Hero: Vacant" on BOTH sides, and Special Bonuses reads "No
+# Special Stats Bonuses".  That is the damage core with the entire skill layer switched off and
+# no buff state to reconstruct.
+#     me   1,000 (500/200/300) T11 TG8, panel inf 1102.3 / 1090.7 / 1042.4 / 1040.6
+#     him  83,600 (thirds)     T10 TG2, panel inf  238.6 /  232.0 /  179.9 /  181.0
+#     VICTORY: I lose 241 + 446 = 687 of 1,000 (313 residents); he is wiped, 29,262 + 54,338.
+#     I won, so my 687 measures HIS output -- the uncensored quantity.
+#
+#     SIMULATED 721 AGAINST 687 OBSERVED.  k = 1.05.
+#
+# THE DAMAGE CORE IS CORRECT.  Everything the model does without heroes -- sqrt(n_u * army_min),
+# the A and D stat products, targeting, per-type tiers and Truegold levels, attrition, stochastic
+# rounding, casualty accounting, troop abilities and their TG gating -- lands within 5% on a fight
+# with an 84:1 troop mismatch.  EVERY REMAINING ERROR IN THIS FILE IS IN THE HERO SKILL LAYER.
+# That is worth more than any of the fits above, because it converts an open-ended search over the
+# whole engine into a bounded one over a single subsystem.
+#
+# TWO THINGS IT SETTLES ON THE WAY:
+#   TROOP ABILITIES NEED NO HERO.  Unyielding Shield fired 104 times with all three hero slots
+#   vacant.  sim.py's comment claimed they apply "whenever the side fields any hero at all" --
+#   corrected.  They are War Academy research, carried by the account.
+#   HIS TG2 ROWS ARE NOW VISIBLE RATHER THAN INFERRED: one cavalry ability (Ambusher, 25 triggers)
+#   and one archer (7), with his infantry section blank.  That is exactly the {inf 0, cav 0,
+#   arch 1} cap I guessed and then REJECTED for making the fit worse -- it was right, and it read
+#   as wrong only because the hero layer around it was wrong.  With the cap: k 1.05 and I win 95%.
+#   Without it: k 1.46 and I lose every time.
+#
+# ALSO A CLEAN MEASURE OF WHAT HEROES ARE WORTH: my infantry attack is 1102.3 here against 2379.0
+# with a lineup and the 20% stack -- so hero expedition stats and buffs together are most of the
+# panel, which is why hero_stats=False against a reported panel has always been the right call.

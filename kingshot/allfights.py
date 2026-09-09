@@ -20,6 +20,16 @@ NP = {'inf': dict(attack=2379.0, defense=1941.2, lethality=2183.4, health=1801.1
 TE = {'inf': 113_467, 'cav': 45_386, 'arch': 68_079}
 TE20 = {'inf': 94_555, 'cav': 37_822, 'arch': 56_733}
 
+# Mail 223407017262625: both sides heroless, no special bonuses, panels far below the with-hero
+# ones (my infantry attack 1102.3 against 2379.0), which is itself a measure of how much of the
+# panel is hero expedition stats.
+NOHERO_PANEL = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1042.4, health=1040.6),
+                'cav': dict(attack=1080.3, defense=1069.3, lethality=990.8, health=992.6),
+                'arch': dict(attack=1083.1, defense=1069.0, lethality=1009.2, health=1004.1)}
+NOHERO_ENEMY = {'inf': dict(attack=238.6, defense=232.0, lethality=179.9, health=181.0),
+                'cav': dict(attack=217.3, defense=206.7, lethality=160.8, health=158.6),
+                'arch': dict(attack=239.1, defense=232.0, lethality=176.8, health=177.2)}
+
 # (label, my panel, my troops, my role, enemy panel, enemy troops, enemy tier, enemy heroes,
 #  enemy Truegold level, enemy heroes, which side's losses are uncensored, observed)
 FIGHTS = [
@@ -63,6 +73,11 @@ FIGHTS = [
     ('Narses 1500 pure inf', NARSES_1500_INF_PANEL, {'inf': 1500, 'cav': 0, 'arch': 0}, 'solo',
      NARSES, {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2,
      ['Long Fei', 'Jabel', 'Rosa'], 'them', 15_598),
+    # NO HEROES ON EITHER SIDE and "No Special Stats Bonuses" -- the damage core with the entire
+    # skill layer switched off.  The cleanest calibration point in the set.  I won, so my 687
+    # losses measure HIS output.
+    ('Narses 1000 NO HEROES', NOHERO_PANEL, {'inf': 500, 'cav': 200, 'arch': 300}, 'solo',
+     NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 687),
 ]
 
 
@@ -83,10 +98,19 @@ FIGHTS = [
 # Round-trip check: Long Fei at L4 comes out 40 / 20 / 80, exactly his in-game tooltips.
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
-ENEMY_NO_REFORGE = {'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
+# My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
+# report reads "Vacant" in all three slots on both sides.
+MY_HEROES = {'Narses 1000 NO HEROES': []}
+DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
+
 ENEMY_TROOP_ABILITIES = {
+    # The heroless report shows his TG2 rows DIRECTLY: one cavalry ability (Ambusher, 25 triggers)
+    # and one archer (7), with the infantry section blank on his side.  No longer a guess.
+    'Narses 1000 NO HEROES': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},
@@ -102,8 +126,8 @@ def score(n=200, seed=1234):
     for lbl, mp, mt, mr, ep, et, tier, etg, eh, side, obs in FIGHTS:
         vals = []
         for _ in range(n):
-            a = Side('A', mp, dict(mt), heroes=['Charles', 'Sophia', 'Yang'], role=mr, joiners=[],
-                     hero_stats=False, tier=11, tg=8, widget_default=0.0)
+            a = Side('A', mp, dict(mt), heroes=MY_HEROES.get(lbl, DEFAULT_MY_HEROES), role=mr,
+                     joiners=[], hero_stats=False, tier=11, tg=8, widget_default=0.0)
             d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
                      joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
                      troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}),

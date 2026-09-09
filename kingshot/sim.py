@@ -173,8 +173,10 @@ class Side:
             for kind, v, scope in effs:
                 out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
         # Truegold troop abilities, carried by the account's War Academy research rather than by a
-        # hero.  This used to hand every ability to any side fielding a hero, on the grounds that
-        # "every PvP report shows both sides with Unyielding Shield firing".  That is false:
+        # hero -- and they fire with NO HEROES AT ALL, confirmed by mail 223407017262625, whose
+        # Battle Details reads "Infantry Hero: Vacant" on both sides while Unyielding Shield still
+        # triggers 104 times.  An earlier comment here said they apply "whenever the side fields
+        # any hero at all"; they need no hero.  It also used to hand every ability to every side:
         # Narses' Long Fei shows no Unyielding Shield row at all, with 61,785 infantry over ~152
         # rounds, so a TG2 account simply does not have it.  See Side.troop_abilities.
         if TROOP_SKILLS_ON:
