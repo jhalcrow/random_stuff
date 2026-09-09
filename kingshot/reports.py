@@ -1726,3 +1726,54 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #     mean k 1.05   spread 0.86-1.28   rms log err 0.126   mean|log| 0.095
 # Nine of ten fights are inside 30%, six inside the measured 8.8% per-rally noise.  For contrast,
 # this session opened at mean k 1.48, spread 1.04-2.01.
+
+
+# ------------------------------------------------- Narses' heroes verified: THE FIT GOT WORSE
+# All nine tooltips, plus Ambusher and Volley confirmed unchanged.  EIGHT OF THE NINE WERE WRONG,
+# and the five proc magnitudes were all badly LOW -- the direction the residual predicted:
+#     Mighty Paragon        40% chance, damage taken -40%       20 -> 40
+#     Celestial Sustenance  Squad's Defense +20%                25 -> 20
+#     Art of War            25% chance of dealing 180% damage   25 -> 80
+#     Rally Flag            40% chance, damage taken -50%       20 -> 50
+#     Hero's Domain         50% chance of 50% more damage       25 -> 50
+#     Youthful Rage         Squads' Lethality +25%              25  ok
+#     Chaos Gambit          40% chance, Damage Dealt +40%       20 -> 40
+#     Enchanting Dance      Enemy Damage Dealt -16%   -- the file called this "Rose of War", 20
+#     Golden Rhythm         Archers' total Attack +24%          30 -> 24
+#
+# APPLYING VERIFIED DATA MADE THE MODEL FAR WORSE: Narses' six went from 0.86-1.05 to 0.27-3.39,
+# all-ten rms log err 0.126 -> 0.899.  The values are read off the game, so THE PREVIOUS GOOD FIT
+# WAS TWO ERRORS CANCELLING: magnitudes about half to a third of true, against a combination rule
+# that over-applies them by about the same factor.  Every proc correction adds error monotonically
+# (bisected: 0.071 -> 0.367 -> 0.290 -> 0.657 -> 0.921 -> 1.072 -> 1.199), so it is not one bad
+# reading.  The data stays in.  Reverting it to recover 0.126 would be fitting the metric against
+# the game, which is the one thing this file has refused to do all session.
+#
+# THE COMBINATION RULE IS NOT SIMPLY MULTIPLICATIVE-VS-ADDITIVE.  _prod multiplies distinct procs;
+# the reference engine accumulates (Skill.damage(): coef = coef + value/100).  Tested by patching
+# _prod to accumulate: all-ten rms 0.891 -> 0.754, Narses 1.137 -> 0.945.  Better, nowhere near
+# enough, so that is not the fault either.
+#
+# WHAT THE TRIGGER COUNTS SAY, and this is the real find: PROCS ROLL PER ATTACK, NOT PER ROUND.
+#     Hero's Domain     .50 chance    324 in ~207 rounds = 1.57/round = 3.1x nominal
+#     Art of War        .25 chance    173 in ~207 rounds = 0.84/round = 3.4x nominal
+#     Unyielding Shield .375 chance   463 in ~207 rounds = 2.24/round = 6.0x nominal
+# A per-round probability cannot exceed 1.  Narses fields three troop types, so ~3 attacks per
+# round, and 3x nominal is exactly what a per-attack roll produces.  Unyielding Shield at 6x is a
+# defensive proc rolled when attacked, so it may see two rolls per attacking squad.
+#
+# WHY THAT IS THE FAULT.  battle_mc rolls each chance skill ONCE PER ROUND at squad level and
+# applies the result to that whole side's damage for the round.  If the game instead rolls per
+# attack and boosts only THAT attack, the expected damage is the same -- but the model multiplies
+# the entire round's output by a proc that should have touched a third of it.  With three damage
+# procs live on Narses that is close to the 3x over-prediction observed, and it explains why the
+# error only surfaced once the magnitudes were correct: at a third of true magnitude the
+# over-application cancelled exactly.
+#
+# NEXT STEP, and it is now a specific engine change rather than a search: roll chance procs per
+# SOURCE TROOP TYPE inside the per-type damage loop, not once per side per round.  The trigger
+# counts predict the result quantitatively -- a side fielding n troop types should show n times
+# nominal -- so it is falsifiable against every report already in this file.
+#
+# STATE: mean k 1.76, spread 0.27-3.39, rms log err 0.899.  This is a REGRESSION in fit and an
+# advance in correctness, and the two should not be confused.  The model was accidentally right.

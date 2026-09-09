@@ -38,8 +38,8 @@ HEROES = {
         ("Nature's Balance", [('leth', 25, 'all')]),
     ]),
     'Jabel': dict(gen=1, rarity=LEG, type='cav', widget=('defender', 'lethality', 15), skills=[
-        ('Rally Flag', [('proc_taken', 20, 'all')]),                 # 40% chance -50% taken
-        ("Hero's Domain", [('proc', 25, 'all')]),                # 50% chance +50%
+        ('Rally Flag', [('proc_taken', 50, 'all')]),                 # 40% chance -50% taken
+        ("Hero's Domain", [('proc', 50, 'all')]),                # 50% chance +50%
         ('Youthful Rage', [('leth', 25, 'all')]),
     ]),
     'Saul': dict(gen=1, rarity=LEG, type='arch', widget=('defender', 'attack', 15), skills=[
@@ -120,15 +120,15 @@ HEROES = {
         ('Sleight Hand', [('proc', 50, 'cav')]),                 # 25% chance extra 200% attack
     ]),
     'Rosa': dict(gen=4, rarity=LEG, type='arch', widget=('rally', 'lethality', 15), skills=[
-        ('Chaos Gambit', [('proc', 20, 'all')]),                 # 40% chance +50%
-        ('Rose of War', [('e_dmg', 20, 'all')]),
-        ('Golden Rhythm', [('atk', 30, 'arch')]),
+        ('Chaos Gambit', [('proc', 40, 'all')]),                 # 40% chance +50%
+        ('Enchanting Dance', [('e_dmg', 16, 'all')]),
+        ('Golden Rhythm', [('atk', 24, 'arch')]),
     ]),
     # ---------------- Gen 5 ----------------
     'Long Fei': dict(gen=5, rarity=LEG, type='inf', widget=('defender', 'attack', 15), skills=[
-        ('Mighty Paragon', [('proc_taken', 20, 'all')]),             # 40% chance -50%
-        ('Celestial Sustenance', [('def', 25, 'all')]),
-        ('Art of War', [('proc', 25, 'all')]),                   # 25% chance 200%
+        ('Mighty Paragon', [('proc_taken', 40, 'all')]),             # 40% chance -50%
+        ('Celestial Sustenance', [('def', 20, 'all')]),
+        ('Art of War', [('proc', 80, 'all')]),                   # 25% chance 200%
     ]),
     'Thrud': dict(gen=5, rarity=LEG, type='cav', widget=('rally', 'lethality', 15), skills=[
         ('Battle Hunger', [('taken', 15, 'inf'), ('taken', 15, 'arch'), ('dmg', 15, 'inf'), ('dmg', 15, 'arch')]),
@@ -191,6 +191,22 @@ HEROES = {
 #     Dissolution       "total Enemy Squad's Defense by 25%"               25  ok
 #     Chiaroscuro       "50% increased damage for 2 turns every 4 turns"   25 -> 50  (schedule ok)
 #     Light and Cold    "total Squad's Lethality by 25%"                   25  ok
+# LONG FEI, JABEL AND ROSA VERIFIED AGAINST TOOLTIPS -- eight of the nine were wrong, and the
+# five proc magnitudes were all badly LOW, which is the direction the Narses residual predicted:
+#     Mighty Paragon        40% chance, damage taken -40%          20 -> 40
+#     Celestial Sustenance  Squad's Defense +20%                   25 -> 20
+#     Art of War            25% chance of dealing 180% damage      25 -> 80   (180% = +80 extra)
+#     Rally Flag            40% chance, damage taken -50%          20 -> 50
+#     Hero's Domain         50% chance of 50% more damage          25 -> 50
+#     Youthful Rage         Squads' Lethality +25%                 25  ok
+#     Chaos Gambit          40% chance, Damage Dealt +40%          20 -> 40
+#     Enchanting Dance      Enemy Damage Dealt -16%    was "Rose of War" 20 -> 16, NAME WAS WRONG
+#     Golden Rhythm         Archers' total Attack +24%             30 -> 24
+# The "+80 extra" reading of Art of War follows the file's own convention: Assault Lance's
+# "double damage" is stored as 100, Volley's "attack twice" as 100, so the value is the EXTRA.
+# Their four flat-stat skills each fired exactly once in both reports, confirming them as auras.
+# Also confirmed unchanged: Ambusher "20% chance to bypass Infantry and directly attack Archers"
+# and Volley "10% chance to attack twice in a row" -- both already right.
 PROC_SPEC = {
     'Unrighteous Strike': ('chance', 0.4, 1), 'Oath of Guardian': ('chance', 0.4, 1),
     'Rally Flag': ('chance', 0.4, 1), "Hero's Domain": ('chance', 0.5, 1),
