@@ -23,14 +23,23 @@ TE20 = {'inf': 94_555, 'cav': 37_822, 'arch': 56_733}
 # (label, my panel, my troops, my role, enemy panel, enemy troops, enemy tier, enemy heroes,
 #  enemy Truegold level, enemy heroes, which side's losses are uncensored, observed)
 FIGHTS = [
+    # WHICH ENEMY PANEL EACH FIGHT GETS IS DECIDED BY WHICH OF MY PANELS IT USES.
+    # NP reconstructs to within 0.08 of a point as the unbuffed panel with +20% Squads' Attack and
+    # +20% Squads' Lethality applied, so every NP fight was fought with that stack up -- and the
+    # 08:14:37 Special Bonuses page shows the stack always carries -20% Enemy Squads' Defense with
+    # it, so those fights must see his defence as NARSES_ED20.  SOLO_PANEL sits at the unbuffed
+    # level instead (its lethality is 1802.9, identical to the post-lapse panel, against NP's
+    # 2183.4), so those fights get his undiminished NARSES.
+    # The inference that the three channels always travel together rests on two observed states,
+    # both all-on or all-off.  A report showing them apart would break it.
     ('Narses pure-arch 5k', NP, {'inf': 2500, 'cav': 1000, 'arch': 1500}, 'solo',
-     NARSES, {'inf': 0, 'cav': 0, 'arch': 116_040}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 72),
+     NARSES_ED20, {'inf': 0, 'cav': 0, 'arch': 116_040}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 72),
     ('Narses mixed atk 10k', SOLO_PANEL, {'inf': 5000, 'cav': 2000, 'arch': 3000}, 'solo',
      NARSES, NARSES_TROOPS, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 239),
     ('Narses mixed def 5k', SOLO_PANEL, {'inf': 2500, 'cav': 1000, 'arch': 1500}, 'garrison',
      NARSES, NARSES_TROOPS, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 292),
     ('Narses inf+arch 1k', NP, {'inf': 500, 'cav': 200, 'arch': 300}, 'solo',
-     NARSES, {'inf': 61_785, 'cav': 0, 'arch': 61_785}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 397),
+     NARSES_ED20, {'inf': 61_785, 'cav': 0, 'arch': 61_785}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'me', 397),
     ('Terry 10k all archer', TERRY_ATTACK_PANEL, {'inf': 0, 'cav': 0, 'arch': 10_000}, 'solo',
      TERRY_ATTACK_ENEMY, TE, 11, 8, ['Triton', 'Ava', 'Yang'], 'them', 1_808),
     ('Terry 10k all inf', TERRY_ATTACK_PANEL, {'inf': 10_000, 'cav': 0, 'arch': 0}, 'solo',

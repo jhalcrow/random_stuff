@@ -1336,12 +1336,25 @@ NARSES_1500_INF = dict(my_troops={'inf': 1_500, 'cav': 0, 'arch': 0}, my_losses=
 # factors on the strength of the reference engine alone (Fight.java:133).  A live panel now says
 # the same thing about the reduction side, from a completely separate source.
 #
-# OPEN, AND IT AFFECTS FOUR SCORED FIGHTS: the earlier Narses fights (pure-arch 5k, mixed atk
-# 10k, mixed def 5k, inf+arch 1k) are all scored against NARSES = 514.3, and I have not checked
-# what their own reports showed.  If any was fought with the 20% active, its enemy defence should
-# be 411.9 and its k is wrong.  Those four measure HIS output (my losses), which does not depend
-# on his defence directly -- but his defence sets how fast I kill him, so it moves the round count
-# and therefore the total.  Worth re-reading those panels before trusting 1.14 / 1.04 / 1.13 / 1.53.
+# RESOLVED, AND IT MOVED FOUR SCORED FIGHTS.  Which enemy panel a fight gets is decided by which
+# of MY panels it used, with no guesswork: NP reconstructs to within 0.08 of a point as the
+# unbuffed panel with +20/+20 applied, so every NP fight had the stack up and must see his defence
+# through the accompanying -20%.  SOLO_PANEL sits at the unbuffed level (lethality 1802.9,
+# identical to the post-lapse panel, against NP's 2183.4), so those fights keep plain NARSES.
+#     fight                  before  after
+#     Narses pure-arch 5k      1.14   1.01
+#     Narses inf+arch 1k       1.53   1.05     <- the outlier that stood unexplained all session
+#     Narses mixed atk 10k     1.04   1.04     (SOLO_PANEL, already right)
+#     Narses mixed def 5k      1.13   1.13     (SOLO_PANEL, already right)
+# All six Narses fights now sit in 0.85-1.13, against 0.68-1.60 before.  Overall rms log err
+# 0.424 -> 0.363.  The 1.53 was never a modelling failure; it was a buff-state bookkeeping error.
+#
+# THE TERRY / OPPONENT-2 RESIDUAL IS NOT THE SAME THING and must not be "fixed" the same way.
+# SPECIAL_BONUSES above records both sides of those fights, the player verified the panel was
+# identical across all three, and both sides' bonuses are already folded into the Stat Bonuses
+# the panels were read from.  So 1.46-2.00 there is not a buff artefact.  What is left unverified
+# in those fights is the opponents' heroes -- Triton, Ava, Wee & Woo, all prose scrapes -- and
+# firing.py now shows the schedules are broadly wrong.  That is where that residual lives.
 #
 # NARSES_ED20 is his panel AS DISPLAYED under that bonus -- not "unbuffed Narses", which is what
 # an earlier version of this note wrongly called it.
@@ -1390,3 +1403,54 @@ NARSES_ED20 = {t: dict(d, defense=(100 + d['defense']) / 1.2 - 100) for t, d in 
 # so Ice Zone and Ambush are mutually inconsistent ACROSS fights and cannot both be .40.
 # "The simulator ends fights too early" rested mainly on the one fight Avalanche could anchor.
 # It is not refuted here, but this fight cannot support it either.
+
+
+# ------------------------------------------------- how Special Bonuses enter the panel (SOLVED)
+# The 08:14:37 report's Special Bonuses page names the channels explicitly, mine against his:
+#     Squads' Attack Bonus            +20.0%   /  +0.0%
+#     Squads' Lethality Bonus         +20.0%   /  +0.0%
+#     Enemy Squads' Defense           -20.0%   /  -0.0%
+#     Appointment-based Squads' Attack +5.0%   /  +0.0%
+# Every line of his is zero, which is the player's account confirmed in the game's own words.
+#
+# Comparing my panel with that stack active against my panel after it lapsed gives an exact,
+# unambiguous mapping over all twelve stat lines -- not a fit, a match to four decimal places:
+#              attack  lethality  defense  health
+#     inf      1.2000     1.2000   1.0000  1.0000
+#     cav      1.2000     1.2000   1.0000  1.0000
+#     arch     1.2000     1.2000   1.0000  1.0000
+# and his defence, seen through my -20.0%, is exactly his true defence / 1.20.
+#
+#     a stated +c% on one of MY stats     ->  my multiplier   x (1 + c)
+#     a stated -c% on ENEMY defence       ->  his multiplier  / (1 + c)      NOT x (1 - c)
+#
+# The asymmetry is the point, and it is the same reciprocal form sim.py's DEF_RECIP uses for
+# defence-side skills on the strength of the reference engine (Fight.java:133).  Two independent
+# sources now agree, and the reduction side is confirmed against a labelled percentage rather
+# than inferred from a ratio.
+
+def with_special(panel, atk=0.0, leth=0.0, e_def=0.0, defn=0.0, hp=0.0):
+    """Apply a Special Bonuses state to a base panel, in the game's own form.
+
+    atk/leth/defn/hp are percentages on the side's OWN stats and multiply by (1 + c/100).
+    e_def is the magnitude of an *opponent's* Enemy Squads' Defense bonus pointed at this side,
+    so this side's displayed defence is divided by (1 + e_def/100).  Pass e_def=20.0, not -20.0.
+
+    Panels are stored as the "+x%" the report shows, i.e. a multiplier of (100 + x) / 100.
+    """
+    def scaled(x, f):
+        return (100.0 + x) * f - 100.0
+    out = {}
+    for t, d in panel.items():
+        out[t] = dict(d,
+                      attack=scaled(d['attack'], 1 + atk / 100.0),
+                      lethality=scaled(d['lethality'], 1 + leth / 100.0),
+                      defense=scaled(d['defense'], (1 + defn / 100.0) / (1 + e_def / 100.0)),
+                      health=scaled(d['health'], 1 + hp / 100.0))
+    return out
+
+
+# Round-trip checks against the two measured panels (both exact to 0.1 of a point):
+#   with_special(NARSES_1500_INF_PANEL, atk=20, leth=20)  ==  the 500-troop fight's own panel
+#   with_special(NARSES, e_def=20)                        ==  his defence as the 500 report shows
+NARSES_ED20 = with_special(NARSES, e_def=20.0)
