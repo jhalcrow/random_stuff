@@ -24,7 +24,8 @@ import itertools, json, math, os, sys
 from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
-from heroes import HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC, proc_uptime
+from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
+                    proc_uptime, STRIKE)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -43,6 +44,10 @@ ENG_A = float(os.environ.get('ENG_A', '0.5'))
 ENG_B = float(os.environ.get('ENG_B', '0.5'))
 # Reference engine applies a per-round attrition of 0.01%: dead -= dead * 0.0001 * round.
 WEAR = float(os.environ.get('WEAR', '0.0001'))
+# Whether a damage skill also grants its troop type an extra enemy target that round.  The
+# reference gates that on effectTarget==40 in addition to effect==101; assuming every damage
+# skill carries it makes the model far worse, so this defaults off.
+STRIKE_CONTINUE = os.environ.get('STRIKE_CONTINUE', '0') == '1'
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -321,6 +326,25 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                     shares = [(target, 1.0)]
                     if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
                         shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
+                    # Extra strikes.  In the reference, needContinue() requires BOTH effect==101
+                    # AND effectTarget==40, so only a minority of damage skills grant an extra
+                    # target; the rest of effect 101 is a plain multiplier on that troop type's
+                    # damage, which skill_mod() already applies.  Turning this on for every damage
+                    # skill triples archer output and wrecks the fit (see STRIKE_CONTINUE below),
+                    # so it is off until a specific skill can be shown to carry effectTarget 40.
+                    # Reference gates this on `unitType == skill.getUnitType()` -- the HERO's own
+                    # troop type, not the skill's declared scope.  Avalanche reads 'all' as a
+                    # damage buff but only ever strikes with Yang's archers.
+                    extra = 0 if not STRIKE_CONTINUE else sum(1 for _, _, _, nm in my_effs
+                                if nm.split(':', 1)[1] in STRIKE
+                                and HEROES[nm.split(':', 1)[0]]['type'] == u)
+                    if extra:
+                        hit = {t for t, _ in shares}
+                        for v in TYPES:
+                            if extra <= 0:
+                                break
+                            if n_tgt[v] > 0 and v not in hit:
+                                shares.append((v, 1.0)); hit.add(v); extra -= 1
                     for tgt, share in shares:
                         mod = skill_mod(src, my_effs, u, other, their_effs, tgt)
                         dead = share * army * A[(src.name, u)] / D[(other.name, tgt)] / 100 * mod

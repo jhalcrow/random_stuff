@@ -230,6 +230,19 @@ COMBAT_HEROES = LEGENDARIES + [h for h in EPICS if h not in ('Fahd',)] + ['Fahd'
 # Alcar/Rescuing Hands, Petra/Evil Eye.  A joiner contributes ONLY skills[0], so these orderings
 # are what the joiner optimisation rests on.  Yang was the one hero whose order was wrong in the
 # original scrape (corrected above), so the error was isolated rather than systemic.
+# Skills that deal damage in their own right -- effect 101 in the reference engine
+# (request-laurent/sos.battle).  Such a skill does TWO things: it multiplies its own troop type's
+# damage, AND it lets that type strike an ADDITIONAL enemy type in the same round rather than
+# stopping at the first living one.  That extra strike is what the Battle Details "Kills" column
+# attributes to the hero, and it is the channel sim.py was missing entirely.
+#
+# Membership comes from the reports, not from prose: a row with a number under Kills is a 101.
+# Verified damage rows so far -- Yang rows 1 and 2, Sophia row 5, Ava row 5, Vivian row 2,
+# Long Fei row 3, Jabel row 2.  Rows 4-6 are gear/weapon skills that heroes.py does not model
+# yet, so only the base-skill members can be listed here.
+STRIKE = {'Ice Zone', 'Avalanche'}          # Yang rows 1 and 2
+STRIKE |= {'Focus Fire'}                    # Vivian row 2 (Crouching Tiger is row 1)
+
 ATTACK_JOINERS = ['Vivian', 'Ava', 'Chenko', 'Amane']            # one per skill category: +25% enemy taken, -25% enemy def, +25% leth, +25% atk
 DEFENSE_JOINERS = ['Triton', 'Ava', 'Alcar', 'Petra']          # +25% def, -25% enemy def, -70% inf/arch taken 2 of 5 turns, 50% chance +50% enemy taken
 

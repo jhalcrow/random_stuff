@@ -635,3 +635,29 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # 2. Reading a troop icon wrongly is expensive.  Getting opponent 2's cavalry tier wrong by one
 #    step moved k from 1.56 to 2.18, which is wider than the entire effect being chased.  The
 #    per-type dict exists because of that.
+
+
+# ------------------------------------------------- the "missing nuke channel" was a wrong frame
+# Implementing it is what disproved it.  Reading Skill.java rather than reasoning from the
+# reports, effect 101 -- the thing the Battle Details Kills column attributes to a hero -- does
+# this:
+#     case 101:  coef = coef * (1 + skill.getValue()/100.0)   [gated on the skill's own unit type]
+# It is a MULTIPLIER on that troop type's damage, not a separate additive source.  sim.py already
+# applies exactly that through skill_mod()'s proc handling.  So the Kills column is attribution --
+# how much of the troop damage is owed to the skill boost -- not damage the model was missing.
+#
+# The one genuinely separate mechanic is the extra target: needContinue() lets a troop type strike
+# an ADDITIONAL enemy type in the same round, but it requires effectTarget==40 AS WELL AS
+# effect==101, so only a minority of damage skills carry it.  Implemented and measured:
+#     no extra strikes (default)   mix 1.47  arch 1.54  inf 2.05  opp2 1.29   mean 1.59
+#     extra strike on every 101    mix 1.76  arch 7.73  inf 2.05  opp2 3.97   mean 3.88
+# Granting it to every damage skill triples archer output and wrecks the fit, so STRIKE_CONTINUE
+# defaults off.  The machinery stays: if a specific skill can be shown to carry effectTarget 40,
+# it can be switched on per skill rather than globally.
+#
+# CONSEQUENCE FOR EVERYTHING ABOVE.  The reading that k tracks the enemy's hero damage share
+# (r = 0.895) has to be retired.  The correlation was real but the causal story behind it was not:
+# there was no missing additive channel for that share to stand in for.  Two independent things
+# were true at once -- opponents with heavy damage heroes hit harder, and the model was 1.6x hot --
+# and I read the second as being caused by the first.  The residual k = 1.59 is still unexplained
+# and is now the whole of the problem rather than half of it.
