@@ -1592,3 +1592,36 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # under-predict by 2-13%, which points at his side still being too weak in the model -- his
 # scraped hero magnitudes, or the cavalry and archer abilities his TG2 rows show him having but
 # which I declined to guess at.  That is a sharper question than "k is 1.5" ever was.
+
+
+# ------------------------------------------------- does the Truegold work fix Terry?  NO.
+# Terry and opponent-2 sit at 1.51 / 1.80 / 1.55 / 2.03, essentially unmoved by everything in the
+# reforge and TG-gating work.  The reason is structural, not a shortfall in the modelling: TERRY
+# IS TG8 LIKE ME, so he gets exactly the abilities and reforges I do and they cancel.  Every
+# change that fixed the Narses fights was an ASYMMETRY -- his TG2 infantry lacking Unyielding
+# Shield, his missing reforges, my lapsed buff stack.  There is no asymmetry with Terry to find.
+#
+# AND NO GLOBAL SKILL-LAYER CHANGE CAN FIX BOTH.  firing.py measures nearly every chance skill at
+# ~0.55 of its modelled rate, on both sides and all three troop types, so the obvious move is to
+# apply that to PROC_SPEC.  Tested:
+#     group             as it stands   procs x0.55
+#     Terry / opp2         0.537          0.249      <- nearly fixed
+#     Narses six           0.068          0.797      <- destroyed
+# The two groups want opposite corrections.  My procs are identical in both, so the difference is
+# not mine: against Narses my troops live ~152 rounds and procs accumulate, against Terry ~25.
+# Slowing procs takes 3x off my output in the Narses fights and 1.9x in the Terry ones, and only
+# the latter wanted it.  NOT APPLIED -- it is a diagnostic, and "fixes one group by breaking the
+# other" is the signature of a wrong mechanism, however good the measurement behind it.
+#
+# WHAT IS ACTUALLY LEFT.  Terry's residual has the shape of HIS side being too weak in the model:
+# under-model his output, my troops survive too long, my output comes out ~2x high.  Every other
+# input to those fights is now verified -- panels read from the report, buff state recorded on
+# both sides, tiers and TG known, troop abilities symmetric and cancelling, skill LEVELS confirmed
+# maxed by the player.  The only unverified thing left in the entire set is the SKILL MAGNITUDES
+# of Triton, Ava and Wee & Woo, which are prose scrapes and have never been checked against
+# anything.  For comparison, my own nine are all tooltip-verified on kind, magnitude, scope and
+# schedule, and my side is the one that now reads 0.99-1.03.
+#
+# THE ASK IS SMALL AND EXACT: the three skill tooltips for Triton and for Ava, read off the hero
+# screen the same way Sophia's and Yang's were.  That is six numbers, and it is the last
+# unverified input in the whole calibration.
