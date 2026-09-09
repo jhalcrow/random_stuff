@@ -1321,22 +1321,31 @@ NARSES_1500_INF = dict(my_troops={'inf': 1_500, 'cav': 0, 'arch': 0}, my_losses=
                        their_jabel=[(71, 0), (324, 83), (1, 0), (33, 0)],
                        their_rosa=[(87, 0), (1, 0), (1, 0), (18, 0)])
 
-# WHICH SIDE OWNS THE 20% IS AMBIGUOUS, AND IT DOES NOT MATTER FOR SCORING.  Comparing the two
-# reports: attack, lethality and health are identical to the decimal, while every defence line is
-# higher by a factor of exactly 1.200 (inf 411.9 -> 514.3, cav 271.3 -> 345.5, arch 372.7 ->
-# 467.2).  NARSES in this file holds the HIGHER numbers, and I scored the 500-troop fight with
-# them -- 20% too much defence on his side, which understates my damage.
+# NARSES NEVER HAD A BUFF -- confirmed by the player, who owns both accounts.  All the variation
+# is MINE: buffs have been expiring across today's reports.  So 514.3 / 345.5 / 467.2 is his TRUE
+# defence, and the 500-troop report's lower 411.9 / 271.3 / 372.7 is that same defence seen
+# through a 20% Enemy Squads' Defense bonus I still had at the time.
 #
-# Two readings fit.  (a) He gained a +20% defence buff: his multiplier is x1.200 exactly, a round
-# number.  (b) I LOST an Enemy Squads' Defense debuff worth 16.67%, which the panel folds into
-# his displayed defence -- the player's own account is that "the 20% bonuses" were theirs and
-# have since lapsed, which favours this, though 16.67% is not the round number (a) gives.
-# Not resolved, and not worth resolving: the panel already shows the net figure, so reading each
-# fight's defence off its own report is correct either way.  What must not happen again is
-# carrying one report's opponent panel into another fight, which is exactly the error here.
-# Note also that Special Bonuses is now nearly empty -- a single +5.0% Appointment-based Squads'
-# Attack for me, 0.0% for him -- so these two fights are the cleanest buff state in the set.
-NARSES_UNBUFFED = {t: dict(d, defense=(100 + d['defense']) / 1.2 - 100) for t, d in NARSES.items()}
+# AND THAT BONUS IS RECIPROCAL, NOT MULTIPLICATIVE.  Reducing enemy defence by 20% divides the
+# multiplier by 1.20; it does not multiply it by 0.80:
+#     inf   true 514.3   x0.80 -> 391.4   /1.20 -> 411.9   report says 411.9
+#     cav   true 345.5   x0.80 -> 256.4   /1.20 -> 271.3   report says 271.3
+#     arch  true 467.2   x0.80 -> 353.8   /1.20 -> 372.7   report says 372.7
+# Matches to 0.05 of a point on all three types, where the multiplicative form is out by ~20.
+# This is independent corroboration of DEF_RECIP in sim.py, which uses 1/(1-c) for defence-side
+# factors on the strength of the reference engine alone (Fight.java:133).  A live panel now says
+# the same thing about the reduction side, from a completely separate source.
+#
+# OPEN, AND IT AFFECTS FOUR SCORED FIGHTS: the earlier Narses fights (pure-arch 5k, mixed atk
+# 10k, mixed def 5k, inf+arch 1k) are all scored against NARSES = 514.3, and I have not checked
+# what their own reports showed.  If any was fought with the 20% active, its enemy defence should
+# be 411.9 and its k is wrong.  Those four measure HIS output (my losses), which does not depend
+# on his defence directly -- but his defence sets how fast I kill him, so it moves the round count
+# and therefore the total.  Worth re-reading those panels before trusting 1.14 / 1.04 / 1.13 / 1.53.
+#
+# NARSES_ED20 is his panel AS DISPLAYED under that bonus -- not "unbuffed Narses", which is what
+# an earlier version of this note wrongly called it.
+NARSES_ED20 = {t: dict(d, defense=(100 + d['defense']) / 1.2 - 100) for t, d in NARSES.items()}
 
 # WHAT THE TWO CORRECTIONS DO.  Both move toward 1, and the two fights I lost now agree:
 #     1,500 pure infantry   pre-registered panel 19,337  k 1.24  ->  report's panel 13,357  k 0.86
