@@ -2173,3 +2173,110 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # Charles+Yang is the sharper of the two, because it is the one case where the model adds a hero
 # WITHOUT adding a proc.  It cleanly separates "the model over-credits procs" from "the model
 # over-credits heroes", and nothing measured so far can tell those apart.
+
+
+# ------------------------------------------------- CHARLES + YANG (mail 223407017264209)
+# Fought at 1,000 (500/200/300), so it is directly comparable to the heroless baseline rather than
+# to the 10,000-troop rungs.  Same heroless Narses, Cavalry slot Vacant.
+#     VICTORY: I lose 10 + 16 = 26 of 1,000 (974 residents); Narses wiped.
+#     THE PANEL LANDED EXACTLY FOR A FOURTH CONSECUTIVE HERO -- inf 1952.8 / 1941.2 / 1802.9 /
+#     1801.1, arch 1823.5 / 1809.4 / 1742.7 / 1737.6, cavalry unchanged.  The stat half is settled.
+#     Rows: Charles 1/1/1 + Unyielding Shield 23; cavalry Ambusher 5, Assault Lance 6 (426 kills);
+#           Yang Ice Zone 18 (3,776), Avalanche 15 (6,257), Ambush 12, row4 4, row5 7 (1,272).
+#
+# THIS RUNG WAS PRE-REGISTERED TO KILL ONE OF TWO FRAMINGS, AND IT KILLED THE PROC FRAMING.
+# Charles has zero procs, so adding him to Yang adds a HERO without adding a PROC.  If the decline
+# were about procs it should have sat near Charles' and Yang's own values; it came in at 0.60,
+# BELOW two-proc-hero Sophia+Yang.  So "the proc channel is over-applied" is dead as stated.
+
+# ------------------------------------------------- THE COMBINATION RULE, SETTLED FROM THE SOURCE
+# Read Skill.java and Fight.java rather than fitting.  The reference engine keeps exactly TWO
+# numbers per attack (Fight.java:127-128, coefAttack and coefDefense) and builds each by walking
+# every skill into ONE running accumulator:
+#     Skill.damage()   coef = 1;  cases 201/221/301/211:  coef = coef + skill.getValue() / 100.0
+#     Skill.defense()  coef = 0;  cases 202/302:          coef = coef + skill.getValue() / 100.0
+# There is no product over distinct skills or stat categories anywhere in it.  Only effect 101
+# ("extra damage") multiplies, and it carries a `coef = coef - 1` guard so it cannot re-multiply
+# within a round.  sim._prod multiplied a separate factor per stat category AND PER PROC NAME.
+# ADOPTED.  Every fight in allfights moves the right way, and by far the most where the theory
+# says it should -- the fights with three proc heroes on BOTH sides, where a product over proc
+# names compounds nine factors against nine:
+#     opponent-2 10k mixed  5.44 -> 2.29     Terry 10k all archer  4.21 -> 1.67
+#     Terry 20k mixed       3.62 -> 1.90     Narses 500 solo       1.51 -> 1.03
+#     rms log err 0.843 -> 0.499     mean|log| 0.613 -> 0.400     spread 0.66-5.44 -> 0.71-2.54
+# THE FIT IS NOT THE EVIDENCE.  It is adopted because it is what the reference implementation
+# does; the improvement is a consequence, and given the degeneracy recorded below, loss totals are
+# no longer strong enough evidence to adopt anything on their own.
+#
+# REJECTED ALTERNATIVES, all of which fit the ladder BETTER and none of which has a source:
+#     strongest-per-kind (procs of a kind take a max, not a product)   rms 0.174  spread 0.46
+#     diminishing returns, total c -> c/(1 + c/2)                      rms 0.225  spread 0.31
+# Both beat accumulation on the ladder.  Both are fitted shapes chosen for flattening a curve,
+# which is the exact move this project has refused throughout, and both contradict the source.
+# Not adopted.  Recorded so they are not rediscovered and mistaken for progress.
+
+# ------------------------------------------------- THE LADDER WAS MEASURING THE WRONG THING
+# After the accumulation fix k still falls monotonically: 1.08 / 0.96 / 0.89 / 0.70 / 0.60.  But
+# the round count -- which depends only on how fast the fight ENDS, not on how much I absorb --
+# explains it almost exactly.  On both rungs Avalanche (periodic 4) can date:
+#     Yang           sim 4.7 rounds vs 6 observed    ratio 0.82   sqrt 0.91   k 0.89
+#     Charles+Yang   sim 21  rounds vs 52 observed   ratio 0.39   sqrt 0.63   k 0.60
+# k = sqrt(round ratio) on both.  The simulator wipes Narses far too fast and my troops are
+# exposed for a fraction of the rounds they really faced.  Charles+Yang's length is corroborated
+# independently: Unyielding Shield fired 23 times at chance .375 -> 61 rounds, against Avalanche's
+# 60.  So "the model over-credits each additional hero" was a description of a symptom.
+#
+# AND IT IS TWO ERRORS, NOT ONE -- THIS IS THE IMPORTANT PART.
+# Scale ONLY my side's skill output by F and re-run Charles+Yang:
+#     F      1.00   0.60   0.40   0.30   0.25   0.20
+#     rounds 14.9   19.4   24.1   27.9   30.4   34.0      (observed ~52-60)
+#     losses 13.9   18.5   22.4   26.3   28.8   31.8      (observed 26)
+# The losses land at F = 0.30, where the fight still runs 28 rounds against 52 observed.  The two
+# observables want different corrections.  So my output is over-modelled AND the opponent's
+# per-round rate is over-modelled, and they partly cancel in every loss total in this file.
+#
+# CONSEQUENCE -- A RETRACTION.  "THE DAMAGE CORE IS CORRECT" IS NOT SUPPORTED.
+# The heroless fight's k of 1.05 was read as validating the entire engine below the hero layer.
+# It cannot bear that weight: it is a single number of the form rate x rounds, and this ladder now
+# shows rate and rounds erring in opposite directions.  The heroless fight's own row supports the
+# same doubt -- Unyielding Shield fired 104 times at chance .375, which needs ~277 rounds of
+# infantry-alive time if it rolls once per round, against the simulator's 139.  What survives from
+# that report is narrower and still valuable: the TG2 ability caps, that troop abilities need no
+# hero, and that the panel reconstruction is right.  What does not survive is "every remaining
+# error in this file is in the hero skill layer."
+
+# ------------------------------------------------- THE BLOCKER: per-round or per-attack?
+# Converting a trigger count into a round count requires knowing how many times a chance proc is
+# rolled per round, and the reports disagree.  Dating each fight by Avalanche and dividing out the
+# nominal chance gives rolls-per-round (a LOWER bound, since a troop ability stops when its type
+# dies):
+#     Narses 500 solo   R=156   Ice Zone 0.95   Ambush 0.64   Unyielding Shield 2.14
+#     Charles+Yang      R= 60   Ice Zone 0.75   Ambush 0.50   Unyielding Shield 1.02
+# Yang's hero procs sit under 1 in both, consistent with one roll per round throttled by troop
+# lifetime.  Unyielding Shield does not: 2.14 in one fight and 1.02 in the other, and 2.14 cannot
+# be explained by lifetime because lifetime only pushes the estimate UP.  Until this is settled,
+# Avalanche is the only trustworthy clock, and it needs archers to fire at all.
+#
+# ------------------------------------------------- next test, pre-registered: PURE ARCHERS, YANG ONLY
+# The march that removes every confound at once.  1,000 ARCHERS, Yang only, Infantry and Cavalry
+# slots Vacant, same heroless Narses.
+#   - Avalanche fires (archers present), so the fight is dated by a periodic skill.
+#   - ONE troop type, so any "rolls once per attacking troop type" multiplicity is 1 by
+#     construction -- Ice Zone and Ambush then measure rolls-per-round directly against Avalanche.
+#   - NO infantry, so Unyielding Shield must read ZERO.  A non-zero count refutes the lifetime
+#     gate outright, which the model relies on everywhere.
+#   - Archers cannot die to their own type's ability gate, so no lifetime throttling of Yang's rows.
+# PRE-REGISTERED, from the current engine:
+#     panel must read  archer attack 1823.5, defense 1809.4, lethality 1742.7, health 1737.6
+#                      infantry and cavalry lines at their heroless values (1102.3 / 1090.7 /
+#                      1042.4 / 1040.6 and 1080.3 / 1069.3 / 990.8 / 992.6)
+#     simulator says my losses 143 of 1,000 in 16.9 rounds, winning 100% of 600 runs
+#     -> Avalanche about 4, Ice Zone about 7, Ambush about 7, Unyielding Shield 0.
+# (Generated, not recalled -- a number that cannot be regenerated is not a pre-registration.
+#  python3 -c from the ladder panel, 600 runs, seed 11.)
+# WHAT EACH OUTCOME MEANS.  If Avalanche comes back near 4, the simulator's clock is right at this
+# march size and the round-count error is specific to MIXED marches -- which would point straight
+# at targeting, the one part of the loop that only does anything when several types are alive.  If
+# it comes back at 10-20, the clock is wrong even with a single troop type and a single hero, and
+# the fault is in the core loop rather than anywhere in the hero layer.  Either way it is read off
+# one row, with no fitting and no reliance on the loss total.

@@ -248,29 +248,35 @@ OPP_DEF_DOWN = ('e_taken', 'e_def', 'proc_e_taken')
 
 
 def _prod(effs, kinds, scope_ok, sign=+1, reciprocal=False):
-    """Multiply (1 +/- sum/100) over distinct ops.  Op = kind (stat category) for flat skills,
-    or the skill name for chance-based (proc_) skills, so procs always multiply.
+    """Combine every skill contribution in one channel into a single coefficient.
 
-    reciprocal: use 1/(1 - sum/100) instead of (1 + sum/100).  The reference engine raises a
-    defender's defence as `defense = defense / (1 - coefDefense)` (Fight.java:133), which is
-    strictly stronger than the (1 + coef) this file assumed -- a +25% defence skill divides
-    damage by 1.333, not 1.25.  Defence-side factors use this form; attack-side ones do not,
-    because Skill.damage() really does accumulate `coef = coef + value/100`.
+    THE REFERENCE ENGINE ACCUMULATES; IT DOES NOT MULTIPLY.  Skill.damage() walks every skill the
+    fighter has into ONE running coefficient (`coef = coef + skill.getValue() / 100.0`, cases 201,
+    221, 301, 211) and Skill.defense() does the same from zero (cases 202, 302).  Fight.java:127
+    then uses exactly two numbers per attack, coefAttack and coefDefense -- there is no product
+    over distinct skills or stat categories anywhere in it.  Only effect 101 ("extra damage")
+    multiplies, and even that carries a `coef = coef - 1` guard so it cannot re-multiply within a
+    round.  This file previously multiplied a separate factor per stat category and PER PROC NAME,
+    so N live procs contributed N factors: with one hero that is at most three and the error is
+    invisible, with two proc heroes it is six, and against a three-hero opponent nine on each side.
+
+    THIS CHANGE IS ADOPTED ON THE SOURCE, NOT ON THE FIT.  It does improve the ladder (rms 0.358
+    -> 0.289) but that improvement is NOT the evidence for it, because the ladder's loss totals
+    have since been shown degenerate -- see the round-count section in reports.py.  A rule read off
+    the reference implementation stands or falls on the reference implementation.
+
+    reciprocal: use 1/(1 - sum/100) instead of (1 + sum/100).  Fight.java:133 raises a defender's
+    defence as `defense = defense / (1 - coefDefense)`, strictly stronger than (1 + coef) -- a +25%
+    defence skill divides damage by 1.333, not 1.25.  Defence-side factors use this form; attack-
+    side ones do not, because Skill.damage() really does accumulate into a coefficient of 1.
     """
-    by_op = {}
+    tot = 0.0
     for kind, v, scope, name in effs:
         if kind in kinds and scope_ok(scope):
-            op = name if kind.startswith('proc') else ('atk' if kind == 'dmg' else kind)
-            if kind.startswith('proc'):
-                v *= PROC_SCALE
-            by_op[op] = by_op.get(op, 0) + v
-    m = 1.0
-    for v in by_op.values():
-        if reciprocal:
-            m *= 1.0 / max(1e-6, 1 - sign * v / 100)
-        else:
-            m *= (1 + sign * v / 100)
-    return m
+            tot += v * PROC_SCALE if kind.startswith('proc') else v
+    if reciprocal:
+        return 1.0 / max(1e-6, 1 - sign * tot / 100)
+    return 1 + sign * tot / 100
 
 
 def skill_mod(att, att_effs, u, dfn, def_effs, v):
