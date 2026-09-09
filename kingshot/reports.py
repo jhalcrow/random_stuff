@@ -1969,3 +1969,36 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # ALSO A CLEAN MEASURE OF WHAT HEROES ARE WORTH: my infantry attack is 1102.3 here against 2379.0
 # with a lineup and the 20% stack -- so hero expedition stats and buffs together are most of the
 # panel, which is why hero_stats=False against a reported panel has always been the right call.
+
+
+# ------------------------------------------------- next test, pre-registered: bisect the hero layer
+# The heroless fight worked because it switched off a whole subsystem at once.  Do the same to the
+# hero layer, which is now the only place the error can be.  It splits cleanly down the middle:
+#     CHARLES  Intimidation, Iron Bodies, Great Justice -- three PERMANENT auras, ZERO procs
+#     YANG     Ice Zone, Avalanche, Ambush              -- three PROCS, ZERO auras
+# So one march with Charles alone tests the aura channel and one with Yang alone tests the proc
+# channel, against a heroless baseline that is already measured at k 1.05.  Same 1,000 troops at
+# 500/200/300, same target, other two hero slots left Vacant.
+#
+# THE PANEL IS ITSELF A PREDICTION, and a free end-to-end check on hero_stats.json:
+#     Charles only -> INFANTRY ATTACK must read 1752.8  (1102.3 + his 650.52)
+#     Yang only    -> ARCHER ATTACK must read 1623.5    (1083.1 + his 540.43)
+# If either line comes back different, hero_stats.json is wrong and nothing downstream is safe.
+# If both land, the stat half of the hero layer is confirmed and only the skill half is left.
+#
+# PRE-REGISTERED, against Narses at 83,600 in thirds, his TG caps {inf 0, cav 0, arch 1}:
+#     no heroes      726 losses (measured 687, k 1.05)   138 rounds
+#     Charles only   193 losses                          106 rounds
+#     Yang only      101 losses                           22 rounds
+#
+# WHAT EACH OUTCOME MEANS:
+#   Charles lands and Yang does not  -> auras are right, procs are wrong.  That is the expected
+#       result if _prod's multiply-by-skill-name is the fault, and it would localise the bug to
+#       one function with three known-good and three known-bad inputs to test against.
+#   Both land                        -> a single hero is fine and the fault is in COMBINING
+#       several, which points at stacking rather than at any one skill's magnitude or schedule.
+#   Charles misses too               -> the aura channel is wrong as well, and the "damage core is
+#       correct" conclusion needs re-examining, because auras are just stat multipliers.
+#   Yang's 22 rounds is worth watching on its own: three procs at full magnitude end the fight six
+#   times faster than no heroes at all, which is the over-application showing up as a round count
+#   rather than as a loss total, and Avalanche's trigger count will measure it directly.
