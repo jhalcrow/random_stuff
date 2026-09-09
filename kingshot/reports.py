@@ -1030,9 +1030,15 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # crossover (the simulator has 1,000 winning 99% of the time and 700 winning 1%), and since the
 # simulator over-predicts my output, reality will lose at 500 at least as readily.
 #
-# PRE-REGISTERED PREDICTIONS for 500 troops at 50/20/30 vs Narses' 61,785 inf + 61,785 archers:
-#     simulator says he loses 38,860 and I am wiped.
-#     if the over-prediction follows MY side (a stat-level cap):  he really loses ~22,900  (k 1.7)
-#     if it follows the OPPONENT (something about Terry/opp2):    he really loses ~32,400  (k 1.2)
+# HIS RATIO SHOULD BE 50/20/30.  Every fight with an anomalous k (mine over-predicted) faces a
+# 50/20/30-ish enemy -- Terry at 50/20/30, opponent-2 at 45/20/35.  Matching that shape leaves his
+# STAT LEVEL as the only difference from those cells, which is the variable under test.  The
+# choice does not affect whether the test works: 50/20/30, 50/0/50 and thirds all lose 0% of the
+# time at a 500-troop march, with his losses landing within 10% of each other.
+#
+# PRE-REGISTERED PREDICTIONS -- 500 troops at 50/20/30 against a 50/20/30 Narses:
+#     simulator says he loses 40,667 and I am wiped.
+#     if the over-prediction follows MY side (a stat-level cap):  he really loses ~23,400  (k 1.74)
+#     if it follows the OPPONENT (something about Terry/opp2):    he really loses ~33,600  (k 1.21)
 # Those are far enough apart that one report decides it.  Capture his actual army composition --
 # he has been wiped twice today, and healed troops may have changed the mix.
