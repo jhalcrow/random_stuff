@@ -41,10 +41,29 @@ def modelled(name):
     return {'chance': v, 'periodic': 1.0 / v, 'always': 1.0}[kind]
 
 
+EXPECTED_ROWS = {t: 3 + len(v) for t, v in
+                 [(k, [x for x in TROOP_SKILLS if x[4] == k]) for k in ('inf', 'cav', 'arch')]}
+
+
+def check_rows(hero, rows):
+    """A row that never fired is omitted from the panel, so indices shift and positional mapping
+    silently mis-assigns.  Verified on Terry's Yang, which shows 4 rows because his Volley fired
+    zero times -- his 4th row is everyone else's 5th.  Never map by position without this."""
+    want = EXPECTED_ROWS[HEROES[hero]['type']]
+    if len(rows) < want:
+        return f"  !! {len(rows)} rows, expected {want}: a zero-trigger row is omitted, mapping below is UNSAFE"
+    if len(rows) > want:
+        return f"  !! {len(rows)} rows, expected {want}: {len(rows) - want} troop ability/-ies missing from TROOP_SKILLS"
+    return None
+
+
 def main():
     print(f"one fight, {ROUNDS:.0f} rounds\n")
     print(f"{'hero':10}{'row':>4}  {'skill':22}{'fired':>7}{'measured':>10}{'modelled':>10}  ratio")
     for hero, rows in ROWS:
+        warn = check_rows(hero, rows)
+        if warn:
+            print(warn)
         info = HEROES[hero]
         troop = [n for n, _ in TROOP_BY_TYPE.get(info['type'], [])]
         for i, (fired, _kills) in enumerate(rows):

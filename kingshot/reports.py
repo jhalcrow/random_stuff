@@ -1481,8 +1481,27 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # What is left there is the scraped magnitudes and SCHEDULES themselves -- and firing.py already
 # shows 15 of 21 schedules wrong by more than 1.5x.  The residual has nowhere else to hide.
 #
-# LOOSE THREAD, recorded rather than chased: Terry's Yang shows 4 rows in the 20k report where
-# mine shows 5, both with archers present, so he is missing one archer troop ability I have.  It
-# does NOT explain the residual -- his archers being weaker would make me kill MORE of them, and
-# the model already over-predicts that -- but it is a real difference between two supposedly
-# identical T11 TG8 archer squads and it should be understood before the troop layer is trusted.
+# RETRACTED -- I read that thread wrong.  Terry's Yang shows 4 rows because HIS VOLLEY FIRED
+# ZERO TIMES AND THE PANEL OMITS ZERO-TRIGGER ROWS ENTIRELY.  His 4th row is everyone else's 5th.
+# He is not missing an ability; nothing differs between the two archer squads.  Re-mapped:
+#     mine   Ice Zone 9   Avalanche 7   Ambush 8   Volley 1   Howling Wind 5
+#     Terry  Ice Zone 8   Avalanche 6   Ambush 5   (Volley 0, omitted)   Howling Wind 6
+# which is two closely matching archer squads, exactly as it should be.
+#
+# THE GENERAL RULE MATTERS MORE THAN THE THREAD: ROW POSITION IS NOT A STABLE INDEX.  A row that
+# never fired is not shown, so indices shift up and any positional mapping is only valid once the
+# row COUNT has been checked against what that hero should have.  firing.py maps by position and
+# now refuses to do so silently when the count is wrong.  Expected counts are 3 skills plus the
+# troop abilities of the hero's own type: infantry 4, cavalry 4, archer 5.
+#
+# THE UPSIDE: AN ABSENT ROW IS DATA, NOT A GAP.  It says "fired exactly zero times", which bounds
+# the rate.  Terry's Volley at 0 over ~25 rounds, mine at 1 over the same 25, and mine at 8 over
+# ~152 in the 500 fight all sit under a nominal .10 -- the same ~0.55 shortfall firing.py found.
+#
+# THE REAL ANOMALY IS SOPHIA, AND IT IS THE OPPOSITE PROBLEM.  In the 500 fight she shows SIX rows
+# where cavalry should have four: rows 1-3 are her skills (28, 43, 1) and rows 4-6 are cavalry
+# troop abilities firing 16, 11 and 4 times, one of them booking 640 kills.  TROOP_SKILLS models
+# ONE cavalry ability (Assault Lance) and sim.py handles Ambusher separately as a targeting
+# effect, so at least one cavalry troop ability is entirely absent from the model -- and it is a
+# damage-dealing one, worth 1.3% of his losses in that fight.  Extra rows cannot be explained by
+# the omission rule, which only ever removes rows.  This is a genuine gap, unlike the Terry one.
