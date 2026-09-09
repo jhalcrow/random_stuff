@@ -1297,3 +1297,77 @@ NARSES_500 = dict(my_troops={'inf': 250, 'cav': 100, 'arch': 150}, my_losses=500
 # there is no round count without my panel rows; and the Stat Bonuses panel will change once hero
 # expedition stats drop out, which is itself a direct check on the hero_stats=False decision.
 # Worth running after the infantry test, not instead of it.
+
+
+# ------------------------------------------------- 1,500 pure infantry (mail 223407017240989)
+# DEFEAT.  My 1,500 wiped (525 + 975); he lost 5,460 + 10,138 = 15,598, residents 107,972
+# (15,598 + 107,972 = 123,570 exactly).  Power -70,875 me, -414,960 him.
+#
+# MY PANEL HAD CHANGED -- the buffs from the previous session had worn off, and Special Bonuses
+# now reads a single +5.0% Appointment-based Squads' Attack (his: 0.0%).  Infantry attack
+# 2379.0 -> 1965.8, infantry lethality 2183.4 -> 1802.9.  The pre-registered 19,337 was computed
+# on the old panel and is therefore not the model's prediction for the fight that happened.
+NARSES_1500_INF_PANEL = {
+    'inf': dict(attack=1965.8, defense=1941.2, lethality=1802.9, health=1801.1),
+    'cav': dict(attack=1833.7, defense=1809.7, lethality=1724.3, health=1726.1),
+    'arch': dict(attack=1836.5, defense=1809.4, lethality=1742.7, health=1737.6)}
+NARSES_1500_INF = dict(my_troops={'inf': 1_500, 'cav': 0, 'arch': 0}, my_losses=1_500,
+                       enemy=NARSES, enemy_troops={'inf': 61_785, 'cav': 24_714, 'arch': 37_071},
+                       enemy_losses=15_598,
+                       my_charles=[(1, 0), (1, 0), (1, 0), (463, 0)],
+                       my_sophia=[(87, 0), (1, 0), (1, 0)],
+                       my_yang=[(53, 1_073), (1, 0), (79, 0)],
+                       their_long_fei=[(84, 0), (1, 0), (173, 73)],
+                       their_jabel=[(71, 0), (324, 83), (1, 0), (33, 0)],
+                       their_rosa=[(87, 0), (1, 0), (1, 0), (18, 0)])
+
+# HIS DEFENCE CARRIES A +20% BUFF HERE THAT THE 500-TROOP FIGHT DID NOT HAVE.  Comparing the two
+# reports: attack, lethality and health are identical to the decimal, while every defence line is
+# higher by a factor of exactly 1.200 (inf 411.9 -> 514.3, cav 271.3 -> 345.5, arch 372.7 ->
+# 467.2).  NARSES in this file holds the BUFFED numbers, and I scored the 500-troop fight with
+# them -- 20% too much defence on his side, which understates my damage.
+NARSES_UNBUFFED = {t: dict(d, defense=(100 + d['defense']) / 1.2 - 100) for t, d in NARSES.items()}
+
+# WHAT THE TWO CORRECTIONS DO.  Both move toward 1, and the two fights I lost now agree:
+#     1,500 pure infantry   pre-registered panel 19,337  k 1.24  ->  report's panel 13,357  k 0.86
+#     500 at 50/20/30       as scored           33,080  k 0.68  ->  report's defence 39,865  k 0.82
+# So my output against Narses is under-predicted by a consistent ~1.2x in both, not by 1.46x in
+# one of them.  Part of what looked like a dramatic reversal was a stale panel.
+# LESSON: re-derive a pre-registered number from the report's OWN panel before scoring it.  The
+# prediction was honestly made on the then-current stats; it stopped describing the fight the
+# moment the buffs lapsed.
+
+# THE PRE-REGISTERED TEST: BOTH PREDICTIONS FALSIFIED, AND MORE INTERESTINGLY THAN EITHER.
+#     predicted  ~78 triggers if the tooltip .375 is right and composition dilutes it
+#     predicted ~171 triggers if .822 holds regardless of composition
+#     OBSERVED   463
+# The round count here is at most ~200 (Ambush 79/.40 = 198; Ice Zone 53/.40 = 133; the simulator
+# says 206).  463 triggers over <=200 rounds is more than 2 per round, and no per-round
+# probability can exceed 1.  UNYIELDING SHIELD IS NOT A PER-ROUND CHANCE ROLL AT ALL.  Modelling
+# it as chance .375 is structurally wrong, not numerically wrong, and no fitted value can fix it.
+# It plausibly rolls per incoming attack or per infantry sub-unit; that is untested.
+#
+# It does scale with infantry, sub-linearly: 250 infantry gave 125 triggers at ~0.82/round,
+# 1,500 gave 463 at 2.25-3.48/round -- 6x the troops for 2.7-4.2x the rate.
+#
+# THE DILUTION HYPOTHESIS IS DEAD.  Stripping cavalry and archers did not bring Unyielding Shield
+# down to a nominal .375; it sent the count up by a factor of 3.7.
+
+# THE ROW-VANISHING PREDICTION WAS CONFIRMED, which is the one thing that went as expected.
+# Yang shows 3 rows, not 5 -- Volley and Howling Wind are absent with zero archers.  Sophia shows
+# 3, with no Assault Lance at zero cavalry.  Troop abilities really are gated on their own type
+# being present, so the sim._alive fix was right.
+
+# BUT THE TEST DESTROYED ITS OWN ROUND ANCHOR, which I should have seen when designing it.
+# YANG'S AVALANCHE COLLAPSES TO 1 TRIGGER WITH ZERO ARCHERS (it fired 39 times at 150 archers).
+# The same collapse is visible in the Terry 10,000 all-infantry report, whose row 2 also reads 1.
+# rounds.py had written that fight off as "3 and 1 triggers, noise dominates" -- wrong reason.
+# It was not noise: Avalanche structurally cannot fire without archers, so its implied round count
+# was meaningless rather than merely imprecise.  A PURE-TYPE MARCH CANNOT ANCHOR A ROUND COUNT.
+#
+# CONSEQUENCE FOR THE EARLIER ROUND-COUNT CLAIM.  Without Avalanche, this fight's count rests on
+# two chance rates that disagree badly: Ice Zone says 133 rounds, Ambush says 198, and the sim
+# says 206.  In the 500-troop fight Ice Zone and Avalanche agreed at ~152 while Ambush said 100 --
+# so Ice Zone and Ambush are mutually inconsistent ACROSS fights and cannot both be .40.
+# "The simulator ends fights too early" rested mainly on the one fight Avalanche could anchor.
+# It is not refuted here, but this fight cannot support it either.

@@ -26,14 +26,22 @@ from allfights import FIGHTS
 # fight label -> (Ice Zone triggers, Avalanche triggers) for MY Yang, read off the report
 TRIGGERS = {
     'Narses mixed atk 10k': (9, 6),      # reports.NARSES_ROWS['my Yang']
-    'Terry 10k all inf':    (3, 1),      # reports.TERRY_ATTACKS[1]['my_yang']
+    'Terry 10k all inf':    (3, None),   # reports.TERRY_ATTACKS[1]['my_yang'] -- no archers
     'Terry 20k mixed':      (9, 7),      # reports.TERRY_ATTACKS[0]['my_yang']
     'Narses 500 solo':      (59, 39),    # reports.NARSES_500['my_yang']
+    'Narses 1500 pure inf': (53, None),  # reports.NARSES_1500_INF['my_yang'] -- no archers
 }
+# AVALANCHE CANNOT ANCHOR A PURE-TYPE MARCH.  With zero archers it collapses to a single trigger
+# (1 at 1,500 infantry, against 39 at 150 archers; the Terry all-infantry report shows the same
+# 1).  That is structural, not sampling: it needs archers to fire.  Those entries carry None, and
+# a march with no archers has no reliable round count at all -- only chance rates, and Ice Zone
+# and Ambush disagree across fights badly enough that neither can be trusted alone.
 LOW_COUNT = 5      # below this many triggers the Poisson noise swamps the estimate
 
 
 def implied(ice, avalanche):
+    if avalanche is None:            # no archers: Avalanche is unavailable as an anchor
+        return ice / 0.40
     return (ice / 0.40 + avalanche * 4) / 2
 
 
@@ -58,11 +66,19 @@ def main():
         if f[0] not in TRIGGERS:
             continue
         ice, av = TRIGGERS[f[0]]
-        imp, s = implied(ice, av), sim_rounds(f)
-        flag = '   <- 3 and 1 triggers: noise dominates' if min(ice, av) < LOW_COUNT else ''
-        print(f"{f[0]:24}{s:>7.0f}{ice/0.40:>9.0f}{av*4:>8}{imp:>9.0f}{s/imp:>10.2f}{flag}")
-    print("\nThe simulator ends fights too early nearly everywhere.  Fit this before fitting any")
-    print("loss total: rounds constrain the opponent's damage alone, totals constrain a product.")
+        imp, sr = implied(ice, av), sim_rounds(f)
+        flag = '' if av else '   <- no archers: no Avalanche anchor'
+        if av and min(ice, av) < LOW_COUNT:
+            flag = '   <- Avalanche collapsed (no archers in this march)'
+        avc = f"{av * 4:>8}" if av else f"{'--':>8}"
+        print(f"{f[0]:24}{sr:>7.0f}{ice / 0.40:>9.0f}{avc}{imp:>9.0f}{sr / imp:>10.2f}{flag}")
+    print("\nFit this before fitting any loss total: rounds constrain the opponent's damage")
+    print("alone, where a total constrains a product of both sides' errors.")
+    print("Read the column with its anchor in mind.  The two rows with an Avalanche count run")
+    print("early (0.49, 0.77); the two without it rest on Ice Zone alone, and Ice Zone and Ambush")
+    print("disagree across fights (500 solo: 148 vs 100; 1500 inf: 132 vs 198), so neither is")
+    print("trustworthy by itself.  'The simulator ends fights too early' is supported only where")
+    print("Avalanche could anchor it.")
 
 
 if __name__ == '__main__':

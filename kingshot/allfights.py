@@ -11,7 +11,8 @@ import math, os, random, statistics, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sim import Side, battle_mc
 from reports import (TERRY_ATTACK_PANEL, TERRY_ATTACK_ENEMY, OPP2, OPP2_TROOPS, OPP2_TIERS,
-                     OPP2_PANEL, SOLO_PANEL, NARSES, NARSES_TROOPS)
+                     OPP2_PANEL, SOLO_PANEL, NARSES, NARSES_TROOPS, NARSES_UNBUFFED,
+                     NARSES_1500_INF_PANEL)
 
 NP = {'inf': dict(attack=2379.0, defense=1941.2, lethality=2183.4, health=1801.1),
       'cav': dict(attack=2220.5, defense=1809.7, lethality=2089.2, health=1726.1),
@@ -42,9 +43,17 @@ FIGHTS = [
     # in the set that measures MY output against a WEAK opponent, and the only one where the
     # model UNDER-predicts.  See rounds.py: its 152 measured rounds against the sim's 73 are what
     # show that a k on totals is a ratio of two cancelling errors, not one side's output.
+    # His defence carries a +20% buff in some reports and not others, and NARSES holds the buffed
+    # numbers.  This fight's own panel shows the unbuffed ones; scoring it with NARSES put 20% too
+    # much defence on him and cost 0.14 of k.
     ('Narses 500 solo', NP, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
-     NARSES, {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2,
+     NARSES_UNBUFFED, {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2,
      ['Long Fei', 'Jabel', 'Rosa'], 'them', 48_561),
+    # Pure infantry, fought after the previous session's buffs lapsed -- hence its own panel
+    # rather than NP.  His defence IS buffed here, so plain NARSES is right for this one.
+    ('Narses 1500 pure inf', NARSES_1500_INF_PANEL, {'inf': 1500, 'cav': 0, 'arch': 0}, 'solo',
+     NARSES, {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2,
+     ['Long Fei', 'Jabel', 'Rosa'], 'them', 15_598),
 ]
 
 
