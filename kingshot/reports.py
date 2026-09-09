@@ -697,3 +697,34 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 #     DEF_RECIP implements it and defaults on.  It makes the fit slightly WORSE (1.59 -> 1.68),
 #     which is expected when a stronger transform is applied to skill values that are themselves
 #     3-4x too big -- not evidence against the reference.
+
+
+# ------------------------------------------------- skill uptimes measured, not guessed
+# heroes.OBSERVED_UPTIME now carries 18 skills whose uptime is measured from Battle Details
+# trigger counts (triggers / rounds) in the three PvP fights where the engine is validated.  The
+# Baron fights were excluded: its trigger counts exceed the simulator's round count outright,
+# which is another sign it is a scripted monster rather than a normal battle.
+#
+# ROW MAPPING CORRECTED: rows 1-3 of a hero panel are the base expedition skills; rows 4+ are TG
+# and gear skills that heroes.py does not model.  Charles' row 4 is Unyielding Shield, a TG proc --
+# which retires it as the round-count proxy used earlier in this file, since its counts (35, 30,
+# 20, 24 across the Baron series) are not monotonic in battle length and so it is not fixed-cadence.
+#
+# THE BIG ONE: Charles' three base skills fire EXACTLY ONCE in every single report, and this file
+# had all three permanently active -- a 15-30x overstatement on the hero in every one of my
+# lineups.  Triton's three do the same on the opponents' side, as does Sophia's Terror Annihilation.
+# Yang's and Sophia's other skills were understated instead, so the error was not one-directional.
+#
+#   variant                          mix   arch    inf   opp2   mean
+#   no hero skills at all           1.04   1.08   2.54   0.96   1.40
+#   both sides, measured uptimes    1.30   1.54   1.97   1.14   1.49
+#   my heroes only, measured        1.40   1.53   1.94   1.20   1.52
+#   guessed uptimes (before)        1.57   1.52   2.21   1.38   1.67
+#
+# Mean k 1.67 -> 1.49, and the two mixed cells (the ones the recommendations actually care about)
+# 1.57 -> 1.30 and 1.38 -> 1.14.  Bear Trap still reproduces 16,797.
+#
+# WHAT IS LEFT.  Turning skills off entirely still gives a better mean (1.40) than any uptime
+# setting, so the residual is not uptime alone -- the skill VALUES and SCOPES in heroes.py are
+# scraped from prose and remain unverified, and the all-infantry cell (1.97) is still the separate
+# structural bug it has been all along.  Uptimes are now data; magnitudes are still guesses.

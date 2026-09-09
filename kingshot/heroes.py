@@ -204,6 +204,30 @@ PROC_SPEC = {
 }
 
 
+# Uptimes measured from Battle Details trigger counts in the three validated PvP fights
+# (Terry 20k mixed, Terry 10k all-infantry, opponent-2 10k mixed), as triggers / rounds.  Rows 1-3
+# of a hero's panel are the base expedition skills; rows 4+ are TG and gear skills (Charles' row 4
+# is Unyielding Shield, a TG proc) which this file does not model at all.
+#
+# The headline: Charles' three base skills fire EXACTLY ONCE in every report, and this file had
+# them permanently active -- a 15-30x overstatement.  Same for Sophia's Terror Annihilation.
+# Yang's and Sophia's other skills were understated instead.
+OBSERVED_UPTIME = {
+    'Intimidation': 0.033, 'Iron Bodies': 0.033, 'Great Justice': 0.033,   # once per battle
+    'Arcane Pact': 0.10, 'Terror Deathblow': 0.18, 'Terror Annihilation': 0.033,
+    'Ice Zone': 0.24, 'Avalanche': 0.13, 'Ambush': 0.23,
+    # Opponents' heroes, from the same reports' right-hand columns.  Triton's three base skills
+    # fire once per battle just like Charles'; Ava's row 2 is the only one of hers that repeats.
+    'Command of Power': 0.033, 'Warfare of Power': 0.033, 'Oath of Power': 0.033,
+    'Dissolution': 0.034, 'Chiaroscuro': 0.103, 'Light and Cold': 0.034,
+    'Artillerymen': 0.037, 'Chain Shelling': 0.037, 'Boom Boom': 0.59,
+}
+# Anything measured gets a chance-proc schedule at that rate, so battle_mc gates it properly
+# instead of leaving it flat-on.
+for _n, _u in OBSERVED_UPTIME.items():
+    PROC_SPEC[_n] = ('chance', _u, 1)
+
+
 def proc_uptime(name):
     mode, p, dur = PROC_SPEC[name]
     if mode == 'chance':
