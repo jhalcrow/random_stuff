@@ -387,3 +387,63 @@ SPECIAL_BONUSES = {           # (mine, Terry's) in %
 #
 # What it does NOT change: the Terry engine fit (1.95x) and the nuke problem both stand, since
 # both were computed from panels that already included all of this.
+
+
+# ------------------------------------------------- Terry attacks (same special bonuses)
+# Two attacks on Terry with the Special Bonuses panel verified identical to the defence above,
+# so buff state is held constant across all three.  I was wiped in both; Terry's losses are the
+# uncensored quantity.  Two cells of the designed sweep: 20,000 at 50/20/30, and 10,000 pure
+# infantry (the zero-archer test).
+TERRY_ATTACKS = [
+    dict(label='20,000 at 50/20/30', my_troops={'inf': 10_000, 'cav': 4_000, 'arch': 6_000},
+         enemy_troops={'inf': 94_555, 'cav': 37_822, 'arch': 56_733},
+         my_losses=20_000, enemy_losses=22_570,
+         my_yang=[(9, 596), (7, 1_020), (8, 0), (1, 0), (5, 487)],
+         their_yang=[(8, 608), (6, 908), (5, 0), (6, 757)]),
+    dict(label='10,000 ALL INFANTRY', my_troops={'inf': 10_000, 'cav': 0, 'arch': 0},
+         enemy_troops={'inf': 113_467, 'cav': 45_386, 'arch': 68_079},
+         my_losses=10_000, enemy_losses=937,
+         my_yang=[(3, 64), (1, 0), (4, 0)],
+         their_yang=[(9, 558), (7, 529), (6, 0), (2, 0), (5, 303)]),
+]
+TERRY_ATTACK_PANEL = {  # mine; Terry's is TERRY_ATTACK_ENEMY below
+    'inf': dict(attack=2555.7, defense=1994.3, lethality=2266.1, health=1909.9),
+    'cav': dict(attack=2384.0, defense=1857.9, lethality=2167.9, health=1830.1),
+    'arch': dict(attack=2387.5, defense=1857.6, lethality=2190.8, health=1842.4)}
+TERRY_ATTACK_ENEMY = {
+    'inf': dict(attack=1537.8, defense=1140.5, lethality=1255.0, health=1309.5),
+    'cav': dict(attack=1378.4, defense=1001.0, lethality=1180.1, health=1042.4),
+    'arch': dict(attack=1507.1, defense=1107.6, lethality=1328.3, health=1122.1)}
+
+# ENGINE BIAS IS NOW CONSISTENT, which is the useful part.  Three Terry fights, buffs held
+# constant, sim over-predicts the losing side's damage output by an almost identical factor:
+#     10,000 defending  observed  9,734   sim 18,966   1.95x
+#     20,000 attacking  observed 22,570   sim 45,611   2.02x
+#     10,000 all-inf    observed    937   sim  1,827   1.95x
+# A stable ~1.97x multiplicative error is a missing term, not chaos, and is a far better target
+# than the scattered ratios from the mixed earlier reports.
+# Possible pattern, flagged as a hypothesis rather than a finding: in the Terry fights I lost and
+# MY damage is over-predicted; in the Narses fights Narses lost and HIS damage was over-predicted
+# (1.24x, 1.37x).  That would mean the real engine punishes the losing side harder than the model
+# does.  The Earthling rally does not fit that reading, but it has the heterogeneous-rally
+# confound already accounted for separately.
+
+# NUKE REGRESSION (nuke_fit.py) -- 13 observations of Yang row 1, all drivers fitted at once
+# instead of eyeballing pairs, which is what produced three wrong hypotheses in a row.
+#   single drivers:  army_min    +0.82  (rms x2.92)   <- much the strongest alone
+#                    own archers +0.31  (rms x3.96)
+#                    A caster    +1.13  (rms x5.25)
+#   best pair:       army_min^+1.23 * D_target^-0.88  (rms x1.94)  <- signs are physical
+#   best triple adds a NEGATIVE exponent on the caster's own attack, which is absurd: with 13
+#   correlated points that is overfitting, not a discovery.
+# Conclusion: army_min (battle scale) and the target's defence x health are the real drivers with
+# sensible signs, but no power law in these variables gets below a ~2x typical error, so a
+# structural piece is still missing.  What the ALL-INFANTRY cell did settle: Yang's nuke fires and
+# deals real damage with ZERO archers (21.3 per trigger, against 66.2 with 6,000 archers at twice
+# the march size), so own troop count matters only weakly -- roughly 1.3x beyond the scale effect.
+
+# TACTICAL, and unambiguous: an all-infantry march is catastrophic into a 50/20/30 garrison.
+# 10,000 pure infantry killed 937; 10,000 at 50/20/30 killed 9,734 -- more than 10x -- because
+# every one of your infantry piles into his infantry, first in the targeting order and the worst
+# matchup, while his 68,079 archers counter yours.  Kill ratios across the three Terry fights:
+# 20,000 at 50/20/30 -> 1.13, 10,000 at 50/20/30 defending -> 0.97, 10,000 all-infantry -> 0.09.
