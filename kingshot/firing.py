@@ -18,6 +18,23 @@ from reports import NARSES_500
 
 ROUNDS = 152.0        # Avalanche 39 * 4 = 156, Ice Zone 59 / 0.40 = 148
 
+# A TROOP ABILITY ONLY RUNS WHILE ITS TYPE IS ALIVE, so dividing its trigger count by the battle
+# length under-counts it by exactly the fraction of the battle that type survived.  An earlier
+# version of this file divided everything by ROUNDS and concluded that 15 of 21 schedules were
+# wrong by more than 1.5x, most at "~0.55 of nominal".  THAT WAS MY OWN DENOMINATOR ERROR, not a
+# game mechanic: 76/152 = 0.50 and 79/152 = 0.52 are the "~0.55".
+# My troops' lifetimes in this fight, simulated: infantry 71, cavalry 76, archers 79 of 152
+# rounds.  Inverting the observed counts instead gives cavalry 70/86/80/73 and archers 80/87 --
+# the same numbers from five independent proc rates, so the schedules were right all along.
+LIFETIME = {'inf': 71.0, 'cav': 76.0, 'arch': 79.0}
+
+# HERO skills are the exception and are divided by the full battle length: Yang's Ice Zone and
+# Avalanche imply 148 and 156, outliving his archers, which matches the Terry all-infantry report
+# where he books kills with zero archers.  Sophia's do NOT -- hers imply 70 and 86, tracking her
+# cavalry.  That asymmetry between two heroes on the same side is unexplained and is now the
+# sharpest open question in the skill layer.
+HERO_USES_TROOP_LIFETIME = {'Sophia'}
+
 ROWS = [('Charles',  NARSES_500['my_charles']),
         ('Sophia',   NARSES_500['my_sophia']),
         ('Yang',     NARSES_500['my_yang']),
@@ -63,8 +80,9 @@ def check_rows(hero, rows):
 
 
 def main():
-    print(f"one fight, {ROUNDS:.0f} rounds\n")
-    print(f"{'hero':10}{'row':>4}  {'skill':22}{'fired':>7}{'measured':>10}{'modelled':>10}  ratio")
+    print(f"one fight, {ROUNDS:.0f} rounds; troop lifetimes "
+          + ", ".join(f"{t} {v:.0f}" for t, v in LIFETIME.items()) + "\n")
+    print(f"{'hero':10}{'row':>4}  {'skill':22}{'fired':>7}{'over':>6}{'measured':>10}{'modelled':>10}  ratio")
     for hero, rows in ROWS:
         warn = check_rows(hero, rows)
         if warn:
@@ -78,13 +96,17 @@ def main():
             else:
                 j = i - 3
                 name = troop[j] if j < len(troop) else '(unmapped row)'
-            meas, mod = fired / ROUNDS, modelled(name)
+            ttype = info['type']
+            denom = ROUNDS
+            if i >= 3 or hero in HERO_USES_TROOP_LIFETIME:
+                denom = LIFETIME[ttype]
+            meas, mod = fired / denom, modelled(name)
             r = f"{meas / mod:5.2f}" if mod else "    -"
             flag = ''
             if mod and (meas / mod > 1.5 or meas / mod < 0.67):
                 flag = '  <-- schedule disagrees'
             m = f"{mod:>10.3f}" if mod else f"{'unmodelled':>10}"
-            print(f"{hero:10}{i+1:>4}  {name:22}{fired:>7}{meas:>10.3f}{m}  {r}{flag}")
+            print(f"{hero:10}{i+1:>4}  {name:22}{fired:>7}{denom:>6.0f}{meas:>10.3f}{m}  {r}{flag}")
         print()
     print("Row 1-3 mapping assumes the panel lists a hero's skills in heroes.py order.  Where a")
     print("row shows exactly 1 trigger it is a permanent aura, which is a check on that mapping:")

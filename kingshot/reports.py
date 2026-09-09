@@ -1682,3 +1682,47 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #      is a real measurement with no correct mechanism yet -- applying it globally breaks Narses.
 #   3. Unyielding Shield fires >2x per round, so it is not a per-round roll at all.
 #   4. Narses' cavalry and archer TG rows: he has one of each and I do not know which.
+
+
+# ------------------------------------------------- RETRACTION: the "~0.55 firing rate" was mine
+# This file recorded, as a headline finding, that 15 of 21 skill schedules disagreed with
+# measurement by more than 1.5x, "most at ~0.55 of nominal", across both sides and all three
+# troop types.  THAT WAS A DENOMINATOR ERROR IN MY OWN ANALYSIS, not a game mechanic.
+#
+# A troop ability only runs while its type is ALIVE.  firing.py divided every trigger count by the
+# 152-round battle length when most of those abilities stopped when the troops carrying them died.
+# My troops' simulated lifetimes in that fight are infantry 71, cavalry 76, archers 79 of 152
+# rounds -- and 76/152 = 0.50, 79/152 = 0.52.  That IS the "~0.55".
+#
+# Inverting the observed counts instead of dividing them recovers those lifetimes from the data
+# alone, from five independent proc rates that never saw the simulator:
+#     cavalry   Arcane Pact 70, Terror Deathblow 86, Ambusher 80, Assault Lance 73  (sim: 76)
+#     archers   Volley 80, Howling Wind 87                                          (sim: 79)
+# The schedules were right the whole time.  Corrected, the table reads Arcane Pact 0.92, Terror
+# Deathblow 1.13, Assault Lance 0.96, Volley 1.01, Howling Wind 1.10, Ice Zone 0.97,
+# Avalanche 1.03 -- and the count of genuine disagreements falls from 15 to 4.
+#
+# This also explains why applying 0.55 globally to PROC_SPEC fixed Terry and destroyed Narses:
+# there was nothing to apply.  sim.py already models troop death; only my measurement did not.
+#
+# WHAT SURVIVES AS A REAL ANOMALY, now only four:
+#   Unyielding Shield  1.76 per infantry-round -- still above 1, so still not a per-round roll
+#   Terror Annihilation  fired 1 -- now fixed, see below
+#   Ambush             0.66 against a .40 tooltip
+#   Warding Impaler    0.53, but on 4 triggers, so mostly noise
+#
+# TERROR ANNIHILATION RECLASSIFIED AS A PERMANENT AURA.  It fired exactly once in both reports,
+# with cavalry alive for 76 rounds in one of them, which is this file's own definition of an aura.
+# It had been modelled as periodic 2 (~38 firings).  Its sibling Terror Deathblow is genuinely
+# periodic -- 43 with cavalry, collapsing to 1 without, the same signature as Avalanche.
+#
+# ALSO NEW, and unexplained: DAMAGE-DEALING hero skills need their own troop type, buff skills do
+# not.  With zero cavalry Sophia's Arcane Pact still fired 87 times over ~207 rounds (.42 against
+# a .40 tooltip) while Terror Deathblow collapsed to 1.  Yang behaves the same way.  But Sophia's
+# surviving skills track her CAVALRY lifetime while Yang's track the whole battle, and that
+# asymmetry between two heroes on the same side is the sharpest open question in the skill layer.
+
+# ------------------------------------------------- state after the retraction and the aura fix
+#     mean k 1.05   spread 0.86-1.28   rms log err 0.126   mean|log| 0.095
+# Nine of ten fights are inside 30%, six inside the measured 8.8% per-rally noise.  For contrast,
+# this session opened at mean k 1.48, spread 1.04-2.01.

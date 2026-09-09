@@ -218,7 +218,13 @@ PROC_SPEC = {
 # A skill that fires EXACTLY ONCE per battle is a permanent aura switched on at the start -- the
 # single trigger is the game recording that it turned on.  Tooltip confirms: "Intimidation Lv. 5 --
 # reduces enemy Squad's Total Lethality by 20%", no chance, no duration.
-PERMANENT = {'Intimidation', 'Iron Bodies', 'Great Justice',
+# Terror Annihilation fired EXACTLY ONCE in both the 500-troop and 1,500-troop reports -- with
+# her cavalry alive for 76 rounds in the first -- which is this file's own definition of a
+# permanent aura.  It was modelled as periodic 2 (~38 firings).  Its sibling Terror Deathblow is
+# genuinely periodic: 43 firings with cavalry present, collapsing to 1 with zero cavalry, the same
+# signature as Avalanche without archers.
+PERMANENT = {
+    'Terror Annihilation','Intimidation', 'Iron Bodies', 'Great Justice',
              'Command of Power', 'Warfare of Power', 'Oath of Power',
              'Dissolution', 'Light and Cold', 'Artillerymen', 'Chain Shelling'}
 
