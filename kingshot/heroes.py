@@ -143,7 +143,7 @@ HEROES = {
     # ---------------- Gen 6 ----------------
     'Triton': dict(gen=6, rarity=LEG, type='inf', widget=('defender', 'defense', 15), skills=[
         ('Command of Power', [('def', 25, 'all')]),
-        ('Warfare of Power', [('proc', 6, 'all')]),              # +30% skill damage; ~20% of damage is skill EV
+        ('Warfare of Power', [('proc', 30, 'all')]),              # +30% skill damage; ~20% of damage is skill EV
         ('Oath of Power', [('hp', 20, 'inf'), ('hp', 30, 'cav'), ('hp', 30, 'arch')]),
     ]),
     'Sophia': dict(gen=6, rarity=LEG, type='cav', widget=('defender', 'lethality', 15), skills=[
@@ -167,7 +167,7 @@ HEROES = {
     ]),
     'Ava': dict(gen=7, rarity=LEG, type='cav', widget=('rally', 'lethality', 15), skills=[
         ('Dissolution', [('e_def', 25, 'all')]),
-        ('Chiaroscuro', [('proc_e_taken', 25, 'all')]),          # +50% taken for 2 of every 4 turns
+        ('Chiaroscuro', [('proc_e_taken', 50, 'all')]),          # +50% taken for 2 of every 4 turns
         ('Light and Cold', [('leth', 25, 'all')]),
     ]),
     'Wee & Woo': dict(gen=7, rarity=LEG, type='arch', widget=('defender', 'attack', 15), skills=[
@@ -182,6 +182,15 @@ HEROES = {
 #   ('periodic', N, dur)    fires every N rounds (rounds N, 2N, ...) and lasts dur rounds
 #   ('always', 1, 1)        per-attack effects over thousands of troops: treated as deterministic
 # The active magnitude is the encoded expected value divided by the steady-state uptime.
+# TRITON AND AVA VERIFIED AGAINST IN-GAME TOOLTIPS (Lv. 5, read off a Terry report).  These were
+# the last unverified skill magnitudes in the whole calibration; four of the six were already
+# right, two were badly low and both in the direction the residual predicted:
+#     Command of Power  "total Squads' Defense by 25%"                     25  ok
+#     Warfare of Power  "total Squads' skill damage dealt by 30%"           6 -> 30
+#     Oath of Power     "Infantry Health 20%, Cavalry and Archer Health 30%"  20/30/30  ok
+#     Dissolution       "total Enemy Squad's Defense by 25%"               25  ok
+#     Chiaroscuro       "50% increased damage for 2 turns every 4 turns"   25 -> 50  (schedule ok)
+#     Light and Cold    "total Squad's Lethality by 25%"                   25  ok
 PROC_SPEC = {
     'Unrighteous Strike': ('chance', 0.4, 1), 'Oath of Guardian': ('chance', 0.4, 1),
     'Rally Flag': ('chance', 0.4, 1), "Hero's Domain": ('chance', 0.5, 1),

@@ -1625,3 +1625,60 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # THE ASK IS SMALL AND EXACT: the three skill tooltips for Triton and for Ava, read off the hero
 # screen the same way Sophia's and Yang's were.  That is six numbers, and it is the last
 # unverified input in the whole calibration.
+
+
+# ------------------------------------------------- Triton and Ava verified: the last unknown
+# All six tooltips, Lv. 5, read off a Terry report.  FOUR OF SIX WERE ALREADY RIGHT, and the two
+# that were wrong were both badly LOW -- exactly the direction the residual predicted, which is
+# the first time a prediction in this file has been confirmed rather than falsified:
+#     Command of Power  "total Squads' Defense by 25%"                        25        ok
+#     Warfare of Power  "total Squads' skill damage dealt by 30%"              6 -> 30
+#     Oath of Power     "Infantry Health 20%, Cavalry and Archer Health 30%"   20/30/30 ok
+#     Dissolution       "total Enemy Squad's Defense by 25%"                  25        ok
+#     Chiaroscuro       "50% increased damage for 2 turns every 4 turns"      25 -> 50
+#     Light and Cold    "total Squad's Lethality by 25%"                      25        ok
+# Chiaroscuro's SCHEDULE was already right (periodic 4, duration 2); only its size was halved.
+#
+# THE FIX IS TARGETED, WHICH IS WHAT SEPARATES IT FROM EVERY REJECTED CANDIDATE.  Triton and Ava
+# appear on Terry's and opponent-2's side and nowhere else, so the six Narses fights do not move
+# at all -- 0.88, 0.96, 0.98, 0.87, 0.97, 1.04 before and after.  Compare the procs-x0.55 test,
+# which bought Terry 0.537 -> 0.249 by wrecking Narses 0.068 -> 0.797.  A correct mechanism moves
+# the fights it belongs to and leaves the rest alone.
+#     Terry / opp2 mean|log|   0.537 -> 0.428 (Chiaroscuro) -> 0.266 (both)
+#     all ten rms log err      0.354 -> 0.282               -> 0.185
+#
+# CAVEAT ON WARFARE OF POWER, stated because the fit likes it and that is not evidence.  The
+# tooltip says "SKILL damage dealt" and sim.py has no separate skill-damage channel -- every hero
+# skill enters through the same SkillMod multiplier as basic damage, so 30 is applied generically.
+# If the narrow reading were right, +30% on the ~10% of kills hero skills actually book would be
+# worth about +3% overall and the fit would barely have moved; it moved a lot, so the data prefers
+# the generic reading.  That is suggestive, not proof.  Two things support it independently: the
+# reference engine's effect 101 is "a plain multiplier on that troop type's damage", and the value
+# 30 sits naturally with its sibling skills (25 / 25 / 25 / 20-30) where the scraped 6 was an
+# outlier.  If a skill-damage channel is ever built, revisit this first.
+
+# ------------------------------------------------- where the calibration stands
+#     fight                  observed        sim       k
+#     Narses pure-arch 5k          72         63    0.88
+#     Narses mixed atk 10k        239        228    0.96
+#     Narses mixed def 5k         292        287    0.98
+#     Narses inf+arch 1k          397        346    0.87
+#     Terry 10k all archer      1,808      2,207    1.22
+#     Terry 10k all inf           937      1,183    1.26
+#     opponent-2 10k mixed     15,224     18,302    1.20
+#     Terry 20k mixed          22,570     31,961    1.42
+#     Narses 500 solo          48,561     46,899    0.97
+#     Narses 1500 pure inf     15,598     16,149    1.04
+#     mean k 1.08   spread 0.87-1.42   rms log err 0.170
+# Against a measured per-rally noise of 8.8% CV, six of the ten are inside noise.  Nothing here
+# was fitted: every change came from a tooltip, a panel or a row count.  The one number that was
+# ever fitted -- the gear constants -- is the oldest thing in the file and should be re-derived.
+#
+# WHAT IS STILL OPEN, in order of how much it could still be hiding:
+#   1. Terry's four sit at 1.20-1.42, a consistent over-prediction of MY output against him and
+#      the only group left with any structure.  Wee & Woo (opponent-2) is still an unverified
+#      scrape, and so is every joiner in the rally fits.
+#   2. firing.py: 15 of 21 schedules disagree with measurement, most at ~0.55 of nominal.  This
+#      is a real measurement with no correct mechanism yet -- applying it globally breaks Narses.
+#   3. Unyielding Shield fires >2x per round, so it is not a per-round roll at all.
+#   4. Narses' cavalry and archer TG rows: he has one of each and I do not know which.
