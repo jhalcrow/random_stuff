@@ -12,10 +12,14 @@ to the decimal before the fight, the stat half is known to be right, so any erro
     Sophia+Yang   k 0.70      + a second PROC hero  (six procs)
     Charles+Yang  k 0.60      + a second AURA hero  (still only three procs)
 
-WHAT THE LADDER LOOKS LIKE IT SAYS, AND WHY THAT READING IS WRONG.  k falls monotonically with
-hero count, and Charles+Yang -- which adds a hero WITHOUT adding a proc -- is the worst rung, so
-for a while this read as "the model over-credits each additional hero, and it is about stacking
-heroes rather than about procs."  The round-count columns kill that reading.  On both rungs that
+THE LOSS COLUMN IS UNDERPOWERED -- READ THE ROUND COLUMNS INSTEAD.  Each rung is ONE battle, and
+against an 84:1 mismatch my losses are a two-digit number.  Measured against the simulator's own
+single-draw distribution (4,000 runs, see reports.py), FOUR OF THE FIVE RUNGS ARE CONSISTENT WITH
+PURE NOISE: z = -0.4, +0.1, +0.5, +0.8, and only Charles+Yang at +2.6.  The monotone decline in k
+is four insignificant points in a suggestive order, and it was over-read for some time on the
+strength of that order.  The tell was visible without statistics: the worst k belongs to the
+smallest loss count.  Round counts carry about 7% relative noise against 15-56% for loss totals,
+so they are the column to believe -- and there the Charles+Yang discrepancy is 23 sigma.  On both rungs that
 Yang's periodic-4 Avalanche can date, k is almost exactly the SQUARE ROOT of the round ratio:
 
     Yang           rounds 4.7 sim vs 6 observed    ratio 0.82   sqrt 0.91   k 0.89
@@ -115,12 +119,13 @@ def main():
             line += f"{'--':>10}{sr:>9.1f}{'--':>7}{'--':>7}"
         print(line)
     print(f"\n  rms log err {math.sqrt(sum(x * x for x in errs) / len(errs)):.3f}")
-    print("  k STILL falls monotonically with hero count -- but the last two columns say why, and")
-    print("  it is not what it looks like.  On both anchored rungs k is almost exactly the square")
-    print("  root of the round-count ratio, so the loss error is the fight ending too early: my")
-    print("  troops are exposed for a quarter of the rounds they really faced.  Chase the round")
-    print("  count, not the loss total.  See reports.py -- forcing the rounds right does NOT fix")
-    print("  the losses, so there are two errors here, not one, and they partly cancel.")
+    print("  DO NOT READ THE k COLUMN AS A TREND.  Four of these five rungs sit inside the")
+    print("  simulator's own single-draw band (z = -0.4, +0.1, +0.5, +0.8); only Charles+Yang is")
+    print("  significant at +2.6.  One battle against an 84:1 mismatch cannot support a 30%")
+    print("  inference.  The round columns are the ones with power -- 7% noise against 15-56% --")
+    print("  and there the Charles+Yang length is off by 23 sigma: the simulator wipes Narses far")
+    print("  too fast, so my troops are exposed for a fraction of the rounds they really faced.")
+    print("  Size future calibration marches for 30+ rounds WITH a win: 400-600 here, not 10,000.")
 
 
 if __name__ == '__main__':

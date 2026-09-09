@@ -2257,26 +2257,72 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # be explained by lifetime because lifetime only pushes the estimate UP.  Until this is settled,
 # Avalanche is the only trustworthy clock, and it needs archers to fire at all.
 #
-# ------------------------------------------------- next test, pre-registered: PURE ARCHERS, YANG ONLY
-# The march that removes every confound at once.  1,000 ARCHERS, Yang only, Infantry and Cavalry
-# slots Vacant, same heroless Narses.
-#   - Avalanche fires (archers present), so the fight is dated by a periodic skill.
+# ------------------------------------------------- HOW NOISY IS A SINGLE BATTLE?  (the power audit)
+# Asked by the player, and it lands: does the 84:1 imbalance make these tests too noisy to read?
+# Each ladder rung is ONE battle, so the right test is how surprising the observed number is as a
+# single draw from the simulator's own distribution -- not how far the MEANS are apart.  4,000 runs
+# per rung:
+#     rung            obs   sim mean   sim sd   5-95% band     z    P(draw >= obs)
+#     0 heroes        687      737      114      603 - 1000   -0.4      0.60
+#     Charles          39       38       15        15 -   65   +0.1      0.46
+#     Yang             73       66       14        44 -   90   +0.5      0.30
+#     Sophia+Yang      41       28       16         0 -   55   +0.8      0.21
+#     Charles+Yang     26       16      3.9        10 -   22   +2.6      0.009
+#
+# FOUR OF THE FIVE RUNGS ARE CONSISTENT WITH PURE NOISE.  "k falls monotonically with hero count"
+# rests on ONE significant rung.  A single draw of 41 from a mean of 28 with sd 16 is unremarkable,
+# and the apparent trend is four insignificant points arranged in a suggestive order.  The tell was
+# there to be seen before the statistics: the WORST k belongs to the SMALLEST loss count.  At 84:1
+# I lose 26 troops of 1,000, and a count that small cannot carry a 30% inference.
+# THIS RETRACTS THE MONOTONE DECLINE as an established fact.  It does not retract the accumulation
+# fix, which rests on the source and on fights with five-figure loss counts (Terry, opponent-2),
+# where relative noise is a fraction of a percent.
+#
+# THE ROUND COUNT SURVIVES THE SAME AUDIT, AND COMFORTABLY.
+#     rung            obs rnd   sim mean   sim sd   rel sd     z
+#     Yang                  6        4.7      0.8     16%     1.3
+#     Charles+Yang         52       20.7      1.4      7%    22.8
+# Round counts carry about 7% relative noise against 15-56% for loss totals, because a fight's
+# length is set by accumulated attrition rather than by the last few stochastic rounds.  The
+# Charles+Yang length discrepancy is 23 sigma.  So: the loss-total ladder was underpowered and was
+# over-read; the round-count finding built on top of it stands.
+#
+# WHAT THE IMBALANCE ACTUALLY COSTS, AND HOW TO BUY POWER BACK.  Scanning march size, Yang alone,
+# pure archers, same Narses (1,500 runs each):
+#     archers    win%   losses  rel sd   rounds  rel sd   Avalanche
+#        250       0%      250  wiped      51.6     3%        12.9
+#        500     100%      203     9%      34.4     8%         8.6
+#      1,000     100%      143    12%      16.9    11%         4.2
+#      2,000     100%      113    15%       9.3    15%         2.3
+#      8,000     100%      106    22%       4.5    21%         1.1
+# POWER IMPROVES AS THE MARCH SHRINKS, because a closer fight lasts longer and both observables
+# average over more rounds.  The 10,000-troop rungs were the worst available design: they end in
+# four rounds, so Avalanche fires ONCE (no clock) and the loss total is a two-digit number at 22%
+# noise.  Below 500 my losses censor at a total wipe and stop measuring anything.  500 is the
+# optimum: still a win, so my losses measure HIS output uncensored, losses in the hundreds at 9%,
+# and Avalanche firing about nine times.
+# RULE FOR EVERY FUTURE CALIBRATION MARCH: size it so the fight runs 30+ rounds and I still win.
+# Against this Narses that is 400-600 troops, not 10,000.
+
+# --------------------------------- next test, pre-registered: 500 PURE ARCHERS, YANG ONLY
+# Revised DOWN from 1,000 on the power analysis above.  Removes every confound at once:
+#   - Avalanche fires about 9 times (archers present), so the fight is dated by a periodic skill.
 #   - ONE troop type, so any "rolls once per attacking troop type" multiplicity is 1 by
 #     construction -- Ice Zone and Ambush then measure rolls-per-round directly against Avalanche.
 #   - NO infantry, so Unyielding Shield must read ZERO.  A non-zero count refutes the lifetime
 #     gate outright, which the model relies on everywhere.
-#   - Archers cannot die to their own type's ability gate, so no lifetime throttling of Yang's rows.
-# PRE-REGISTERED, from the current engine:
+#   - 34 rounds and 203 losses, so both observables sit at 8-9% noise rather than 22%.
+# PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11 -- a number that cannot
+# be regenerated is not a pre-registration):
 #     panel must read  archer attack 1823.5, defense 1809.4, lethality 1742.7, health 1737.6
-#                      infantry and cavalry lines at their heroless values (1102.3 / 1090.7 /
-#                      1042.4 / 1040.6 and 1080.3 / 1069.3 / 990.8 / 992.6)
-#     simulator says my losses 143 of 1,000 in 16.9 rounds, winning 100% of 600 runs
-#     -> Avalanche about 4, Ice Zone about 7, Ambush about 7, Unyielding Shield 0.
-# (Generated, not recalled -- a number that cannot be regenerated is not a pre-registration.
-#  python3 -c from the ladder panel, 600 runs, seed 11.)
-# WHAT EACH OUTCOME MEANS.  If Avalanche comes back near 4, the simulator's clock is right at this
-# march size and the round-count error is specific to MIXED marches -- which would point straight
-# at targeting, the one part of the loop that only does anything when several types are alive.  If
-# it comes back at 10-20, the clock is wrong even with a single troop type and a single hero, and
-# the fault is in the core loop rather than anywhere in the hero layer.  Either way it is read off
-# one row, with no fitting and no reliance on the loss total.
+#                      infantry and cavalry at heroless values (1102.3 / 1090.7 / 1042.4 / 1040.6
+#                      and 1080.3 / 1069.3 / 990.8 / 992.6)
+#     I win 100% of runs, losing 203 +/- 18 of 500 (90% band 174-234) in 34.4 +/- 2.6 rounds
+#     rows:  Avalanche 8.6   Ice Zone 13.8   Ambush 13.8   Unyielding Shield 0
+# WHAT EACH OUTCOME MEANS.  Avalanche at 12 or more is a >3-sigma refutation of the simulator's
+# clock with a SINGLE troop type and a SINGLE hero -- which puts the fault in the core loop, not
+# anywhere in the hero layer.  Avalanche near 9 says the clock is right here, and the 23-sigma
+# Charles+Yang discrepancy is then specific to MIXED marches, which points straight at targeting,
+# the one part of the loop that only does anything when several types are alive.  Ice Zone or
+# Ambush near 41 instead of 14 would mean three rolls per round and settle the per-attack question
+# the other way.  Read off one row each, no fitting, no reliance on the loss total.
