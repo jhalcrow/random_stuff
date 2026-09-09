@@ -212,8 +212,15 @@ DEFENCE = dict(my_troops={'inf': 2_500, 'cav': 1_000, 'arch': 1_500}, my_losses=
 # ANOTHER player's city, or the widget slots are misclassified in heroes.py.  Every garrison
 # recommendation made before this report assumed they fire.
 
-# COMBAT ALWAYS RUNS UNTIL ONE SIDE IS WIPED (confirmed by the player).  Nothing is ever
-# censored, so the winner's own losses are the informative quantity in every report.  Narses'
+# COMBAT ALWAYS RUNS UNTIL ONE SIDE IS WIPED (confirmed by the player), so where a report exists
+# the winner's own losses are the informative quantity.
+# BUT THE REPORT ITSELF CAN BE WITHHELD.  A 500-troop march on Narses returned only "Our troops
+# were annihilated with overwhelming force!  Battle results cannot be reviewed" -- no panels, no
+# losses, no trigger rows.  The earlier claim here that "nothing is ever censored" was wrong, and
+# it was load-bearing: the whole uncensored-quantity method assumes every fight yields numbers.
+# WHERE THE THRESHOLD SITS: 500 troops against 123,570 (0.40% of the defender) was withheld;
+# 10,000 against Terry's 227,000 (4.4%) was not, even though Terry lost only 937 troops there.
+# So the trigger is the SIZE RATIO of the marches, not how little damage the loser did.  Narses'
 # 123,570 wiped in both fights with an identical 43,251 / 80,319 split, which re-confirms that
 # the wound split is deterministic given a full wipe.
 
@@ -1040,5 +1047,49 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 #     simulator says he loses 40,667 and I am wiped.
 #     if the over-prediction follows MY side (a stat-level cap):  he really loses ~23,400  (k 1.74)
 #     if it follows the OPPONENT (something about Terry/opp2):    he really loses ~33,600  (k 1.21)
-# Those are far enough apart that one report decides it.  Capture his actual army composition --
-# he has been wiped twice today, and healed troops may have changed the mix.
+#
+# RESULT: RUN, AND VOID.  The march was wiped -- which the simulator did call, at 0% win -- but
+# the game withheld the report (see the censorship note above), so none of the three numbers
+# could be read.  Two separate faults, worth keeping straight:
+#   1. The design was unsound.  Losing to a WEAK opponent requires a march small enough to trip
+#      the size-ratio censor, so against Narses the window "I lose AND a report exists" is
+#      probably empty.  No choice of his ratio would have rescued it.
+#   2. The 40,667 does not reproduce.  Under allfights.py's configuration the same fight gives
+#      33,273 (latest panel) or 22,790 (SOLO_PANEL); 40,667 came from some intermediate state
+#      that is now lost.  A pre-registered number I cannot regenerate is not a pre-registration.
+# The one thing salvaged: with hero_stats=True the simulator has 500 troops WIPING Narses
+# (122,935 of 123,570).  Reality wiped my 500, so the reported panel really does already include
+# hero expedition stats, and allfights.py's hero_stats=False is right.  A cheap confirmation of
+# a switch that was previously only argued from the panel layout.
+
+
+# ------------------------------------------------- next test, pre-registered (replacement)
+# TURN THE MEASUREMENT INTO A BIT, NOT A NUMBER.  The censor can withhold panels but it cannot
+# hide who won -- "annihilated with overwhelming force" IS the outcome.  So test the CROSSOVER:
+# the march size at which I flip from beating Narses to losing to him.
+#
+# Why that separates what the loss set could not.  Simulating the two stories directly (divide a
+# side's output by its k, by scaling the opponent's D term) across march sizes at 50/20/30:
+#
+#     hypothesis                700    850   1000   1200   1400    <- my march, win probability
+#     H0  simulator as-is        2%    32%    88%   100%   100%
+#     H1  my output /1.74, his /1.21   0%     0%    14%    71%   100%
+#     H2  both sides /1.45       2%    34%    91%   100%   100%
+#
+# H2 IS INDISTINGUISHABLE FROM H0.  A bias that hits both sides equally does not move the
+# crossover at all -- it cancels.  Only the DIFFERENTIAL moves it, and 1.74/1.21 = 1.44 moves it
+# by about 250 troops.  That is what makes this test worth running and the last one not: it asks
+# whether the side-asymmetry is real at all, which comes before any question of mechanism.
+#
+# THE TEST: 1,000 troops at 50/20/30, three or four times.
+#     simulator says I win 88% of the time, losing ~600 of the 1,000.
+#     if the differential is real, I win 14% of the time and am usually wiped.
+# Three attacks: 3 wins has p=0.68 under H0 and p=0.003 under H1; 3 losses inverts that.
+#
+# It cannot be censored into uselessness.  A win always yields a full report (and my own losses
+# then measure HIS output, another k), and a loss yields the bit even if the panels are withheld.
+# Cost is at most 1,000 troops a run, against the 20,000 already spent on single Terry attacks.
+#
+# CAVEAT, stated in advance: this measures the RATIO of the two sides' outputs, not either one.
+# It cannot distinguish a cap on my stats from an over-model of Narses; it only says whether the
+# 1.74/1.21 split is a real asymmetry or an artifact of the win/lose confound.
