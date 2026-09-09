@@ -456,7 +456,20 @@ def score(res, me):
 
 
 def bear_check():
-    """Reproduce kingshotguides.com's worked Bear Trap example: expected 16,797 damage."""
+    """Reproduce kingshotguides.com's worked Bear Trap example: expected 16,797 damage.
+
+    NOT A REGRESSION TEST, despite being cited as one throughout this project's history.  It
+    hand-computes the formula inline: it never calls battle() or battle_mc(), it hardcodes the
+    bear's defence instead of building D from stats, and it applies a 1.10 archer multiplier that
+    is the counter-triangle since deleted from the model as unsourced.  It touches base_stats()
+    and the sqrt engagement term and nothing else, so it returns 16,797 no matter what is done to
+    targeting, troop abilities, skill uptimes, rounding, Ambusher, per-type tiers or widgets --
+    verified by running it under all of those toggles.
+
+    Its worth is as a check on ONE thing: that base_stats() and sqrt(n_u * army_min) still agree
+    with a third-party worked example.  Use allfights.py for anything else; that scores the real
+    engine against eight measured battles.
+    """
     stats = {t: dict(attack=25, defense=0, lethality=0, health=0) for t in TYPES}
     me = Side('me', stats, {'inf': 6000, 'cav': 6000, 'arch': 6000}, tier=6, tg=0, hero_stats=False)
     total = 0.0

@@ -995,3 +995,20 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # LOSE sits at 1.49-2.01.  That is a cleaner split than anything earlier in this file, and it says
 # the remaining error is specific to being annihilated -- the regime where the sqrt(n_u) term
 # drives my output to near zero while the model still has me fighting.  That is the next thread.
+
+
+# ------------------------------------------------- bear_check() is not a regression test
+# It has been cited after every change in this session as "Bear Trap still reproduces 16,797",
+# implying the changes were safe.  That was worthless reassurance.  bear_check() hand-computes the
+# formula inline -- it never calls battle() or battle_mc(), hardcodes the bear's defence rather
+# than building D from stats, and applies a 1.10 archer multiplier that is the counter-triangle
+# deleted earlier today as unsourced.  Run under ROUND_MODE, TROOP_SKILLS, AMBUSH_ROLL, DEF_RECIP,
+# SKILL_SCALE, WEAR and ENG_A toggles it returns 16,797 every time.
+#
+# It also is NOT player data -- it came from a kingshotguides.com worked example on day one, the
+# same class of community source that supplied the counter-triangle and the per-round cavalry
+# bypass, both of which turned out to be wrong for this engine.
+#
+# What it is actually good for: confirming base_stats() and sqrt(n_u * army_min) still agree with
+# a third-party worked example.  Everything else should be judged by allfights.py, which scores
+# the real engine against eight measured battles.  Docstring corrected accordingly.
