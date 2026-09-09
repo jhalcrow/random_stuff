@@ -899,3 +899,38 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # Ambusher redirect, and how Volley and Howling Wind compose with it -- is implemented from
 # tooltips but never validated as a SYSTEM.  That is the next place to look, and it is a code
 # question rather than a data-collection one.
+
+
+# ------------------------------------------------- Ambusher / archer ability ablation
+# Full cross of Ambusher against the two archer abilities, over the four sweep cells:
+#
+#   configuration                     mix   arch    inf   opp2   mean  spread
+#   Amb on  + both archer abilities  2.01   1.58   1.84   1.67   1.78   1.27
+#   Amb on  + Howling Wind only      2.06   1.45   1.97   1.71   1.80   1.42
+#   Amb on  + Volley only            2.10   1.45   2.02   1.72   1.82   1.45
+#   Amb on  + neither                2.27   1.35   2.14   1.76   1.88   1.68
+#   Amb off + both archer abilities  1.44   1.62   1.86   1.29   1.55   1.44
+#   Amb off + neither                1.54   1.32   2.12   1.30   1.57   1.63
+#
+# The archer abilities are second-order and both belong: keeping both gives the tightest spread
+# in either half (1.27 with Ambusher, 1.44 without).  AMBUSHER is what moves the mixed cells --
+# on 2.01/1.67, off 1.44/1.29 -- and it is the only mechanic that fires exclusively there.
+#
+# NOT the split-vs-roll modelling.  The tooltip says "20% chance", and the reports carry Ambusher
+# as its own row with a trigger count (3 in the ~16 rounds Sophia's cavalry survived = 19%), so it
+# is a discrete per-round redirect rather than a permanent damage split.  Implemented that way
+# (AMBUSH_ROLL, default on) and it changes almost nothing: mean 1.77 against 1.78.  The old split
+# gave cavalry two attacks a round, each with its own ceil(), but the expectation was the same.
+#
+# WHAT IT IS INSTEAD -- the base stat spread between troop types:
+#     T11 TG8   infantry  attack   829   health 2487
+#               cavalry   attack  2487   health  829
+#               archers   attack  3317   health  571
+# An archer is 4.36x squishier than an infantryman before any bonuses, so redirecting cavalry onto
+# archers is worth an enormous amount.  Both sides' panels show archer defence and health bonuses
+# within a few percent of their infantry ones, so that entire gap comes from troops_base.json --
+# scraped from kingshotsimulator.com's JS bundle and never validated against anything.
+#
+# That makes the base-stat table, not Ambusher, the live suspect: it is the one input to the
+# mixed cells that has never been checked, Ambusher's value is entirely determined by it, and
+# a table that exaggerates the archer/infantry gap would produce exactly this signature.

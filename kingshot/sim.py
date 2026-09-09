@@ -55,6 +55,11 @@ DEF_RECIP = os.environ.get('DEF_RECIP', '1') == '1'
 # one is applied where the effects are built and therefore reaches both.
 SKILL_SCALE = float(os.environ.get('SKILL_SCALE', '1.0'))
 TROOP_SKILLS_ON = os.environ.get('TROOP_SKILLS', '1') == '1'
+# Per-ability ablation: comma-separated names to disable, for isolating which of the tooltip-
+# sourced troop abilities the mixed cells actually want.
+TROOP_SKILLS_OFF = {s.strip() for s in os.environ.get('TROOP_SKILLS_OFF', '').split(',') if s.strip()}
+# Ambusher as a discrete per-round roll (tooltip wording) rather than a permanent damage split.
+AMBUSH_ROLL = os.environ.get('AMBUSH_ROLL', '1') == '1'
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -145,6 +150,8 @@ class Side:
         # side fields any hero at all.
         if TROOP_SKILLS_ON:
             for sname, kind, v, _p, ttype in TROOP_SKILLS:
+                if sname in TROOP_SKILLS_OFF:
+                    continue
                 out.append((kind, v * SKILL_SCALE, ttype, f'Troop:{sname}'))
         return out
 
@@ -373,7 +380,16 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                     army = n_src[u] ** ENG_A * army_sqrt
                     shares = [(target, 1.0)]
                     if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
-                        shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
+                        # "20% chance to bypass Infantry and directly attack Archers" -- a discrete
+                        # per-round roll, not a permanent split.  The reports carry it as its own
+                        # row with a trigger count (3 in ~16 rounds of cavalry life = 19%).
+                        # Splitting instead gives the cavalry TWO attacks a round, each with its
+                        # own ceil(), one of them against a target ~5x squishier.
+                        if AMBUSH_ROLL:
+                            if rng.random() < src.ambusher:
+                                shares = [('arch', 1.0)]
+                        else:
+                            shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
                     # Extra strikes.  In the reference, needContinue() requires BOTH effect==101
                     # AND effectTarget==40, so only a minority of damage skills grant an extra
                     # target; the rest of effect 101 is a plain multiplier on that troop type's
