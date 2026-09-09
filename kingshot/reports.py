@@ -290,3 +290,52 @@ BIG_RALLY = dict(
 # two sides of a fight.  Confounded here by the multi-player rally, unknown joiner skills and
 # unknown widget levels at that time -- a solo fight where both sides' rows are visible would
 # settle it cleanly.
+
+
+# ---------------------------------------------------------------- Terry defence
+# Solo, one player each side, BOTH sides' Yang damage rows visible -- the clean two-sided nuke
+# test.  Terry attacked my 10,000 (50/20/30) with 226,932 and wiped me; he lost 9,734.
+# Both sides T11 TG8 (Lv 11.0, badge 8).  Mail 223407017217906.
+TERRY = {'inf': dict(attack=1216.4, defense=897.5, lethality=1227.1, health=1281.4),
+         'cav': dict(attack=1354.0, defense=988.7, lethality=1170.0, health=1032.2),
+         'arch': dict(attack=1482.7, defense=1095.2, lethality=1318.2, health=1111.9)}
+TERRY_TROOPS = {'inf': 124_813, 'cav': 22_693, 'arch': 79_426}
+TERRY_FIGHT = dict(my_panel={'inf': dict(attack=2585.6, defense=2009.9, lethality=2278.6, health=1920.5),
+                             'cav': dict(attack=2413.9, defense=1873.4, lethality=2180.4, health=1840.8),
+                             'arch': dict(attack=2417.4, defense=1873.2, lethality=2203.3, health=1853.0)},
+                   my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_losses=10_000,
+                   enemy_losses=9_734, my_heroes=['Charles', 'Sophia', 'Yang'],
+                   enemy_heroes=['Amadeus', 'Ava', 'Yang'],
+                   my_yang=[(5, 274), (1, 0), (3, 0)], their_yang=[(6, 526), (3, 412), (2, 0), (2, 0)])
+
+# ENGINE: I was wiped, so Terry's losses are the uncensored quantity.  Sim gives 18,966 against
+# 9,734 observed (1.95x) with my defender widgets off, 25,206 (2.59x) with them on.
+#
+# UNEXPLAINED PANEL CHANGE: in this report attack sits 27% above defence and lethality 18% above
+# health, where in every earlier non-rally panel each pair matched within 1.5%.  That is not the
+# clean +15% signature of a widget, so it is NOT read as the defender widget firing -- it looks
+# like an attack/lethality buff.  Per-report panels mean it blocks nothing, but the cause is
+# unknown and it is a reminder that the panel carries buffs I cannot see or name.
+
+# NUKE CHANNEL -- three guesses, three failures.  Every Yang row-1 observation:
+#
+#   fight                     army_min  own arch  per trigger    target D
+#   Baron 203,610              203,610    61,083          772  10,562,500
+#   Baron 100,000              100,000    30,000          411  10,562,500
+#   Baron  50,000               50,000    15,000          146  10,562,500
+#   Narses attack               10,000     3,000          658     242,403
+#   Narses defence               5,000     1,500          462     242,403
+#   Terry defence, mine         10,000     3,000           55   1,377,746
+#   Terry defence, theirs       10,000    79,426           88   4,262,953
+#   Earthling rally, mine      663,292   401,515        9,045   4,815,172
+#   Earthling rally, theirs    663,292   578,298        3,682   4,965,158
+#
+# Ruled out:
+#   * proportional to the caster's own troops -- 3,000 archers gave 658/trigger against Narses
+#     and 55 against Terry, and Yang once scored 203 kills with ZERO archers
+#   * a simple A/D volley -- it misses 2.5x LOW in the Terry fight and 1.6-3.4x HIGH in the
+#     Earthling rally, opposite directions, so no constant correction fixes both
+#   * purely army_min -- identical army_min for both sides of the Terry fight, 1.6x apart
+#
+# Six variables move across these nine points with one report per combination.  Opportunistic
+# reports will not crack this; it needs a designed sweep that moves ONE variable at a time.
