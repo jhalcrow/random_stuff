@@ -2126,3 +2126,50 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # second combination effect is still unidentified risks the same two-errors-cancelling trap that
 # the verified magnitudes exposed.  The ladder makes that testable now -- any candidate rule has
 # to flatten k across all four, not just lower an average.
+
+
+# ------------------------------------------------- searching the combination rule on the ladder
+# Every candidate scored against all four rungs.  The criterion is FLATTENING -- spread is
+# max-min of log k across the ladder -- not lowering an average, because a rule that just scales
+# everything down can improve rms while leaving the hero-count trend untouched.
+#     rule                       0 heroes  Charles  Yang  Sophia+Yang    rms   spread
+#     multiply (current)             1.05     1.12  0.83     0.64       0.248   0.55
+#     accumulate (reference form)    1.09     1.14  0.89     0.70       0.202   0.46
+#     strongest proc only            1.11     1.14  0.93     0.72       0.188   0.46
+#     multiply + SkillMod cap 3      1.07     1.15  0.94     0.76       0.160   0.44
+#     'all' scope = hero's own type  1.05     1.79  0.86     1.18       0.312   0.73
+# NONE of them flattens it.  Every one keeps the monotone decline; they only shift the level.
+#
+# THE SCOPE RULE IS NOW REFUTED, and that matters because it was the BEST candidate back when the
+# magnitudes were still wrong (0.396 against 0.891).  On clean isolated data it is the WORST of
+# the five: Charles blows up to 1.79 because his auras stop protecting his own cavalry and
+# archers.  It was never a mechanism, only a compensation for the wrong magnitudes -- exactly the
+# thing refusing to adopt it was meant to avoid.
+#
+# WHAT DOES FLATTEN IT is a single scale on HERO procs only, leaving troop abilities alone so the
+# heroless rung cannot move:
+#     x1.00  1.05  1.12  0.83  0.64   rms 0.248  spread 0.55
+#     x0.50  1.05  1.12  0.95  0.95   rms 0.069  spread 0.16
+#     x0.40  1.05  1.12  0.98  1.03   rms 0.063  spread 0.13
+#     x0.25  1.05  1.12  1.06  1.21   rms 0.116  spread 0.14
+# So hero procs are over-applied by roughly 2 to 2.5x, and one constant absorbs the whole
+# hero-count trend.  NOT ADOPTED.  It is a fitted constant with no mechanism behind it, which is
+# the one thing this file has consistently refused, and a scale that absorbs a trend is exactly
+# what a missing mechanism looks like from the outside.  Recorded as a MEASURED RESIDUAL: whatever
+# the real rule is, it has to reduce hero proc contribution by about half at two heroes.
+
+# ------------------------------------------------- next tests, pre-registered: the missing rungs
+# The ladder has Charles (auras), Yang (procs) and Sophia+Yang (two proc heroes).  Two rungs are
+# missing and they separate hypotheses the current four cannot:
+#   SOPHIA ALONE -- 2 procs and 1 aura, against Yang's 3 procs and 0 auras.  If the over-credit
+#       scales with PROC COUNT, Sophia alone lands nearer 1.0 than Yang did (0.83); if it scales
+#       with a hero being present at all, she lands at 0.83 too.  panel: cavalry 1820.7 / 1809.7 /
+#       1724.3 / 1726.1, infantry and archer unchanged.  Simulator: 39 losses.
+#   CHARLES + YANG -- one aura hero plus one proc hero, no added procs over Yang alone.  If the
+#       decline is really about PROCS, this should sit near Charles' and Yang's own values and NOT
+#       drop to Sophia+Yang's 0.62.  If it drops anyway, the fault is about HEROES rather than
+#       procs and the whole proc framing is wrong.  panel: infantry 1952.8 / 1941.2 / 1802.9 /
+#       1801.1 and archer 1823.5 / 1809.4 / 1742.7 / 1737.6.  Simulator: 12 losses.
+# Charles+Yang is the sharper of the two, because it is the one case where the model adds a hero
+# WITHOUT adding a proc.  It cleanly separates "the model over-credits procs" from "the model
+# over-credits heroes", and nothing measured so far can tell those apart.
