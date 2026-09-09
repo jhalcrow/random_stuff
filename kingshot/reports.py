@@ -661,3 +661,39 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # were true at once -- opponents with heavy damage heroes hit harder, and the model was 1.6x hot --
 # and I read the second as being caused by the first.  The residual k = 1.59 is still unexplained
 # and is now the whole of the problem rather than half of it.
+
+
+# ------------------------------------------------- k, decomposed at last
+# Running the four cells with NO hero skills on either side separates the engine from the skill
+# data, which should have been the first diagnostic rather than the last:
+#
+#     with hero skills      mix 1.57  arch 1.52  inf 2.21  opp2 1.38   mean 1.67
+#     NO hero skills        mix 1.04  arch 1.08  inf 2.54  opp2 0.96   mean 1.40
+#
+# THREE OF FOUR CELLS LAND AT k = 1 WITH THE SKILLS OFF.  The engine -- sqrt(n_u * army_min),
+# the /100 and ceil, both stat products, first-living-type targeting, per-type tier and Truegold,
+# the reference attrition, and the removal of the invented triangle and cavalry bypass -- is
+# correct.  The residual was never in the engine.
+#
+# HERO SKILL MAGNITUDES ARE ROUGHLY 3-4x TOO STRONG.  Scanning a global multiplier:
+#     SKILL_SCALE  1.00  0.75  0.50  0.35  0.25  0.00
+#     mean k       1.67  1.57  1.49  1.46  1.44  1.40
+#     mix          1.57  1.41  1.26  1.19  1.15  1.04
+# The likely cause is in the reference's condition(): a skill is live only when
+# (round - roundLag) % roundFreq == 0, so a frequency-5 skill fires one round in five.  This
+# file models skills as continuously active or as chance procs, with uptimes in heroes.py that
+# have never been checked against that gating.  SKILL_SCALE is left at 1.0 deliberately -- the
+# fix is to implement the round-frequency schedule, not to fit another global constant.
+#
+# THE ALL-INFANTRY CELL IS A SEPARATE BUG.  It sits at 2.21-2.54 and moves the WRONG way as
+# skills are weakened, so whatever is wrong there is not shared with the other three.  It is the
+# only cell where the march is a single front-line troop type.
+#
+# TWO BUGS FOUND ALONG THE WAY:
+#   * PROC_SCALE was read only by battle(), never by battle_mc() -- so it was a dead knob on the
+#     Monte Carlo path that every report fit in this file uses.  SKILL_SCALE is applied where the
+#     effects are built and reaches both.
+#   * Defence skills: the reference raises defence as 1/(1 - coef), not (1 + coef) (Fight.java:133).
+#     DEF_RECIP implements it and defaults on.  It makes the fit slightly WORSE (1.59 -> 1.68),
+#     which is expected when a stronger transform is applied to skill values that are themselves
+#     3-4x too big -- not evidence against the reference.

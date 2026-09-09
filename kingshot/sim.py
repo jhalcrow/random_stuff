@@ -48,6 +48,12 @@ WEAR = float(os.environ.get('WEAR', '0.0001'))
 # reference gates that on effectTarget==40 in addition to effect==101; assuming every damage
 # skill carries it makes the model far worse, so this defaults off.
 STRIKE_CONTINUE = os.environ.get('STRIKE_CONTINUE', '0') == '1'
+# Defence skills raise defence as 1/(1 - coef) in the reference, not (1 + coef).
+DEF_RECIP = os.environ.get('DEF_RECIP', '1') == '1'
+# Global multiplier on every hero skill magnitude.  PROC_SCALE only ever reached battle(), not
+# battle_mc(), so it was a dead knob on the Monte Carlo path used for all the report fits; this
+# one is applied where the effects are built and therefore reaches both.
+SKILL_SCALE = float(os.environ.get('SKILL_SCALE', '1.0'))
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -127,11 +133,11 @@ class Side:
         for h in self.heroes:
             for i, (sname, effs) in enumerate(HEROES[h]['skills']):
                 for kind, v, scope in effs:
-                    out.append((kind, v, scope, f'{h}:{sname}'))
+                    out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
         for h in self.joiners:
             sname, effs = HEROES[h]['skills'][0]
             for kind, v, scope in effs:
-                out.append((kind, v, scope, f'{h}:{sname}'))
+                out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
         return out
 
     def special_bonus(self):
@@ -173,9 +179,16 @@ OPP_DMG_DOWN = ('e_atk', 'e_leth', 'e_dmg', 'proc_e_dmg')
 OPP_DEF_DOWN = ('e_taken', 'e_def', 'proc_e_taken')
 
 
-def _prod(effs, kinds, scope_ok, sign=+1):
+def _prod(effs, kinds, scope_ok, sign=+1, reciprocal=False):
     """Multiply (1 +/- sum/100) over distinct ops.  Op = kind (stat category) for flat skills,
-    or the skill name for chance-based (proc_) skills, so procs always multiply."""
+    or the skill name for chance-based (proc_) skills, so procs always multiply.
+
+    reciprocal: use 1/(1 - sum/100) instead of (1 + sum/100).  The reference engine raises a
+    defender's defence as `defense = defense / (1 - coefDefense)` (Fight.java:133), which is
+    strictly stronger than the (1 + coef) this file assumed -- a +25% defence skill divides
+    damage by 1.333, not 1.25.  Defence-side factors use this form; attack-side ones do not,
+    because Skill.damage() really does accumulate `coef = coef + value/100`.
+    """
     by_op = {}
     for kind, v, scope, name in effs:
         if kind in kinds and scope_ok(scope):
@@ -185,7 +198,10 @@ def _prod(effs, kinds, scope_ok, sign=+1):
             by_op[op] = by_op.get(op, 0) + v
     m = 1.0
     for v in by_op.values():
-        m *= (1 + sign * v / 100)
+        if reciprocal:
+            m *= 1.0 / max(1e-6, 1 - sign * v / 100)
+        else:
+            m *= (1 + sign * v / 100)
     return m
 
 
@@ -196,7 +212,7 @@ def skill_mod(att, att_effs, u, dfn, def_effs, v):
     dmg_up = _prod(att_effs, DMG_UP, lambda s: s in ('all', u))
     opp_def_down = _prod(att_effs, OPP_DEF_DOWN, lambda s: s in ('all', v))
     opp_dmg_down = _prod(def_effs, OPP_DMG_DOWN, lambda s: s in ('all', u))
-    def_up = _prod(def_effs, TAKEN + DEF_UP, lambda s: s in ('all', v))
+    def_up = _prod(def_effs, TAKEN + DEF_UP, lambda s: s in ('all', v), reciprocal=DEF_RECIP)
     tri = 1.0
     if (u, v) in (('arch', 'inf'), ('inf', 'cav'), ('cav', 'arch')):
         tri = 1 + att.triangle / 100
