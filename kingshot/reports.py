@@ -766,3 +766,39 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # (4x Chenko in every one of them) are the only skills left running at flat uptime, and the
 # heterogeneous-rally problem recorded earlier is untouched.  Measuring Chenko's uptime from a
 # rally report's Battle Details is the cheap test.
+
+
+# ------------------------------------------------- rows 4+ are TROOP abilities, not hero skills
+# The single biggest structural misreading in this file, corrected by the player's tooltips.
+# Rows 4 and 5 of a hero's Battle Details panel belong to that hero's TROOP TYPE and every player
+# has them; sim.py modelled none of them.  Verbatim:
+#   Unyielding Shield  37.5% chance to reduce incoming damage by 36%          (infantry)
+#   Ambusher           20% chance to bypass Infantry and directly attack Archers  (cavalry)
+#   Assault Lance      15% chance to deal double damage                       (cavalry)
+#   Volley             10% chance to attack twice in a row                    (archers)
+#   Howling Wind       30% chance to deal 50% extra damage                    (archers)
+#
+# AMBUSHER WAS REAL ALL ALONG.  It was deleted earlier today because the reference engine has no
+# such mechanic -- but that engine is State of Survival, a DIFFERENT GAME that shares the core
+# formula.  Treating it as authoritative for Kingshot's troop abilities was an over-application:
+# it settles the damage maths, not the ability list.  Side.ambusher is back to 0.20.
+#
+# A BUG WHILE IMPLEMENTING: the tooltips give raw effect sizes, but _split_effects() recovers a
+# live magnitude as value/uptime, so the stored number must be the EXPECTED value.  Passing 36%
+# and 0.375 gave a 96% damage reduction when live.  TROOP_SKILLS now stores chance x effect.
+#
+#   variant                                  mix   arch    inf   opp2   mean   spread
+#   everything flat-on (start of today)     1.57   1.52   2.21   1.38   1.67    1.60
+#   permanent auras + measured procs        1.37   1.38   2.04   1.14   1.48    1.79
+#   + troop abilities and Ambusher          1.71   1.36   1.67   1.36   1.53    1.25
+#
+# The all-infantry cell -- structurally broken all session at 2.0-2.5 -- is finally at 1.67, and
+# Unyielding Shield is why: it is an infantry-only defensive ability, so a pure-infantry march was
+# the configuration most damaged by its absence.  The spread across cells (1.25) is the tightest
+# it has been.
+#
+# HONEST TENSION: restoring Ambusher makes the two MIXED cells worse (1.37 -> 1.71, 1.14 -> 1.36)
+# even though the tooltip confirms it exists.  A confirmed-real mechanic degrading the fit means
+# something it interacts with is still wrong -- most likely the skill magnitudes, which remain
+# unverified prose scrapes, or the archer abilities' interaction with the ambush target.  Do not
+# resolve that by removing Ambusher again.

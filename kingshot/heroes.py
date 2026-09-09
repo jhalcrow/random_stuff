@@ -237,10 +237,35 @@ PERMANENT = {'Intimidation', 'Iron Bodies', 'Great Justice', 'Terror Annihilatio
 for _n in PERMANENT:
     PROC_SPEC.pop(_n, None)
 
-# Truegold gear skill, from its tooltip: "a 37.5% chance to reduce incoming damage by 36%".
-# Both sides in every PvP report have it (Charles row 4 / Triton row 4), and sim.py models no
-# TG or gear skills at all, so this is the first one.
-TG_SKILLS = {'Unyielding Shield': ('proc_taken', 36.0, 'all', 0.375)}
+# TROOP abilities.  Rows 4+ of a hero's Battle Details panel are not the hero's skills at all --
+# they belong to that hero's TROOP TYPE, and every player has them.  Tooltips, verbatim:
+#   Unyielding Shield  "A shield forged with Truegold. Extremely durable, it has a 37.5% chance
+#                       to reduce incoming damage by 36%."          (infantry)
+#   Ambusher           "20% chance to bypass Infantry and directly attack Archers."   (cavalry)
+#   Assault Lance      "A lance forged with a Truegold handle ... Has a 15% chance to deal double
+#                       damage."                                     (cavalry)
+#   Volley             "10% chance to attack twice in a row."        (archers)
+#   Howling Wind       "An arrow forged with Truegold ... 30% chance to deal 50% extra damage."
+#                                                                    (archers)
+#
+# AMBUSHER IS REAL AND KINGSHOT-SPECIFIC.  It was removed from sim.py earlier today on the
+# grounds that the reference engine (request-laurent/sos.battle) has no such mechanic -- but that
+# engine is State of Survival, a DIFFERENT GAME sharing the same core formula.  The reference is
+# authoritative for the damage maths and not for Kingshot's troop abilities.  Side.ambusher goes
+# back to 0.20.
+#
+# (name, effect kind, EXPECTED value %, chance per round, troop type)
+# The magnitude stored is the expected value (chance x effect), matching how every other proc in
+# this file is stored: _split_effects() recovers the live magnitude as value / uptime, so passing
+# the raw effect size here would multiply the chance in twice.
+TROOP_SKILLS = [
+    ('Unyielding Shield', 'proc_taken', 0.375 * 36.0, 0.375, 'inf'),   # 13.5
+    ('Assault Lance',     'proc',       0.15 * 100.0, 0.15,  'cav'),   # 15.0, double damage
+    ('Volley',            'proc',       0.10 * 100.0, 0.10,  'arch'),  # 10.0, a second attack
+    ('Howling Wind',      'proc',       0.30 * 50.0,  0.30,  'arch'),  # 15.0
+]
+for _n, _k, _v, _p, _t in TROOP_SKILLS:
+    PROC_SPEC[_n] = ('chance', _p, 1)
 
 def proc_uptime(name):
     mode, p, dur = PROC_SPEC[name]

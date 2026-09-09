@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
 from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
-                    proc_uptime, STRIKE, TG_SKILLS, PERMANENT)
+                    proc_uptime, STRIKE, TROOP_SKILLS, PERMANENT)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -54,7 +54,7 @@ DEF_RECIP = os.environ.get('DEF_RECIP', '1') == '1'
 # battle_mc(), so it was a dead knob on the Monte Carlo path used for all the report fits; this
 # one is applied where the effects are built and therefore reaches both.
 SKILL_SCALE = float(os.environ.get('SKILL_SCALE', '1.0'))
-TG_SKILLS_ON = os.environ.get('TG_SKILLS', '1') == '1'
+TROOP_SKILLS_ON = os.environ.get('TROOP_SKILLS', '1') == '1'
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -119,7 +119,8 @@ class Side:
     # carrying the biker/sniper perk -- not a flat per-round bypass.  Defaults are now 0; the
     # fields stay so the assumption can be re-tested.
     triangle: float = 0.0                        # counter bonus % (archers>infantry etc.) -- unsourced
-    ambusher: float = 0.0                        # cavalry share bypassing the front line -- unsourced
+    ambusher: float = 0.20                       # cavalry 'Ambusher': 20% chance to bypass Infantry
+                                                 # and hit Archers -- tooltip-confirmed, Kingshot-specific
 
     # ---- derived
     def tier_of(self, ttype):
@@ -142,10 +143,9 @@ class Side:
         # Truegold gear skills, carried by the account rather than a hero.  Every PvP report in
         # reports.py shows both sides with Unyielding Shield firing, so it applies whenever the
         # side fields any hero at all.
-        if self.heroes and TG_SKILLS_ON:
-            for sname, (kind, v, scope, p) in TG_SKILLS.items():
-                PROC_SPEC.setdefault(sname, ('chance', p, 1))
-                out.append((kind, v * SKILL_SCALE, scope, f'TG:{sname}'))
+        if TROOP_SKILLS_ON:
+            for sname, kind, v, _p, ttype in TROOP_SKILLS:
+                out.append((kind, v * SKILL_SCALE, ttype, f'Troop:{sname}'))
         return out
 
     def special_bonus(self):
