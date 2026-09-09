@@ -80,6 +80,12 @@ class Side:
     tg: int = 8
     special: dict = field(default_factory=dict)  # extra special bonus % per stat (pets, city, appointments)
     hero_stats: bool = True                      # add per-hero expedition stats + weapon to the hero's troop type
+    # Per-hero widget scale, keyed by hero name: 1.0 = the widget at max level, 0.0 = the hero has
+    # no widget unlocked at all.  Widgets are an account-by-account thing -- an opponent can field
+    # a hero whose widget is missing or only part-levelled -- so assuming max on everyone silently
+    # inflates them.  Any hero not named here defaults to WIDGET_DEFAULT.
+    widget_levels: dict = field(default_factory=dict)
+    widget_default: float = 1.0
     triangle: float = 10.0                       # innate counter bonus % (archers>infantry etc.)
     ambusher: float = 0.20                       # cavalry chance to bypass the front line and hit archers
 
@@ -104,7 +110,7 @@ class Side:
         for h in self.heroes:
             w = HEROES[h]['widget']
             if w and ((w[0] == 'rally' and self.role == 'rally') or (w[0] == 'defender' and self.role == 'garrison')):
-                sp[w[1]] += w[2]
+                sp[w[1]] += w[2] * self.widget_levels.get(h, self.widget_default)
         return sp
 
     def hero_stat(self, ttype, key):

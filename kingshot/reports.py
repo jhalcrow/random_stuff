@@ -217,11 +217,30 @@ DEFENCE = dict(my_troops={'inf': 2_500, 'cav': 1_000, 'arch': 1_500}, my_losses=
 # 123,570 wiped in both fights with an identical 43,251 / 80,319 split, which re-confirms that
 # the wound split is deterministic given a full wipe.
 
-# FIRST FULLY-SPECIFIED TWO-SIDED TESTS (both tiers and Truegold levels known):
-#   I defend with 5,000: observed 292 lost, sim 308  -> 1.05x   excellent
-#   I attack with 10,000: observed 239 lost, sim 391 -> 1.63x   over-predicts my losses
-# The asymmetry is about 5 sigma against the measured 8.8% noise but rests on one report each.
-# It is the open question a repeat of both directions would settle.
+# FIRST FULLY-SPECIFIED TWO-SIDED TESTS (both tiers and Truegold levels known).
+# The first pass got these badly wrong by assuming max widgets on everyone.  Narses has NO
+# widget on two of his three heroes and only a level-1 widget on Jabel, while my own defender
+# widgets are proven not to fire at all (above).  Both errors were real and they pointed in
+# opposite directions, so they partly cancelled:
+#
+#   fight                  observed   naive sim         corrected sim
+#   I attack with 10,000        239   391 (1.63x)       297 (1.24x)
+#   I defend with  5,000        292   308 (1.05x)       400 (1.37x)
+#
+# The "excellent 1.05x" on defence was luck, and the attack/defence ASYMMETRY reported from it
+# does not exist.  What is left is a single uniform bias: the model over-predicts my losses by
+# roughly 30% in both directions, which is a far more tractable shape than two separate faults.
+#
+# That residual is the expected signature of the missing nuke channel.  Hero direct damage was
+# 11% of the kills in the defence fight and at least 9% in the attack; without it the enemy
+# survives extra rounds in the simulator, so my troops eat extra rounds of incoming damage, and
+# the engine's positive feedback turns a ~10% damage shortfall into a ~30% loss overshoot.
+# Implementing the nuke channel should collapse both ratios toward 1.0 -- that is the test.
+#
+# LESSON: never assume an opponent's widgets are maxed.  Side.widget_levels now takes a per-hero
+# scale (1.0 = max, 0.0 = not unlocked) with widget_default for the rest.  Every opponent model
+# built before this -- run.py's 900-trio ranking, elo.py, gear.py -- assumed max widgets on both
+# sides.  That is harmless where both sides are mirrored but not where they are not.
 
 # The Gilded Baron is confirmed as an event monster with a scripted stat block: a real player
 # at T10 TG2 fits the engine, while the Baron at the same nominal tier/TG gives 204,077 against
