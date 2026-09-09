@@ -225,6 +225,11 @@ EPICS = [h for h, d in HEROES.items() if d['rarity'] == EPIC]
 COMBAT_HEROES = LEGENDARIES + [h for h in EPICS if h not in ('Fahd',)] + ['Fahd']
 
 # Meta joiner picks (their FIRST skill is what a joiner contributes).
+# Joiner first skills verified in game by the player (2026-09-09): Vivian/Crouching Tiger,
+# Ava/Dissolution, Chenko/Stand of Arms, Amane/Tri-Phalanx, Triton/Command of Power,
+# Alcar/Rescuing Hands, Petra/Evil Eye.  A joiner contributes ONLY skills[0], so these orderings
+# are what the joiner optimisation rests on.  Yang was the one hero whose order was wrong in the
+# original scrape (corrected above), so the error was isolated rather than systemic.
 ATTACK_JOINERS = ['Vivian', 'Ava', 'Chenko', 'Amane']            # one per skill category: +25% enemy taken, -25% enemy def, +25% leth, +25% atk
 DEFENSE_JOINERS = ['Triton', 'Ava', 'Alcar', 'Petra']          # +25% def, -25% enemy def, -70% inf/arch taken 2 of 5 turns, 50% chance +50% enemy taken
 
