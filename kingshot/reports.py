@@ -125,8 +125,22 @@ SOLO_TROOPS = {'inf': 101_805, 'cav': 40_722, 'arch': 61_083}     # 50/20/30, 20
 BARON_TROOPS = {'inf': 178_000, 'cav': 178_000, 'arch': 178_000}  # 534,000, flat thirds
 
 # (label, defender losses, my losses, hero-attributed kills)
-SOLO_RUNS = [('Baron solo A', 180_529, 203_610, 54_601),
-             ('Baron solo B', 159_421, 203_610, 49_435)]
+SOLO_RUNS = [('Baron 203,610 A', 180_529, 203_610, 54_601),
+             ('Baron 203,610 B', 159_421, 203_610, 49_435),
+             ('Baron 100,000',    62_191, 100_000, 20_595),
+             ('Baron 50,000',     15_117,  50_000,  3_065)]
+
+# Per-skill nuke output across the four: (march size, kills, triggers) for each damage row.
+# Per-trigger magnitude scales as march_size^1.15 (mean over the four rows), while trigger
+# counts scale roughly as sqrt(march_size) -- i.e. with battle length.  Total nuke damage is
+# the product of the two, which is why the hero share stays near 30% except in the shortest
+# fight (50,000 troops, only 20%: too few rounds for the nukes to accumulate).
+NUKE_ROWS = {
+    'Sophia r5': [(203_610, 5_007, 7), (203_610, 2_193, 3), (100_000, 1_955, 7), (50_000, 233, 2)],
+    'Yang r1':   [(203_610, 19_304, 25), (203_610, 17_791, 25), (100_000, 6_582, 16), (50_000, 1_460, 10)],
+    'Yang r2':   [(203_610, 18_818, 14), (203_610, 18_969, 17), (100_000, 9_401, 14), (50_000, 957, 4)],
+    'Yang r5':   [(203_610, 11_472, 14), (203_610, 10_482, 13), (100_000, 2_657, 5), (50_000, 415, 2)],
+}
 
 # What these two settled:
 #  * NOISE: kills 159,421 vs 180,529 -> CV 8.8% on n=2, against the simulator's 7.6% for this
@@ -138,10 +152,12 @@ SOLO_RUNS = [('Baron solo A', 180_529, 203_610, 54_601),
 #  * RESEARCH DRIFT since the rallies: attack and defense up 317-343 points on every type,
 #    lethality and health unchanged to 0.1.  Any comparison across that boundary must use each
 #    report's own panel.
-#  * ENGINE TERM: observed damage minus the hero-attributed kills is 117,957 on average; the
-#    simulator, which has no direct-damage channel at all, predicts 111,000 -- within 6%, against
-#    a different opponent, in solo role, at 20x the march size of every other report.  The core
-#    kills formula is sound; the entire shortfall is the missing nuke channel (30-31% of damage).
+#  * ENGINE TERM: subtract the hero-attributed kills and compare the remainder to the simulator,
+#    which has no direct-damage channel at all.  Across a 4x range of march size the ratios are
+#    0.88 / 1.00 / 0.90 / 1.12, mean 0.98.  Single-run noise is ~9%, so the worst miss is about
+#    one sigma.  The sqrt(n_u * army_min) * A/D kills formula is correct -- validated in solo
+#    role, against a different opponent with no heroes, from 50,000 to 203,610 troops.  The
+#    entire remaining shortfall is the missing nuke channel (20-33% of observed damage).
 #  * NUKES: per-trigger damage is stable run to run (Sophia 715 vs 731, Yang row5 819 vs 806),
 #    while trigger COUNTS swing hard (Sophia row5 fired 7 times then 3).  So model nuke magnitude
 #    as a deterministic function of state and the trigger count as the random variable.
