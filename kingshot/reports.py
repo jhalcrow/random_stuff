@@ -339,3 +339,51 @@ TERRY_FIGHT = dict(my_panel={'inf': dict(attack=2585.6, defense=2009.9, lethalit
 #
 # Six variables move across these nine points with one report per combination.  Opportunistic
 # reports will not crack this; it needs a designed sweep that moves ONE variable at a time.
+
+
+# ------------------------------------------------- Notes on Special Bonuses (Terry fight)
+# The report's own breakdown of what the Stat Bonuses panel is made of.  Header reads
+# "Stats Bonuses include the following Special Bonuses", which settles a standing question:
+# the panel already has all of this baked in, so feeding panels straight into Side(stats=...)
+# with special={} is correct and nothing is double counted.
+SPECIAL_BONUSES = {           # (mine, Terry's) in %
+    'Squads Attack':               (20.0, 0.0),
+    'Squads Lethality':            (20.0, 0.0),
+    'Enemy Squads Defense':       (-20.0, -0.0),
+    'Enemy Defense Penalty (Pet)':(-10.0, -6.0),
+    'Enemy Lethality Penalty (Pet)':(-5.0, -4.0),
+    'Enemy Health Penalty (Pet)':  (-5.0, -3.5),
+    'Attack Bonus (Pet Skill)':    (10.0, 6.0),
+    'Defense Bonus (Pet Skill)':   (10.0, 7.0),
+    'Lethality Bonus (Pet Skill)': (10.0, 6.0),
+    'Health Bonus (Pet Skill)':    (10.0, 7.0),
+    'Appointment Squads Attack':    (5.0, 0.0),
+}
+
+# DECOMPOSITION, my two defence panels (Narses fight, unbuffed -> Terry fight, buffed).
+# Pet skills are passive so they sit in both panels and cancel out of the ratio; only the
+# temporary buffs differ.
+#
+#   stat        Narses    Terry   observed   temp buffs   residual
+#   attack      1960.8   2585.6     1.3032   1.25 (20+5)    1.0425
+#   lethality   1802.9   2278.6     1.2500   1.20 (20)      1.0417
+#   defense     1933.2   2009.9     1.0377   1.00           1.0377
+#   health      1799.0   1920.5     1.0640   1.00           1.0640
+#
+# Attack and lethality leave the SAME 1.042 residual, which is research done between the two
+# fights.  This independently re-validates the special-bonus model on a fresh set of bonuses:
+# sources ADD within a stat (Squads' Attack 20 + Appointment 5 = 25) and the sum multiplies
+# (100 + base) exactly once -- the same rule the widget stacking followed.
+#
+# CAVEAT THIS CREATES, and it reaches backwards.  The "Enemy X Penalty" lines sit in MY column
+# but must be reflected in the OPPONENT'S displayed lines -- a debuff I inflict cannot be part
+# of my own stat sheet.  So every opponent panel stored in this file is that opponent AS SEEN
+# THROUGH MY DEBUFF LOADOUT, not their true sheet.  Reproducing the fight it came from is fine;
+# reusing it for a fight where my pets or buffs differ is not.  That applies to N2DBLG, NARSES,
+# BARON, TERRY and the Earthling rally alike.
+#
+# It also retro-explains the N2DBLG analysis: "he had a 20% buff stack and I did not" is
+# literally these Squads' Attack / Squads' Lethality / Enemy Squads' Defense lines.
+#
+# What it does NOT change: the Terry engine fit (1.95x) and the nuke problem both stand, since
+# both were computed from panels that already included all of this.
