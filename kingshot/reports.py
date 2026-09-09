@@ -1454,3 +1454,35 @@ def with_special(panel, atk=0.0, leth=0.0, e_def=0.0, defn=0.0, hp=0.0):
 #   with_special(NARSES_1500_INF_PANEL, atk=20, leth=20)  ==  the 500-troop fight's own panel
 #   with_special(NARSES, e_def=20)                        ==  his defence as the 500 report shows
 NARSES_ED20 = with_special(NARSES, e_def=20.0)
+
+
+# ------------------------------------------------- Terry's widgets and Ava's stars: NO CHANGE
+# Reported: Terry's widgets are not all maxed and his Ava is only 4 stars, but her skills are
+# fully upgraded.  Traced through sim.py, the first two facts cannot reach the model:
+#     widget level  -> Side.special_bonus(), scaled by widget_levels / widget_default
+#     star level    -> Side.hero_stat(), expedition stats at max star, gated by hero_stats
+# allfights.py runs both sides with widget_default=0.0 and hero_stats=False precisely because the
+# Stat Bonuses panel already contains both.  Reading the panel is what makes an opponent's
+# account state unobservable-and-irrelevant rather than an unknown to guess at.
+#
+# THE TRAP THIS AVOIDS IS SHARP, because "correcting" it would have looked like progress:
+#     fight                observed   panel only   +max widgets   +max star stats
+#     Terry 10k all archer    1,808        2,728          2,372               658
+#     Terry 10k all inf         937        1,726          1,501               391
+#     opponent-2 10k mixed   15,224       23,827         18,840             4,582
+#     Terry 20k mixed        22,570       46,101         39,625             9,543
+# Granting Terry max widgets moves k from 1.51 to 1.31 -- the right direction -- while being
+# double-counting.  A metric improving is not evidence a change is correct.
+#
+# THE THIRD FACT IS THE USEFUL ONE.  Skill LEVEL is not in the panel and is not scaled by stars or
+# widgets: heroes.py stores flat magnitudes (Ava: e_def 25, Chiaroscuro proc_e_taken 25, Light and
+# Cold leth 25) which are max-level values.  "Fully upgraded" confirms those are right for Terry,
+# so under-levelled opponent skills is now excluded as an explanation for the 1.46-2.00 residual.
+# What is left there is the scraped magnitudes and SCHEDULES themselves -- and firing.py already
+# shows 15 of 21 schedules wrong by more than 1.5x.  The residual has nowhere else to hide.
+#
+# LOOSE THREAD, recorded rather than chased: Terry's Yang shows 4 rows in the 20k report where
+# mine shows 5, both with archers present, so he is missing one archer troop ability I have.  It
+# does NOT explain the residual -- his archers being weaker would make me kill MORE of them, and
+# the model already over-predicts that -- but it is a real difference between two supposedly
+# identical T11 TG8 archer squads and it should be understood before the troop layer is trusted.
