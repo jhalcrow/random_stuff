@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
 from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
-                    proc_uptime, STRIKE)
+                    proc_uptime, STRIKE, TG_SKILLS, PERMANENT)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -54,6 +54,7 @@ DEF_RECIP = os.environ.get('DEF_RECIP', '1') == '1'
 # battle_mc(), so it was a dead knob on the Monte Carlo path used for all the report fits; this
 # one is applied where the effects are built and therefore reaches both.
 SKILL_SCALE = float(os.environ.get('SKILL_SCALE', '1.0'))
+TG_SKILLS_ON = os.environ.get('TG_SKILLS', '1') == '1'
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -138,6 +139,13 @@ class Side:
             sname, effs = HEROES[h]['skills'][0]
             for kind, v, scope in effs:
                 out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
+        # Truegold gear skills, carried by the account rather than a hero.  Every PvP report in
+        # reports.py shows both sides with Unyielding Shield firing, so it applies whenever the
+        # side fields any hero at all.
+        if self.heroes and TG_SKILLS_ON:
+            for sname, (kind, v, scope, p) in TG_SKILLS.items():
+                PROC_SPEC.setdefault(sname, ('chance', p, 1))
+                out.append((kind, v * SKILL_SCALE, scope, f'TG:{sname}'))
         return out
 
     def special_bonus(self):
@@ -275,7 +283,12 @@ def _split_effects(effs):
     """Flat effects (always on) and proc skills grouped by skill name with full magnitudes."""
     flat, procs = [], {}
     for kind, v, scope, name in effs:
-        if kind.startswith('proc'):
+        # PERMANENT wins over the kind prefix: these were written as 'proc' when this file assumed
+        # everything was chance-based, but the reports show them firing exactly once (switched on
+        # at battle start) and the in-game tooltip gives no chance or duration.
+        if name.split(':', 1)[1] in PERMANENT:
+            flat.append((kind, v, scope, name))
+        elif kind.startswith('proc'):
             sname = name.split(':', 1)[1]
             mag = v / proc_uptime(sname)
             procs.setdefault(sname, []).append((kind, mag, scope, name))

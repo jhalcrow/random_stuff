@@ -729,6 +729,35 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # scraped from prose and remain unverified, and the all-infantry cell (1.97) is still the separate
 # structural bug it has been all along.  Uptimes are now data; magnitudes are still guesses.
 
+# CORRECTED by the player, with the in-game tooltips:
+#   * A skill that fires exactly once per battle is a PERMANENT aura switched on at the start --
+#     the single trigger is the game recording that it turned on.  "Intimidation Lv. 5 -- reduces
+#     enemy Squad's Total Lethality by 20%", no chance, no duration.  So the previous commit's
+#     reading of those as ~0.03 uptime was wrong in the opposite direction from the original bug,
+#     and heroes.PERMANENT now pins eleven of them back to always-on.  sim._split_effects treats
+#     PERMANENT as authoritative over the 'proc' kind prefix they were written with.
+#   * Charles row 4 is Unyielding Shield, a TRUEGOLD gear skill: "37.5% chance to reduce incoming
+#     damage by 36%".  Both sides carry it in every PvP report and sim.py modelled no TG or gear
+#     skills at all.  heroes.TG_SKILLS now holds it and Side.effects() applies it to any side
+#     fielding heroes.
+#
+#   variant                                   mix   arch    inf   opp2   mean
+#   everything flat-on (before today)        1.57   1.52   2.21   1.38   1.67
+#   all uptimes measured (over-corrected)    1.30   1.54   1.97   1.14   1.49
+#   permanent auras + measured procs         1.37   1.38   2.04   1.14   1.48
+#   + the Unyielding Shield TG skill         1.26   1.35   1.98   1.14   1.43
+#
+# The two mixed cells are now 1.26 and 1.14, from 1.57 and 1.38 this morning.  The early N2DBLG
+# rally fits recovered too: 2.94 -> and the whole set back from 1.70/1.75/3.25/4.09 to
+# 1.22/1.61/2.75/2.94, though still worse than before the uptime work, which keeps the joiner
+# uptimes (4x Chenko, still flat-on) as the live suspect there.
+#
+# CAVEAT ON MAGNITUDES.  Terror Annihilation was stored as 37.5 because this file assumed "+75%
+# on one turn in two" and halved it into an expected value.  If it is permanent, the stored
+# number is half what it should be.  The same halving may sit in other entries.  Uptimes are now
+# data; the magnitudes behind them are still unverified prose scrapes and this is the clearest
+# example of the two assumptions being entangled.
+
 # REGRESSION TO FLAG, not to bury: the four early N2DBLG rally fits got WORSE with these changes.
 #   before  1.04 / 1.14 / 0.76 / 1.74      after  1.70 / 1.75 / 3.25 / 4.09
 # Those four are the least trustworthy data in this file -- multi-player rallies, joiner skills

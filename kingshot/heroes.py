@@ -204,29 +204,43 @@ PROC_SPEC = {
 }
 
 
-# Uptimes measured from Battle Details trigger counts in the three validated PvP fights
-# (Terry 20k mixed, Terry 10k all-infantry, opponent-2 10k mixed), as triggers / rounds.  Rows 1-3
-# of a hero's panel are the base expedition skills; rows 4+ are TG and gear skills (Charles' row 4
-# is Unyielding Shield, a TG proc) which this file does not model at all.
+# Skill activation, from the reports plus in-game tooltips.
 #
-# The headline: Charles' three base skills fire EXACTLY ONCE in every report, and this file had
-# them permanently active -- a 15-30x overstatement.  Same for Sophia's Terror Annihilation.
-# Yang's and Sophia's other skills were understated instead.
+# A skill that fires EXACTLY ONCE per battle is a permanent aura switched on at the start -- the
+# single trigger is the game recording that it turned on, not a one-round effect.  Confirmed by
+# the tooltip: "Intimidation Lv. 5 -- reduces enemy Squad's Total Lethality by 20%", with no
+# duration or chance.  Charles', Triton's, Ava's rows 1 and 3, and Wee & Woo's rows 1 and 2 all
+# behave this way.  Those keep uptime 1.0.
+#
+# Skills that fire repeatedly are true procs, and their uptime is measured as triggers / rounds
+# in the three PvP fights where the engine is validated (Terry 20k mixed, Terry 10k all-infantry,
+# opponent-2 10k mixed).  The Baron fights are excluded -- their trigger counts exceed the
+# simulator's round count outright.
+#
+# Rows 1-3 of a hero panel are the base expedition skills; rows 4+ are TG and gear skills.
 OBSERVED_UPTIME = {
-    'Intimidation': 0.033, 'Iron Bodies': 0.033, 'Great Justice': 0.033,   # once per battle
-    'Arcane Pact': 0.10, 'Terror Deathblow': 0.18, 'Terror Annihilation': 0.033,
-    'Ice Zone': 0.24, 'Avalanche': 0.13, 'Ambush': 0.23,
-    # Opponents' heroes, from the same reports' right-hand columns.  Triton's three base skills
-    # fire once per battle just like Charles'; Ava's row 2 is the only one of hers that repeats.
-    'Command of Power': 0.033, 'Warfare of Power': 0.033, 'Oath of Power': 0.033,
-    'Dissolution': 0.034, 'Chiaroscuro': 0.103, 'Light and Cold': 0.034,
-    'Artillerymen': 0.037, 'Chain Shelling': 0.037, 'Boom Boom': 0.59,
+    'Arcane Pact': 0.10,        # Sophia row 1, fires 2-6 times
+    'Terror Deathblow': 0.18,   # Sophia row 2, fires 7-9 times
+    'Ice Zone': 0.24,           # Yang row 1
+    'Avalanche': 0.13,          # Yang row 2
+    'Ambush': 0.23,             # Yang row 3
+    'Chiaroscuro': 0.103,       # Ava row 2, the only one of hers that repeats
+    'Boom Boom': 0.59,          # Wee & Woo row 3
 }
-# Anything measured gets a chance-proc schedule at that rate, so battle_mc gates it properly
-# instead of leaving it flat-on.
 for _n, _u in OBSERVED_UPTIME.items():
     PROC_SPEC[_n] = ('chance', _u, 1)
 
+# Permanent auras -- observed firing exactly once, so explicitly NOT proc-gated.
+PERMANENT = {'Intimidation', 'Iron Bodies', 'Great Justice', 'Terror Annihilation',
+             'Command of Power', 'Warfare of Power', 'Oath of Power',
+             'Dissolution', 'Light and Cold', 'Artillerymen', 'Chain Shelling'}
+for _n in PERMANENT:
+    PROC_SPEC.pop(_n, None)
+
+# Truegold gear skill, from its tooltip: "a 37.5% chance to reduce incoming damage by 36%".
+# Both sides in every PvP report have it (Charles row 4 / Triton row 4), and sim.py models no
+# TG or gear skills at all, so this is the first one.
+TG_SKILLS = {'Unyielding Shield': ('proc_taken', 36.0, 'all', 0.375)}
 
 def proc_uptime(name):
     mode, p, dur = PROC_SPEC[name]
