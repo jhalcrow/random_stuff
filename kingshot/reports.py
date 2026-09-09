@@ -1843,3 +1843,35 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #   - the reference's Skill.protect() pool (sim.PROTECT, never implemented) soaks a share of dead
 #     per round and would blunt exactly the runaway feedback that turns 1.35x into 3x
 # PROTECT is the one with an actual reference implementation behind it and has never been tried.
+
+
+# ------------------------------------------------- Elo rerun on the current engine
+# 200 battles per pairing, 144,200 troops a side, mirror stats.  What today's verified data did to
+# the ranking (Bradley-Terry, 1500 = mean of all 14 lineups):
+#     Charles / Jabel / Wee & Woo  60/15/25    1528 -> 1765   +237
+#     Triton / Thrud / Yang  50/20/30          1047 -> 1204   +157
+#     Charles / Ava / Yang  45/30/25           1297 -> 1387    +90
+#     Long Fei / Sophia / Wee & Woo  40/60/0   1840 -> 1918    +78
+#     Charles / Sophia / Wee & Woo  55/45/0    1480 -> 1300   -180
+#     Charles / Sophia / Marlin  55/45/0       1544 -> 1379   -166
+#     Charles / Sophia / Yang  60/40/0         1589 -> 1431   -158
+# The movement is exactly the verified changes and nothing else: every Jabel and Triton lineup
+# rose (Rally Flag 20->50, Hero's Domain 25->50, Warfare of Power 6->30) and every Sophia lineup
+# fell (Terror Annihilation reclassified from periodic-2 to a one-shot aura).
+#
+# HOW MUCH TO TRUST IT.  These are mirror-stat pairings, and an error hitting both sides equally
+# cancels out of a relative ranking -- the same cancellation the crossover analysis established.
+# So the ORDER survives the 3x absolute error far better than any single rating does.  What does
+# NOT cancel is a difference in how much two lineups lean on procs, and that is precisely what
+# moved: the biggest risers are the ones whose procs got stronger, through the same channel the
+# model over-applies.  So the movers are the least trustworthy part of the table.
+#
+# TWO THINGS THAT ARE SAFE TO READ:
+#   Every defence lineup outranks every attack lineup, and attacker win rates run 0-52% with means
+#   of 7-21%.  On equal troops and mirror stats the garrison wins, and that is not a small edge.
+#   Long Fei tops the table while carrying Lv.4 magnitudes, so his lineup is if anything UNDERSTATED.
+#
+# UNVALIDATED CONFIGURATION, worth fixing before this file is trusted further: elo.py runs Side()
+# with hero_stats=True and widget_default=1.0 against USER_STATS (the profile Bonus Overview),
+# while every fight allfights.py validates runs the opposite way -- in-battle panel stats with both
+# switches off.  The engine is calibrated in one configuration and used for planning in another.

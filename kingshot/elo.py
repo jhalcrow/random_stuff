@@ -10,6 +10,7 @@ ratio, centred so the mean is 1500).
 import math, os, random, sys
 from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops, score,
                  ATTACK_JOINERS, DEFENSE_JOINERS)
+from heroes import warn_underlevelled, UNDERLEVELLED
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side
@@ -73,6 +74,23 @@ def bradley_terry(players, games, iters=2000):
 
 if __name__ == '__main__':
     print(f'{N} Monte Carlo battles per pairing, {SIZE:,} troops each side, attacker stats x{ATT_SCALE}, defender stats x{DEF_SCALE}\n')
+    print('  CALIBRATION STATE: allfights.py currently scores rms log err 0.90 with tooltip-verified')
+    print('  magnitudes in place -- Narses\' output over-predicted about 3x.  These are MIRROR-stat')
+    print('  pairings, so an error hitting both sides equally largely cancels out of a RELATIVE')
+    print('  ranking; it does not cancel where two lineups differ in how much they lean on procs,')
+    print('  which is exactly what moved most in the last rerun.  Treat the ORDER as usable and any')
+    print('  single rating as soft.  Note also that this file runs Side() with hero_stats=True and')
+    print('  widget_default=1.0 against USER_STATS, a configuration no report has ever validated;')
+    print('  allfights.py validates the opposite one (panel stats, both switches off).')
+    # Some lineups here contain heroes whose magnitudes were read off an opponent's under-levelled
+    # account.  Belisarius' own heroes are all maxed, so those lineups are UNDER-rated below.
+    used = {h for _, hs, _ in ATTACKERS + DEFENDERS for h in hs} & UNDERLEVELLED
+    if used:
+        print(warn_underlevelled(sorted(used), 'lineups below'))
+        for lbl, hs, _ in ATTACKERS + DEFENDERS:
+            if set(hs) & UNDERLEVELLED:
+                print(f'       affected: {lbl}')
+        print()
     names = [a[0] for a in ATTACKERS] + [d[0] for d in DEFENDERS]
     games = []
     table = {}
