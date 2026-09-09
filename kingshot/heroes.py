@@ -256,6 +256,12 @@ TROOP_SKILLS = [
     ('Assault Lance',     'proc',       0.15 * 100.0, 0.15,  'cav'),   # 15.0, double damage
     ('Volley',            'proc',       0.10 * 100.0, 0.10,  'arch'),  # 10.0, a second attack
     ('Howling Wind',      'proc',       0.30 * 50.0,  0.30,  'arch'),  # 15.0
+    # Tooltip, read off the Sophia/Ava block of a Terry report: "The reforged [Assault Lance] is
+    # a great improvement not just in strength but defense as well, granting Cavalry a 10% chance
+    # of taking half damage when under attack."  A Truegold cavalry ability, and a DEFENSIVE proc
+    # -- the model had no cavalry damage reduction at all.  Found because the Battle Details panel
+    # showed Sophia with six rows where the model expected four.
+    ('Warding Impaler',   'proc_taken', 0.10 * 50.0,  0.10,  'cav'),   # 5.0, half damage taken
 ]
 for _n, _k, _v, _p, _t in TROOP_SKILLS:
     PROC_SPEC[_n] = ('chance', _p, 1)

@@ -1498,10 +1498,27 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # the rate.  Terry's Volley at 0 over ~25 rounds, mine at 1 over the same 25, and mine at 8 over
 # ~152 in the 500 fight all sit under a nominal .10 -- the same ~0.55 shortfall firing.py found.
 #
-# THE REAL ANOMALY IS SOPHIA, AND IT IS THE OPPOSITE PROBLEM.  In the 500 fight she shows SIX rows
-# where cavalry should have four: rows 1-3 are her skills (28, 43, 1) and rows 4-6 are cavalry
-# troop abilities firing 16, 11 and 4 times, one of them booking 640 kills.  TROOP_SKILLS models
-# ONE cavalry ability (Assault Lance) and sim.py handles Ambusher separately as a targeting
-# effect, so at least one cavalry troop ability is entirely absent from the model -- and it is a
-# damage-dealing one, worth 1.3% of his losses in that fight.  Extra rows cannot be explained by
-# the omission rule, which only ever removes rows.  This is a genuine gap, unlike the Terry one.
+# THE SIX-ROW ANOMALY IS SOLVED, AND IT WAS A MISSING MECHANIC.  Row 6 is WARDING IMPALER, a
+# Truegold cavalry ability, tooltip read off the Sophia/Ava block of a Terry report:
+#     "The reforged [Assault Lance] is a great improvement not just in strength but defense as
+#      well, granting Cavalry a 10% chance of taking half damage when under attack."
+# The model had NO cavalry damage reduction of any kind.  Now in TROOP_SKILLS as
+# ('Warding Impaler', 'proc_taken', 0.10 * 50.0, 0.10, 'cav').
+#
+# CAVALRY DISPLAYS THREE TROOP ABILITY ROWS, not one.  Order pinned from the report rather than
+# from list order: row 5 is the only one booking kills so it is Assault Lance (double damage), and
+# the tooltip is anchored to the last row, which leaves Ambusher first.  firing.py now holds this
+# as TROOP_ROWS instead of deriving it from TROOP_SKILLS, which would have got it wrong.
+#     row 4  Ambusher          16 fired   .105/round   modelled .20   0.53
+#     row 5  Assault Lance     11 fired   .072/round   modelled .15   0.48
+#     row 6  Warding Impaler    4 fired   .026/round   modelled .10   0.26
+# Ambusher joins the ~0.55 cluster, which now covers all three troop types.  Note Ambusher has no
+# modelled firing rate at all: sim.py carries it as Side.ambusher, a targeting effect, so it never
+# appears in TROOP_SKILLS and firing.py can only measure it, not compare it.
+#
+# ADDING IT MAKES THE AGGREGATE SLIGHTLY WORSE AND IT STAYS IN.  rms log err 0.363 -> 0.371,
+# mean|log| 0.273 -> 0.286; some fights improve (pure-arch 1.01 -> 0.97), others worsen (mixed def
+# 1.13 -> 1.18).  A tooltip-confirmed mechanic is not deleted because a fit likes it less -- that
+# is the same discipline as refusing the max-widget "improvement" three entries above, and the
+# opposite of what k-chasing did for most of this session.  What the regression actually says is
+# that something else is compensating for the absent cavalry mitigation, which is a lead.

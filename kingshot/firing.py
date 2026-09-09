@@ -25,9 +25,15 @@ ROWS = [('Charles',  NARSES_500['my_charles']),
         ('Jabel',    NARSES_500['their_jabel']),
         ('Rosa',     NARSES_500['their_rosa'])]
 
-TROOP_BY_TYPE = {}
-for _n, _k, _v, _p, _t in TROOP_SKILLS:
-    TROOP_BY_TYPE.setdefault(_t, []).append((_n, _p))
+# Troop-ability rows IN THE ORDER THE PANEL SHOWS THEM, which is not TROOP_SKILLS order and is
+# not derivable from it.  Cavalry displays three, one of them Ambusher -- which sim.py handles as
+# a targeting effect rather than a TROOP_SKILLS entry, so it has no modelled firing rate here.
+# The cavalry order is read off the 500-troop report: row 5 is the only one booking kills, which
+# makes it Assault Lance (double damage), and the Warding Impaler tooltip is anchored to the last
+# row.  That leaves Ambusher first.  Rows 4-6 fired 16, 11 and 4 times.
+TROOP_ROWS = {'inf': ['Unyielding Shield'],
+              'cav': ['Ambusher', 'Assault Lance', 'Warding Impaler'],
+              'arch': ['Volley', 'Howling Wind']}
 
 
 def modelled(name):
@@ -41,8 +47,7 @@ def modelled(name):
     return {'chance': v, 'periodic': 1.0 / v, 'always': 1.0}[kind]
 
 
-EXPECTED_ROWS = {t: 3 + len(v) for t, v in
-                 [(k, [x for x in TROOP_SKILLS if x[4] == k]) for k in ('inf', 'cav', 'arch')]}
+EXPECTED_ROWS = {t: 3 + len(v) for t, v in TROOP_ROWS.items()}
 
 
 def check_rows(hero, rows):
@@ -53,7 +58,7 @@ def check_rows(hero, rows):
     if len(rows) < want:
         return f"  !! {len(rows)} rows, expected {want}: a zero-trigger row is omitted, mapping below is UNSAFE"
     if len(rows) > want:
-        return f"  !! {len(rows)} rows, expected {want}: {len(rows) - want} troop ability/-ies missing from TROOP_SKILLS"
+        return f"  !! {len(rows)} rows, expected {want}: {len(rows) - want} troop ability/-ies not in TROOP_ROWS"
     return None
 
 
@@ -65,7 +70,7 @@ def main():
         if warn:
             print(warn)
         info = HEROES[hero]
-        troop = [n for n, _ in TROOP_BY_TYPE.get(info['type'], [])]
+        troop = TROOP_ROWS.get(info['type'], [])
         for i, (fired, _kills) in enumerate(rows):
             if i < 3:
                 name = info['skills'][i]
