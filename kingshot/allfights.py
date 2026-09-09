@@ -38,6 +38,13 @@ FIGHTS = [
      OPP2, OPP2_TROOPS, OPP2_TIERS, 8, ['Triton', 'Ava', 'Wee & Woo'], 'them', 15_224),
     ('Terry 20k mixed', TERRY_ATTACK_PANEL, {'inf': 10_000, 'cav': 4000, 'arch': 6000}, 'solo',
      TERRY_ATTACK_ENEMY, TE20, 11, 8, ['Triton', 'Ava', 'Yang'], 'them', 22_570),
+    # Recovered from the defender's mail after the attacker's copy was censored.  The first fight
+    # in the set that measures MY output against a WEAK opponent, and the only one where the
+    # model UNDER-predicts.  See rounds.py: its 152 measured rounds against the sim's 73 are what
+    # show that a k on totals is a ratio of two cancelling errors, not one side's output.
+    ('Narses 500 solo', NP, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     NARSES, {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2,
+     ['Long Fei', 'Jabel', 'Rosa'], 'them', 48_561),
 ]
 
 

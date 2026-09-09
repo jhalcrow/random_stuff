@@ -1063,7 +1063,85 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # a switch that was previously only argued from the panel layout.
 
 
-# ------------------------------------------------- next test, pre-registered (replacement)
+# ------------------------------------------------- the 500-troop test, RECOVERED
+# Mail 223407017237641.  The attacker's copy was censored; the DEFENDER's copy was not, and the
+# player owns both accounts.  THE CENSOR IS THEREFORE NOT A DATA LOSS -- it withholds the mail
+# from the loser, not from the winner.  Any future fight can be recovered from the other side.
+#
+# Overview: his squad 123,570, injured 16,997 + lightly injured 31,564 = 48,561 casualties,
+# residents 75,009 (48,561 + 75,009 = 123,570 exactly).  My 500 wiped: 176 + 324, residents 0.
+# Power confirms the split independently: -1,291,772 / 48,561 = 26.6 per troop for his T10 TG2,
+# -23,760 / 500 = 47.5 for my T11 TG8.
+NARSES_500 = dict(my_troops={'inf': 250, 'cav': 100, 'arch': 150}, my_losses=500,
+                  enemy=NARSES, enemy_troops={'inf': 61_785, 'cav': 24_714, 'arch': 37_071},
+                  enemy_losses=48_561,
+                  # rows as displayed: (triggers, kills)
+                  my_charles=[(1, 0), (1, 0), (1, 0), (125, 0)],
+                  my_sophia=[(28, 0), (43, 0), (1, 0), (16, 0), (11, 640), (4, 0)],
+                  my_yang=[(59, 1_591), (39, 1_864), (40, 0), (8, 0), (26, 878)],
+                  their_long_fei=[(35, 0), (1, 0), (58, 22)],
+                  their_jabel=[(30, 0), (122, 27), (1, 0), (17, 0)],
+                  their_rosa=[(38, 0), (1, 0), (1, 0), (7, 0)])
+
+# THE PRE-REGISTERED TEST RESOLVED AGAINST BOTH HYPOTHESES.
+#     simulator  33,299        k 0.69   -- the sim UNDER-predicts my output by 1.46x
+#     "my stats are capped"   ~23,400   -- would need k 1.74; reality was more than double it
+#     "it is the opponent"    ~33,600   -- would need k 1.21
+# Every fight measuring MY output before this one over-predicted it (1.49 to 2.01).  Against a
+# WEAK opponent the same model under-predicts it.  A cap on my own high stat multipliers cannot
+# do that -- my stats are the same in both -- so that hypothesis is dead, not merely unsupported.
+
+# WHAT ACTUALLY BROKE THE PROBLEM OPEN: the trigger counts are a ROUND COUNT.
+# Yang's first two skills have tooltip-verified schedules, and they agree with each other:
+#     Avalanche  periodic 4, fired 39  ->  156 rounds
+#     Ice Zone   chance .40, fired 59  ->  148 rounds
+# The fight ran about 152 rounds.  The simulator runs 73.  My troops survived twice as long as
+# the model says, and that is measured, not inferred.
+#
+# TWO OBSERVABLES IDENTIFY WHAT ONE COULD NOT.  Total losses alone are degenerate: rate and
+# survival trade off along a ridge, and (my /1.2, his /1.5), (my /1.4, his /1.8) and
+# (my /1.6, his /2.0) all fit the five Narses totals about equally (rms log err 0.12-0.16).
+# The round count is orthogonal -- per-round rate depends only on MY damage, round count only on
+# HIS -- so together they pin it exactly:
+#     my per-round damage over-modelled  1.4x
+#     his per-round damage over-modelled 2.0x
+#   sim at (1.4, 2.0): 152 rounds, 49,138 killed, 324/round
+#   observed:          152 rounds, 48,561 killed, 319/round
+#
+# THIS RETIRES THE WHOLE "WHOSE SIDE IS OVER-PREDICTED" FRAMING.  Both sides are over-modelled.
+# k on totals was never measuring one side's output: in a fight that ends in a wipe, the loser's
+# total output = rate x rounds, and the two errors partly cancel.  That is why k moved so little
+# under a dozen substantive changes, and why it pointed at my side -- an artefact of which error
+# happened to dominate, not a fact about my stats.
+
+# THE ROUND-COUNT TEST APPLIED RETROACTIVELY (rounds.py).  reports.py already stored Yang rows
+# for other fights, so this is free evidence that was sitting in the file unused:
+#     fight                  sim rounds   implied   sim/real
+#     Narses 500 solo             73        152       0.48
+#     Narses mixed atk 10k        13         23       0.57
+#     Terry 20k mixed             20         25       0.77
+#     Terry 10k all infantry      19          6       3.32
+# The simulator ends fights too early almost everywhere.  The all-infantry fight inverts it, but
+# rests on 3 and 1 triggers -- Poisson noise there is larger than the effect, so it carries very
+# little weight and must not be read as a fifth data point.
+#
+# CAVEAT ON THE OTHER ROWS.  Only Yang's first two schedules are trusted.  Ambush (chance .40,
+# 40 triggers) implies 100 rounds, and Charles' Unyielding Shield (chance .375, 125 triggers)
+# implies 333.  Either those roll per attacking squad rather than per round, or the schedules are
+# wrong.  Unresolved, and deliberately not fitted around.
+
+# HERO DAMAGE SHARE, measured on both sides of one fight: mine 640 + 1,591 + 1,864 + 878 = 4,973
+# of 48,561 = 10.2%; his 22 + 27 = 49 of my 500 = 9.8%.  The ~10% hero channel holds on both
+# sides at a 247:1 size mismatch, which is a stronger check than either earlier estimate.
+
+
+# ------------------------------------------------- crossover test, SUPERSEDED before running
+# Written when the censored mail looked like a data loss.  It is not -- the defender's copy is
+# intact and the player owns both accounts -- and the recovered report answered the question the
+# crossover was designed to sneak up on, so this is kept only as the reasoning it replaced.
+# One part of it survives and is now load-bearing: an error applied EQUALLY to both sides cancels
+# out of the crossover.  That same cancellation is what hid the real fault in the totals.
+#
 # TURN THE MEASUREMENT INTO A BIT, NOT A NUMBER.  The censor can withhold panels but it cannot
 # hide who won -- "annihilated with overwhelming force" IS the outcome.  So test the CROSSOVER:
 # the march size at which I flip from beating Narses to losing to him.
@@ -1093,3 +1171,31 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # CAVEAT, stated in advance: this measures the RATIO of the two sides' outputs, not either one.
 # It cannot distinguish a cap on my stats from an over-model of Narses; it only says whether the
 # 1.74/1.21 split is a real asymmetry or an artifact of the win/lose confound.
+
+# ------------------------------------------------- next step
+# STOP FITTING TOTALS.  A total is rate x rounds and the two errors cancel; that degeneracy is
+# what made the last dozen changes look inert.  Fit the ROUND COUNT first -- it isolates the
+# opponent's per-round damage with no contribution from mine -- then fit the rate.
+#
+# CAPTURE THE TRIGGER ROWS ON EVERY REPORT FROM NOW ON.  They are worth more than the loss
+# totals: a Yang lineup yields a round count for free, and the round count is the observable that
+# identifies the model.  Where the loser's mail is censored, pull the winner's copy instead.
+#
+# The obvious suspect for "the sim ends fights ~2x too early" is the engagement term
+# sqrt(n_u * army_min) with army_min frozen at battle start (ARMY_MIN_LIVE, ENG_A, ENG_B in
+# sim.py are already switches for exactly this).  Worth testing against the round counts BEFORE
+# touching anything else, because the round count can now falsify it directly.
+
+# FIRST RESULT FROM THE NEW OBSERVABLE (ARMY_MIN_LIVE=1, i.e. army_min recomputed each round
+# instead of frozen at battle start).  Tested against round counts, which is the point -- this is
+# a survival-side hypothesis, so the round count judges it and the totals barely can:
+#     fight                  rounds sim/real     totals k
+#     Terry 20k mixed          0.77 -> 0.98      2.01 -> 1.95
+#     Narses 500 solo          0.48 -> 0.64      0.68 -> 0.69
+#     Narses mixed atk 10k     0.57 -> 0.57      1.04 -> 1.09
+#     Terry 10k all infantry   3.32 -> 5.86      1.83 -> 1.79   (noise-dominated, ignore)
+# rms log err over all nine totals 0.366 -> 0.348.
+# So it moves both observables the right way and lands the best-measured fight almost exactly.
+# DEFAULT NOT FLIPPED.  It is a partial fix -- 0.64 still means the fight ends too early -- and
+# the per-round rate error (1.4x) is untouched.  Fitting one channel at a time is the entire
+# lesson of the last thirty reports; taking this now would re-confound the two.
