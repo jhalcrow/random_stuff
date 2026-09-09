@@ -76,8 +76,11 @@ class Side:
     heroes: list = field(default_factory=list)   # 3 lineup heroes
     role: str = 'solo'                           # 'rally' (initiating), 'garrison', 'solo'
     joiners: list = field(default_factory=list)  # joiner heroes; only their first skill counts
-    tier: int = 10
-    tg: int = 8
+    tier: int = 10                               # troop tier; an int applies to all three types
+    tg: int = 8                                  # Truegold level, same convention as tier
+    # Armies are often not uniform -- a report can show infantry and archers at Lv 11.0 while the
+    # cavalry reads Lv 10.0.  Pass a dict keyed by troop type to either field to model that;
+    # tier_of()/tg_of() resolve a scalar or a dict transparently.
     special: dict = field(default_factory=dict)  # extra special bonus % per stat (pets, city, appointments)
     hero_stats: bool = True                      # add per-hero expedition stats + weapon to the hero's troop type
     # Per-hero widget scale, keyed by hero name: 1.0 = the widget at max level, 0.0 = the hero has
@@ -90,6 +93,12 @@ class Side:
     ambusher: float = 0.20                       # cavalry chance to bypass the front line and hit archers
 
     # ---- derived
+    def tier_of(self, ttype):
+        return self.tier[ttype] if isinstance(self.tier, dict) else self.tier
+
+    def tg_of(self, ttype):
+        return self.tg[ttype] if isinstance(self.tg, dict) else self.tg
+
     def effects(self):
         """List of (kind, value, scope, op_id) from lineup skills + joiner first skills."""
         out = []
@@ -178,7 +187,7 @@ def battle(a: Side, d: Side, max_rounds=5000, wear=0.0, verbose=False):
     D = {}
     for s in (a, d):
         for t in TYPES:
-            ba, bd, bl, bh = base_stats(t, s.tier, s.tg)
+            ba, bd, bl, bh = base_stats(t, s.tier_of(t), s.tg_of(t))
             A[(s.name, t)] = ba * s.stat(t, 'attack') * bl * s.stat(t, 'lethality') / 100
             D[(s.name, t)] = bh * s.stat(t, 'health') * bd * s.stat(t, 'defense') / 100
     ae, de = a.effects(), d.effects()
@@ -244,7 +253,7 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
         A, D = {}, {}
         for s in (a, d):
             for t in TYPES:
-                ba, bd, bl, bh = base_stats(t, s.tier, s.tg)
+                ba, bd, bl, bh = base_stats(t, s.tier_of(t), s.tg_of(t))
                 A[(s.name, t)] = ba * s.stat(t, 'attack') * bl * s.stat(t, 'lethality') / 100
                 D[(s.name, t)] = bh * s.stat(t, 'health') * bd * s.stat(t, 'defense') / 100
         fa, pa = _split_effects(a.effects())

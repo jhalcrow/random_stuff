@@ -489,3 +489,40 @@ TERRY_SWEEP = [
 # Mixed is 6x better than pure archer and 12x better than pure infantry.  It is not about WHICH
 # type: with one type you have no front line, everything you own is exposed to all three of his
 # types at once, and all your damage funnels into whichever type is first in his targeting order.
+
+
+# ------------------------------------------------- second opponent, cell 1
+# A different player ([PRO], name is whitespace characters) with ZERO special bonuses on every
+# line -- no pets, no buffs -- where Terry at least had pet skills.  My own buffs identical to
+# the Terry sweep.  Solo, 10,000 at 50/20/30, I was wiped, so his losses are uncensored.
+OPP2 = {'inf': dict(attack=1380.6, defense=1009.3, lethality=1032.5, health=1112.8),
+        'cav': dict(attack=1422.5, defense=1052.7, lethality=1038.7, health=985.8),
+        'arch': dict(attack=1471.7, defense=1083.6, lethality=1199.8, health=1040.9)}
+OPP2_TROOPS = {'inf': 81_050, 'cav': 36_022, 'arch': 63_038}     # 180,110
+OPP2_TIERS = {'inf': 11, 'cav': 10, 'arch': 11}                  # his cavalry reads Lv 10.0
+OPP2_PANEL = {'inf': dict(attack=2555.7, defense=2120.0, lethality=2360.7, health=1980.2),
+              'cav': dict(attack=2384.0, defense=1975.3, lethality=2258.6, health=1897.7),
+              'arch': dict(attack=2387.5, defense=1975.1, lethality=2282.4, health=1910.4)}
+OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_losses=10_000,
+                  enemy_losses=15_224, enemy_heroes=['Triton', 'Ava', 'Wee & Woo'],
+                  my_yang_row1=(8, 519))
+# 15,224 killed for 10,000 sent is 1.52 per troop -- the best PvP result in the whole dataset,
+# and he is 1.30x softer than Terry on the infantry my archers target.
+
+# Side.tier and Side.tg now accept a dict keyed by troop type as well as an int, because armies
+# are routinely non-uniform.  Guessing a single tier for this opponent gave k anywhere from 1.56
+# (all T11) to 2.18 (all T10), which is wider than the whole question; his real split pins it.
+#
+# IS k UNIVERSAL?  Five cells across two opponents:
+#     Terry 20,000 50/20/30        2.00
+#     Terry 10,000 all infantry    1.96
+#     Terry 10,000 50/20/30 def    1.95
+#     Terry 10,000 all archer      1.66
+#     opponent 2, 10,000 50/20/30  1.63
+#   mean 1.84, spread 1.63-2.00, sd 0.18
+# Every cell over-predicts, in a band under 1.25x wide, across two opponents with completely
+# different buff loadouts (Terry had pet skills; this one has literally none).  So k is NOT an
+# artefact of the special-bonus channels, and a global constant near 1.8 is defensible today.
+# It is not yet proven constant: 1.63-1.66 versus 1.95-2.00 looks like two clusters rather than
+# scatter around one value, and the remaining sweep cells against this opponent will say whether
+# that is real or just the ~9% noise stacking up.
