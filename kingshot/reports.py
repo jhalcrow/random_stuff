@@ -246,3 +246,47 @@ DEFENCE = dict(my_troops={'inf': 2_500, 'cav': 1_000, 'arch': 1_500}, my_losses=
 # at T10 TG2 fits the engine, while the Baron at the same nominal tier/TG gives 204,077 against
 # 117,957 observed.  The Baron-based "mean ratio 0.98" should be read as validating the SHAPE
 # of the march-size scaling only; the Narses pair is now the real absolute check.
+
+
+# ---------------------------------------------------------------- large rally
+# Rally on [GOD]Earthling, mail 223407016665003 (older research state, TG7 troops).
+# VICTORY: their 663,292 wiped, I lost 177,243 of 923,309 -- uncensored on my side.
+BIG_RALLY = dict(
+    me={'inf': dict(attack=2048.1, defense=2030.0, lethality=2779.8, health=2230.9),
+        'cav': dict(attack=2024.2, defense=2003.6, lethality=2739.4, health=2210.7),
+        'arch': dict(attack=1907.9, defense=1887.3, lethality=2706.5, health=2174.6)},
+    enemy={'inf': dict(attack=2176.3, defense=2237.3, lethality=2285.7, health=2276.2),
+           'cav': dict(attack=2052.0, defense=2108.3, lethality=2099.5, health=2080.4),
+           'arch': dict(attack=2179.1, defense=2240.2, lethality=2291.5, health=2279.6)},
+    my_troops={'inf': 363_155, 'cav': 158_639, 'arch': 401_515},      # 923,309
+    enemy_troops={'inf': 0, 'cav': 84_994, 'arch': 578_298},          # 663,292, NO infantry
+    my_losses=177_243, enemy_losses=663_292,
+    my_heroes=['Charles', 'Ava', 'Yang'], enemy_heroes=['Triton', 'Thrud', 'Yang'],
+    contributors=[('Belisarius', 299_415, 80_189), ('Bjorn', 241_601, 73_104)],  # rest unlisted
+    # Yang vs Yang, both sides' damage rows visible in one fight:
+    my_yang=[(3, 27_134), (2, 20_270), (3, 17_103)],
+    their_yang=[(2, 7_364), (5, 16_623), (4, 15_654)],
+)
+
+# A RALLY IS NOT ONE ARMY WITH ONE STAT SHEET.
+# The Stat Bonuses panel shows the LEADER's bonuses, but each contributing player's troops fight
+# with their own.  I sent 299,415 of the 923,309 -- 32% -- and the simulator applies my sheet to
+# all of it, inflating the rally badly: it predicts 101,480 of my troops lost against 177,243
+# observed (0.57x).  Scaling the whole rally to ~0.85x of my own sheet reproduces the observed
+# losses, which is what you would expect when two thirds of it is joiners weaker than the leader.
+# Every rally recommendation in run.py / elo.py treats the rally as homogeneous at the leader's
+# stats and therefore overstates rallies relative to solo marches.
+#
+# THIS ALSO BREAKS the "one uniform bias" story from the previous commit.  Sim-over-observed on
+# my own losses now reads 1.24x and 1.37x on single-player solo fights but 0.51x on this rally.
+# The errors point in opposite directions, so the missing nuke channel cannot be the whole
+# explanation; the multi-player rally has a separate and larger fault of its own.
+#
+# NUKE CHANNEL: this is the only report where BOTH sides' damage rows are visible for the same
+# hero.  Per trigger my Yang did 9,045 / 10,135 / 5,701 against their 3,682 / 3,325 / 3,914 --
+# a ratio of 1.46x to 3.05x.  If a nuke scaled exactly like a troop volley (sqrt(n_u * army_min)
+# * A/D, with army_min identical for both sides) mine should have hit 0.89x theirs.  So the
+# volley analogy, which held across march sizes against one target, does NOT carry across the
+# two sides of a fight.  Confounded here by the multi-player rally, unknown joiner skills and
+# unknown widget levels at that time -- a solo fight where both sides' rows are visible would
+# settle it cleanly.
