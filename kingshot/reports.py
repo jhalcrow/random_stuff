@@ -526,3 +526,43 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # It is not yet proven constant: 1.63-1.66 versus 1.95-2.00 looks like two clusters rather than
 # scatter around one value, and the remaining sweep cells against this opponent will say whether
 # that is real or just the ~9% noise stacking up.
+
+
+# ------------------------------------------------- k is a symptom, not a parameter
+# Fitting k was the wrong move.  If the engine were implemented correctly k would be 1, so a
+# stable 1.8 is a bug to find, not a constant to apply.  Diagnosis so far:
+#
+# NOT the round count.  The reports give a proxy via fixed-cadence skills (Charles row 4 fires
+# 17 / 23 / 23 times in three cells).  The simulator runs 17.3 / 15.6 / 15.1 -- the same or
+# FEWER rounds -- while still over-killing, so it is over-killing per round.
+#
+# NOT the engagement term.  Scanning army = n_u**ENG_A * army_min**ENG_B over a 5x5 grid, the
+# reverse-engineered sqrt(n_u * army_min) (0.5/0.5) gives the TIGHTEST spread of k across cells
+# (max/min 1.24) of anything tried.  Exponents that pull the mean k toward 1 (0.70/0.20 gives
+# mean 0.98) make the spread worse (1.41).  So that form is right and the error is elsewhere.
+# ENG_A/ENG_B stay at 0.5/0.5; the knobs are left in place for future tests.
+#
+# NOT a live army_min.  Recomputing it each round as armies shrink moves the mean 1.81 -> 1.70
+# but does not tighten the spread.  Left off by default (ARMY_MIN_LIVE).
+#
+# LARGELY THE MISSING HERO DAMAGE CHANNEL.  The simulator models no direct-damage skills, so it
+# under-kills MY army by whatever the ENEMY's heroes contributed; I then survive too long and
+# over-kill them.  k should therefore track how much hero damage the opponent brought, and it does:
+#
+#   cell                 my losses   from their heroes   share     k
+#   Terry 20k mix           20,000               2,976   14.9%   2.00
+#   Terry 10k all inf       10,000               1,464   14.6%   1.94
+#   Terry 10k all arch      10,000                 956    9.6%   1.65
+#   opp2 10k mix            10,000                 264    2.6%   1.62
+#
+#   r = 0.895;  k = 1.49 + 3.04 * share
+#
+# That is the Terry/opponent-2 split: Terry fields Yang, the heaviest direct-damage hero in the
+# roster; opponent 2 fields Wee & Woo, who barely scratched me.  So k was never a constant -- the
+# spread in it IS the size of the channel the model is missing.
+#
+# STILL UNEXPLAINED: the intercept.  Against an opponent whose heroes deal no direct damage the
+# fit still predicts k = 1.49, not 1.0.  With four points that intercept is soft, but it says
+# roughly half the error is the missing channel and roughly half is something else not yet found.
+# Implementing the channel is now both the fix and the measurement: whatever k remains afterwards
+# is the real residual bug.

@@ -31,6 +31,16 @@ _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
 _BASE = json.load(open(os.path.join(os.path.dirname(__file__), 'troops_base.json')))
 TG_STEP = 1.05   # the table covers TG0-5; TG6-8 extrapolated at the table's own ~5%/level
 PROC_SCALE = float(os.environ.get('PROC_SCALE', '1.0'))   # discount applied to chance-based skill EVs
+# The engagement term sqrt(n_u * army_min) was modelled with army_min frozen at battle start.
+# If the real engine recomputes it as armies shrink, the losing side's output decays twice over
+# (its own count AND army_min fall together) while the winner's decays once -- exactly the
+# asymmetry the reports show.  Toggle to test.
+ARMY_MIN_LIVE = os.environ.get('ARMY_MIN_LIVE', '0') == '1'
+# Engagement term exponents: army = n_u**ENG_A * army_min**ENG_B.  The reverse-engineered form
+# is sqrt(n_u * army_min), i.e. 0.5/0.5, which compresses a big army's numerical advantage hard.
+# Scanning these is how we test whether that compression is the reason the model runs hot.
+ENG_A = float(os.environ.get('ENG_A', '0.5'))
+ENG_B = float(os.environ.get('ENG_B', '0.5'))
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -198,6 +208,8 @@ def battle(a: Side, d: Side, max_rounds=5000, wear=0.0, verbose=False):
     rnd = 0
     while rnd < max_rounds and sum(na.values()) > 0 and sum(nd.values()) > 0:
         rnd += 1
+        if ARMY_MIN_LIVE:
+            army_min = min(sum(na.values()), sum(nd.values()))
         kills_on_d = {t: 0.0 for t in TYPES}
         kills_on_a = {t: 0.0 for t in TYPES}
         for (src, n_src, n_tgt, Aa, Dd, mm, kills) in (
@@ -206,11 +218,11 @@ def battle(a: Side, d: Side, max_rounds=5000, wear=0.0, verbose=False):
             target = next((v for v in TYPES if n_tgt[v] > 0), None)
             if target is None:
                 continue
-            army_sqrt = math.sqrt(army_min)
+            army_sqrt = army_min ** ENG_B
             for u in TYPES:
                 if n_src[u] <= 0:
                     continue
-                army = math.sqrt(n_src[u]) * army_sqrt
+                army = n_src[u] ** ENG_A * army_sqrt
                 shares = [(target, 1.0)]
                 if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
                     shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
@@ -261,10 +273,13 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
         active = {}          # (side, skill) -> rounds remaining
         na, nd = dict(a.troops), dict(d.troops)
         army_min = min(sum(na.values()), sum(nd.values()))
-        army_sqrt = math.sqrt(army_min)
+        army_sqrt = army_min ** ENG_B
         rnd = 0
         while rnd < max_rounds and sum(na.values()) > 0 and sum(nd.values()) > 0:
             rnd += 1
+            if ARMY_MIN_LIVE:
+                army_min = min(sum(na.values()), sum(nd.values()))
+                army_sqrt = army_min ** ENG_B
             # decide which procs are live this round
             live = {'a': list(fa), 'd': list(fd)}
             for side, procs in (('a', pa), ('d', pd)):
@@ -295,7 +310,7 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                 for u in TYPES:
                     if n_src[u] <= 0:
                         continue
-                    army = math.sqrt(n_src[u]) * army_sqrt
+                    army = n_src[u] ** ENG_A * army_sqrt
                     shares = [(target, 1.0)]
                     if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
                         shares = [(target, 1 - src.ambusher), ('arch', src.ambusher)]
