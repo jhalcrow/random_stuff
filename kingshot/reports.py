@@ -1801,3 +1801,45 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # scoring Narses and not for choosing Belisarius' marches.
 # NOTE the allfights scoring is unaffected -- those fights ARE against Narses at his own levels --
 # so the 0.899 regression and the per-attack proc finding stand exactly as recorded above.
+
+
+# ------------------------------------------------- engine: per-attack procs (DONE, and it is
+#                                                    correct, and it does NOT fix the fit)
+# IMPLEMENTED.  heroes.PER_ATTACK marks the procs whose tooltip describes an ATTACK; battle_mc
+# now rolls those once per attacking troop type inside the per-type damage loop and applies each
+# roll only to that type's damage.  Everything else still rolls once per round.
+#
+# VALIDATED ON A NEW OBSERVABLE (procs.py).  Simulated trigger counts against the 1,500-troop
+# report, where Narses fielded three troop types throughout:
+#     proc              observed   per-round   per-attack   model/observed
+#     Art of War             173          52          155        0.90
+#     Hero's Domain          324         104          310        0.96
+#     Mighty Paragon          84          83          248        0.99
+#     Rally Flag              71          83          248        1.17
+#     Chaos Gambit            87          83          248        0.95
+# The two ATTACK procs need the per-attack column and the three others the per-round column, and
+# that split is the tooltip wording rather than a fitted choice.  The model had never been held
+# to trigger counts at all before this.
+#
+# IT DOES NOT FIX THE DAMAGE ERROR, and that was predictable: rolling per type and applying per
+# type leaves the EXPECTED damage unchanged, only its variance.  rms log err 0.899 -> 0.902.
+# Recorded so the next person does not expect otherwise.
+#
+# FIVE COMBINATION RULES TESTED AND REJECTED -- all-ten rms log err, verified magnitudes in place:
+#     procs multiply, by skill name (current)          0.891
+#     procs accumulate within kind (reference form)    0.754
+#     damage reductions: strongest only, no stacking   0.918
+#     damage reductions: summed, capped at 90%         0.764
+#     hero 'all' scope read as the hero's OWN type     0.396
+# The last is much the best and is NOT adopted: the tooltips say "total Squads'" and "all squads"
+# outright, so a rule contradicting them that improves the fit is compensating for a different
+# error -- the same signature as procs-x0.55 and ENG_B 0.4.  Adopting it would rebuild exactly the
+# two-errors-cancelling state that the verified magnitudes just exposed.
+#
+# WHERE THAT LEAVES IT.  Narses' output is over-predicted about 3x with correct magnitudes on
+# both sides, and no stacking rule tried accounts for it.  The remaining suspects, none tested:
+#   - proc magnitudes may not be a straight multiplier on the damage term at all
+#   - "damage taken -50%" may reduce the DEALT damage of the attacker rather than raising defence
+#   - the reference's Skill.protect() pool (sim.PROTECT, never implemented) soaks a share of dead
+#     per round and would blunt exactly the runaway feedback that turns 1.35x into 3x
+# PROTECT is the one with an actual reference implementation behind it and has never been tried.

@@ -25,7 +25,8 @@ from dataclasses import dataclass, field
 
 sys.path.insert(0, os.path.dirname(__file__))
 from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
-                    proc_uptime, STRIKE, TROOP_SKILLS, TROOP_REFORGE, PERMANENT)
+                    proc_uptime, STRIKE, TROOP_SKILLS, TROOP_REFORGE, PERMANENT,
+                    PER_ATTACK)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -362,10 +363,22 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
             if ARMY_MIN_LIVE:
                 army_min = min(sum(na.values()), sum(nd.values()))
                 army_sqrt = army_min ** ENG_B
-            # decide which procs are live this round
+            # decide which procs are live this round.  PER_ATTACK skills are rolled once per
+            # ATTACKING TROOP TYPE and apply only to that type's damage -- the trigger counts say
+            # so plainly (3.1x and 3.3x nominal against a 3-type army, where every other proc
+            # reads 1.0x).  They are collected separately and merged inside the per-type loop.
             live = {'a': list(fa), 'd': list(fd)}
+            per_attack = {('a', u): [] for u in TYPES}
+            per_attack.update({('d', u): [] for u in TYPES})
             for side, procs in (('a', pa), ('d', pd)):
                 for sname, effs in procs.items():
+                    if sname in PER_ATTACK:
+                        mode, p, dur = PROC_SPEC[sname]
+                        for u in TYPES:
+                            if mode == 'always' or (mode == 'periodic' and rnd % p == 0) \
+                                    or (mode == 'chance' and rng.random() < p):
+                                per_attack[(side, u)].extend(effs)
+                        continue
                     mode, p, dur = PROC_SPEC[sname]
                     key = (side, sname)
                     if mode == 'always':
@@ -414,15 +427,21 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                 return out
             ae = _alive(live['a'], na, a.troops)
             de = _alive(live['d'], nd, d.troops)
+            pae = {u: _alive(per_attack[('a', u)], na, a.troops) for u in TYPES}
+            pde = {u: _alive(per_attack[('d', u)], nd, d.troops) for u in TYPES}
             ta = next((v for v in TYPES if nd[v] > 0), None)
             td = next((v for v in TYPES if na[v] > 0), None)
             kills_on_d = {t: 0.0 for t in TYPES}
             kills_on_a = {t: 0.0 for t in TYPES}
-            for src, n_src, n_tgt, target, kills, my_effs, their_effs, other in (
-                    (a, na, nd, ta, kills_on_d, ae, de, d), (d, nd, na, td, kills_on_a, de, ae, a)):
+            for src, n_src, n_tgt, target, kills, my_effs, their_effs, other, mine_pa in (
+                    (a, na, nd, ta, kills_on_d, ae, de, d, pae),
+                    (d, nd, na, td, kills_on_a, de, ae, a, pde)):
                 for u in TYPES:
                     if n_src[u] <= 0:
                         continue
+                    # NOTE: a fresh name, not a rebind of my_effs -- rebinding would carry one
+                    # troop type's per-attack rolls into the next type's iteration.
+                    u_effs = my_effs + mine_pa[u] if mine_pa[u] else my_effs
                     army = n_src[u] ** ENG_A * army_sqrt
                     shares = [(target, 1.0)]
                     if u == 'cav' and target != 'arch' and n_tgt['arch'] > 0 and src.ambusher > 0:
@@ -456,7 +475,7 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                             if n_tgt[v] > 0 and v not in hit:
                                 shares.append((v, 1.0)); hit.add(v); extra -= 1
                     for tgt, share in shares:
-                        mod = skill_mod(src, my_effs, u, other, their_effs, tgt)
+                        mod = skill_mod(src, u_effs, u, other, their_effs, tgt)
                         dead = share * army * A[(src.name, u)] / D[(other.name, tgt)] / 100 * mod
                         dead -= dead * WEAR * rnd          # reference engine's per-round attrition
                         if PROTECT:

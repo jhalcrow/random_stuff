@@ -416,3 +416,18 @@ def warn_underlevelled(lineup, where=''):
     return (f"  !! {', '.join(bad)} {verb} Lv.4 magnitudes read off Narses' account, below max"
             + (f" ({where})" if where else "")
             + " -- under-rated here; see heroes.SKILL_LEVEL")
+
+
+# ---------------------------------------------------------------- per-attack procs
+# Measured, not assumed.  In the 1,500-troop report Narses fielded three troop types, and exactly
+# two of his procs fired about three times per round while every other proc on either side fired
+# about once (fired/round over nominal chance):
+#     Art of War      3.3    "granting all squads' ATTACKS a 25% chance..."
+#     Hero's Domain   3.1    "...50% chance of dealing 50% more damage WHEN ATTACKING"
+#     Mighty Paragon  1.0    "reducing damage TAKEN"
+#     Rally Flag      0.9    "reducing damage TAKEN"
+#     Chaos Gambit    1.1    "increasing all Squads' Damage Dealt" -- a buff, not an attack
+#     Ambusher 0.8, Volley 0.9
+# The split is exactly the tooltip wording: a proc that describes an ATTACK is rolled once per
+# attacking squad, everything else once per round.  Three squads, three rolls.
+PER_ATTACK = {'Art of War', "Hero's Domain"}
