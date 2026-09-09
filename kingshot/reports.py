@@ -2042,3 +2042,45 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # the report shows Avalanche firing five or ten times, the fight really lasted 20-40 rounds and
 # the proc channel is over-applied by exactly that factor -- measured directly off the row, with
 # no fitting and no reliance on the loss total at all.
+
+
+# ------------------------------------------------- YANG ONLY (mail, 2026-09-09 17:44:33)
+# Same 10,000 at 5,000/2,000/3,000, same heroless Narses, Infantry and Cavalry slots Vacant.
+#     VICTORY: I lose 26 + 47 = 73 of 10,000.  SIMULATED 60.  k = 0.83.
+#
+# THE PANEL PREDICTION LANDED EXACTLY: archer 1823.5 / 1809.4 / 1742.7 / 1737.6, predicted to the
+# decimal from hero_stats.json plus the +200 / +600 gear measured off the CHARLES fight.  That is
+# a different hero and a different troop type, so the gear constants are now confirmed rather than
+# merely fitted to the one report they came from.  Infantry and cavalry lines unchanged.
+# AVALANCHE FIRED ONCE, as predicted for a 4-round fight.  The rows imply 4 to 10.7 rounds
+# (Avalanche 1 -> 4, Ice Zone 3 -> 7.5, Ambush 3 -> 7.5, Unyielding Shield 4 -> 10.7) against the
+# simulator's 4, so the proc channel is NOT over-firing with one hero.
+#
+# MY PREDICTION WAS WRONG ON WHICH BRANCH.  I said "Charles lands and Yang does not -> auras are
+# right, procs are wrong" was the expected outcome.  BOTH LANDED:
+#     no heroes            k 1.05
+#     Charles, 3 auras     k 1.12
+#     Yang, 3 procs        k 0.83
+# A single hero of either kind is fine.  So the fault is not in auras, not in procs, and not in
+# any one skill's magnitude or schedule -- it is in COMBINING SEVERAL, which is the second branch
+# this test was pre-registered to distinguish and the one I called less likely.
+#
+# THAT IS A MUCH SHARPER TARGET than "the proc channel".  _prod multiplies distinct proc names
+# together, so N procs live in the same round multiply N factors; with one hero that is at most
+# three and the error is invisible, with two proc heroes it is six, and against Terry it is nine
+# on each side.  The over-prediction growing from 1.0 to 5.4 as heroes are added is exactly the
+# signature of a product where a sum belongs.
+
+# ------------------------------------------------- next test, pre-registered: TWO PROC HEROES
+# Charles + Yang would NOT test this -- Charles has zero procs, so Yang's three would still be the
+# only ones live and the count would not change.  The test needs two PROC heroes.
+#     SOPHIA + YANG, Infantry slot Vacant, same 10,000 at 5,000/2,000/3,000, same target.
+#     Sophia brings Arcane Pact and Terror Deathblow; Yang brings three.  Six procs against three.
+#     panel must read  cavalry 1820.7 / 1809.7 / 1724.3 / 1726.1
+#                      archer  1823.5 / 1809.4 / 1742.7 / 1737.6   (unchanged from the Yang fight)
+#     simulator says my losses 25 in 3.2 rounds, against 73 observed for Yang alone.
+# IF THE COMBINATION IS THE FAULT, reality will come in well above 25 -- the model should be
+# roughly halving the losses that adding Sophia actually saves.  If reality lands near 25, two
+# proc heroes are still fine and the break is at three, which the full Charles+Sophia+Yang march
+# would then pin down (simulator: 5 losses, and 5 is small enough that any real number at all
+# would settle it).
