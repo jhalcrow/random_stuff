@@ -55,6 +55,25 @@ TIER = re.compile(r'skill-tier-label[^>]*>(?P<lvl>L\d)</span>'
                   r'<span class="skill-tier-value[^>]*>(?P<val>[^<]*)</span>')
 
 
+STAT = re.compile(r'>((?:Infantry|Cavalry|Archer) (Attack|Defense|Lethality|Health))<')
+
+
+def parse_stats(html):
+    """Expedition stats.  The page splits them: star Attack/Defense sit under the 'Expedition'
+    heading, the exclusive weapon's Lethality/Health under 'Expedition Stats'.  Both are taken;
+    Conquest-mode tiles are skipped."""
+    marks = [(m.start(), m.group(1)) for m in re.finditer(r'<h3[^>]*>([^<]+)</h3>', html)]
+    out = {}
+    for m in STAT.finditer(html):
+        prev = [t for p, t in marks if p < m.start()]
+        if not (prev and prev[-1].startswith('Expedition')):
+            continue
+        v = re.search(r'\+?([\d,]+\.?\d*)%', html[m.start():m.start() + 300])
+        if v:
+            out[m.group(2).lower()] = float(v.group(1).replace(',', ''))
+    return out
+
+
 def parse(html):
     block = expedition_block(html)
     if not block:
@@ -77,8 +96,9 @@ def main():
     names = slugs(refresh)
     print(f'{len(names)} heroes')
     for i, s in enumerate(names, 1):
-        skills = parse(get(f'{BASE}/heroes/{s}/', refresh))
-        data[s] = skills
+        page = get(f'{BASE}/heroes/{s}/', refresh)
+        skills = parse(page)
+        data[s] = {'skills': skills, 'stats': parse_stats(page)}
         print(f'  {i:3}/{len(names)}  {s:14} {len(skills)} expedition skills'
               + ('   <-- NONE PARSED' if not skills else ''))
     json.dump(data, open(OUT, 'w'), indent=1, sort_keys=True)

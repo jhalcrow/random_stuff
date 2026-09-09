@@ -1910,3 +1910,28 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #
 # STILL UNSOURCED, 4 skills: Saul Resourceful, Yeonwoo Well-Traveled, Amane Exorcism, Fahd
 # Pathfinder.  None is in a lineup any current tool ranks.
+
+
+# ------------------------------------------------- hero base stats: checked, and NOT the problem
+# The same site carries each hero's Expedition stats, split across two sections -- star Attack and
+# Defense under the "Expedition" heading, the exclusive weapon's Lethality and Health under
+# "Expedition Stats".  crawl_heroes.py now captures both.
+#
+# UNLIKE THE SKILL MAGNITUDES, hero_stats.json was essentially right: 22 of 29 heroes matched the
+# site exactly, and four of the seven misses were heroes with no exclusive weapon where the model
+# stores 0 and the site simply has no tile -- agreement, not disagreement.  Only four real errors:
+#     Chenko  exp_atk/def  200.16 -> 140.11
+#     Fahd    exp_atk/def  200.16 -> 140.11
+#     Gordon  exp_atk/def  200.16 -> 140.11
+#     Helga   weapon       55.00  -> 55.50
+# Chenko is in ATTACK_JOINERS and the rally fits carry four of him, so that one is not cosmetic.
+#
+# THE CONTRAST IS THE POINT.  44 skill magnitudes were wrong by up to 10x while 22 of 29 stat
+# blocks were exact.  Both tables came from prose scrapes, but the stats are single numbers a
+# scraper reads off a page while the skills needed a human to parse a sentence into kind, scope
+# and magnitude -- and that is where it went wrong.  So the Elo problem was the SKILL layer alone,
+# and checking the stats was worth doing precisely because it ruled the other half out.
+#
+# NO EFFECT ON allfights (hero_stats=False there -- the reported panel already contains them) and
+# none on the Elo ordering either; the corrected heroes were not near the top.  rms log err stays
+# 0.884 and the ranking is unchanged from the previous entry.

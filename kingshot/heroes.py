@@ -467,7 +467,9 @@ def _track(levels):
 
 SITE_TRACK, SITE_SOURCE = {}, {}
 if _os.path.exists(_SKILLS_JSON):
-    for _slug, _sks in _json.load(open(_SKILLS_JSON)).items():
+    for _slug, _entry in _json.load(open(_SKILLS_JSON)).items():
+        # crawl_heroes.py emitted a bare skill list before it also carried stats; accept both.
+        _sks = _entry['skills'] if isinstance(_entry, dict) else _entry
         for _sk in _sks:
             _t = _track(_sk['levels'])
             if _t:
