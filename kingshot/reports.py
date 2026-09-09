@@ -1199,3 +1199,49 @@ NARSES_500 = dict(my_troops={'inf': 250, 'cav': 100, 'arch': 150}, my_losses=500
 # DEFAULT NOT FLIPPED.  It is a partial fix -- 0.64 still means the fight ends too early -- and
 # the per-round rate error (1.4x) is untouched.  Fitting one channel at a time is the entire
 # lesson of the last thirty reports; taking this now would re-confound the two.
+
+
+# ------------------------------------------------- firing rates (firing.py)
+# With the round count known, every trigger row becomes a firing RATE, comparable directly to
+# heroes.PROC_SPEC.  One report is therefore a calibration table for the whole skill layer --
+# including the opponent heroes, whose schedules were never more than prose scrapes.
+#
+# 15 of the 21 modelled rows disagree by more than 1.5x.  The two that do not are Yang's Ice Zone
+# (0.97) and Avalanche (1.03), which is not independent evidence: they defined the round count.
+#     Unyielding Shield  modelled .375  measured .822   2.19x
+#     Hero's Domain      modelled .500  measured .803   1.61x
+#     Art of War         modelled .250  measured .382   1.53x
+#     Arcane Pact        modelled .400  measured .184   0.46x
+#     Rally Flag         modelled .400  measured .197   0.49x
+#     Volley             modelled .100  measured .053   0.53x
+#     Howling Wind       modelled .300  measured .171   0.57x   ... and eight more
+# Note Volley and Howling Wind are TOOLTIP values, not scrapes, and they still come in at ~0.55.
+# Note also that Yang's own rows 1-2 sit at 1.00 while his rows 3-5 sit at 0.53-0.66 -- same
+# hero, same troops, same rounds -- so this is not a uniform rescaling of everything.
+#
+# CORRECTION TO THE PREVIOUS ENTRY.  It said the fight "ran about 152 rounds" and the simulator's
+# 73 was too early by 2.1x.  Stated too precisely.  Most rows coming in low is ALSO what a
+# too-high round count would produce, so the count has to be solved for, not assumed.  Solving it
+# over the non-Yang rows gives a broad, poor minimum near 120 (rms log err 0.53, and 0.53-0.59
+# anywhere between 100 and 152).  The honest statement: the fight ran 120-156 rounds and the
+# simulator is early by 1.6-2.1x.  The direction and rough size hold; the second decimal did not.
+# Avalanche remains the anchor because it is PERIODIC -- 39 triggers of an every-4th-round skill
+# is near-deterministic, where every chance rate is only as good as the number scraped for it.
+#
+# ALSO CORRECTED: allfights.py labelled mean|log k| as "rms log err".  Mean-abs is always the
+# smaller of the two, so every "rms log err" quoted above this line is really mean-abs (the
+# ceil() fix "0.458 -> 0.364", the ARMY_MIN_LIVE note "0.366 -> 0.348", and the Narses joint fits
+# in this file).  Comparisons between those numbers stand -- both are monotone in the errors --
+# but the figures never meant what they said.  The default now prints 0.424 where it printed
+# 0.366.  Both are printed from here on.
+
+# TWO ENGINE KNOBS TESTED AGAINST THE ROUND COUNT, BOTH REJECTED AS FIXES:
+#     ENG_B 0.5 -> 0.4   aggregate rounds rms 0.556 -> 0.382, and totals improve too -- but
+#                        per-fight it does not converge, it OVERSHOOTS: Terry 20k goes 0.77 ->
+#                        1.86 and Narses 10k 0.57 -> 1.22 while Narses 500 goes 0.48 -> 0.89.
+#                        Trading all-under for mixed over/under lowers an rms without fixing
+#                        anything.  This is the same trap as fitting a constant.
+#     ARMY_MIN_LIVE=1    coherent but partial: 0.48 -> 0.64, 0.77 -> 0.98, 0.57 -> 0.57.  No sign
+#                        flips, every fight still early.  Better shape, smaller aggregate gain.
+# Neither touches the real residual: Terry/opponent-2 totals stay at 1.6-1.9 and the 500-solo at
+# 0.67 under both.  Judge candidates per-fight and by sign, never by the aggregate alone.

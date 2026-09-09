@@ -7,7 +7,7 @@ model has been over-predicting.
 
   python3 kingshot/allfights.py
 """
-import os, random, statistics, sys
+import math, os, random, statistics, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from sim import Side, battle_mc
 from reports import (TERRY_ATTACK_PANEL, TERRY_ATTACK_ENEMY, OPP2, OPP2_TROOPS, OPP2_TIERS,
@@ -75,5 +75,11 @@ if __name__ == '__main__':
     for lbl, obs, sim in score():
         ks.append(sim / obs)
         print(f'  {lbl:22s}{obs:10,}{sim:10,.0f}{sim/obs:7.2f}')
+    # This line used to label mean|log k| as "rms log err".  They are not the same and mean-abs
+    # is always the smaller, so every "rms log err" quoted in reports.py before 2026-09-09 is
+    # really mean-abs.  Both are printed now: comparisons across those older notes stay valid
+    # (both are monotone in the errors), but the number never meant what it said.
+    logs = [math.log(k) for k in ks]
+    rms = math.sqrt(sum(x * x for x in logs) / len(logs))
     print(f'\n  mean k {statistics.mean(ks):.2f}   spread {min(ks):.2f}-{max(ks):.2f}'
-          f'   rms log err {statistics.mean([abs(__import__("math").log(k)) for k in ks]):.3f}')
+          f'   rms log err {rms:.3f}   mean|log| {statistics.mean([abs(x) for x in logs]):.3f}')
