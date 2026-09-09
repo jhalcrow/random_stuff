@@ -1875,3 +1875,38 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # with hero_stats=True and widget_default=1.0 against USER_STATS (the profile Bonus Overview),
 # while every fight allfights.py validates runs the opposite way -- in-battle panel stats with both
 # switches off.  The engine is calibrated in one configuration and used for planning in another.
+
+
+# ------------------------------------------------- the whole roster, from the site
+# crawl_heroes.py pulls every hero's Expedition skills at every level from kingshotoptimizer.com
+# into hero_skills.json; heroes.apply_site_magnitudes() scales the modelled effects to MAX level.
+#
+# VALIDATED BEFORE TRUSTED.  Triton's, Ava's and Jabel's Lv.5 tooltips match the site's L5 exactly,
+# and Long Fei at L4 round-trips to 40 / 20 / 80 -- precisely his in-game tooltips.  Six skills
+# whose site L5 is exactly 1.25x my in-game Lv.4 reading, which is the L4->L5 step.
+#
+# THE SCRAPED MAGNITUDES WERE WRONG ALMOST EVERYWHERE -- 44 of the modelled skills disagreed with
+# the site's max, by factors from x0.10 to x5.00:
+#     Alcar Praetorian Will   100 -> 10     Thrud Reckless Charge     20 -> 100
+#     Yang Avalanche           25 -> 100    Hilde Elixir of Strength  25 -> 100
+#     Yang Ice Zone            40 -> 100    Vivian Trap of Greed      15 -> 60
+#     Sophia Arcane Pact       20 -> 40     Wee & Woo Artillerymen    15 -> 10
+# THIS IS WHY THE ELO TABLE LOOKED WRONG.  Charles, Triton, Ava and Jabel came out unchanged --
+# they were the only ones ever verified in game -- and every other hero in those pools was ranked
+# on numbers that were off by up to 10x.  The ranking was never measuring lineup quality.
+#
+# Side.skill_levels models an opponent's under-levelled heroes: Narses runs Long Fei 4, Jabel 5,
+# Rosa 4.  heroes.level_scale() reads the step off the site rather than guessing it, which is the
+# thing the previous entry explicitly refused to invent.
+#
+# EFFECT ON THE FIT: rms log err 0.899 -> 0.884, but the shape changed completely.
+#     Narses six   0.25-3.24  ->  0.66-1.51     much better
+#     Terry / opp2 1.20-1.51  ->  2.32-5.44     much worse
+# Both sides' magnitudes roughly doubled, so the proc-combination fault -- procs multiplying by
+# skill name -- now compounds over much larger numbers and dominates everything else.  Against
+# Narses my troops live ~150 rounds and the error saturates; against Terry ~25 rounds and it does
+# not.  The data is now right and the mechanism is wrong, which is the correct order to fix them
+# in but does not yet show up in the metric.
+#
+# STILL UNSOURCED, 4 skills: Saul Resourceful, Yeonwoo Well-Traveled, Amane Exorcism, Fahd
+# Pathfinder.  None is in a lineup any current tool ranks.

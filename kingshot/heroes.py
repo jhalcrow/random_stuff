@@ -431,3 +431,85 @@ def warn_underlevelled(lineup, where=''):
 # The split is exactly the tooltip wording: a proc that describes an ATTACK is rolled once per
 # attacking squad, everything else once per round.  Three squads, three rolls.
 PER_ATTACK = {'Art of War', "Hero's Domain"}
+
+
+# ---------------------------------------------------------------- site magnitudes (L1..L5)
+# hero_skills.json is crawled from kingshotoptimizer.com by crawl_heroes.py and carries every
+# Expedition skill at every level.  It is the first source in this project that gives MAX-level
+# values for the whole roster; everything before it was either a prose scrape or a tooltip read
+# off whatever level one particular account happened to have.
+#
+# VALIDATED AGAINST THE GAME BEFORE BEING TRUSTED.  Triton's, Ava's and Jabel's Lv.5 tooltips
+# match the site's L5 exactly, and every one of Long Fei's and Rosa's Lv.4 tooltips is exactly the
+# site's L4 -- six skills whose site L5 is exactly 1.25x what I read in game, which is the L4->L5
+# step.  The level tracks are therefore real, not the site's guesswork.
+import json as _json, os as _os, re as _re
+
+_SKILLS_JSON = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'hero_skills.json')
+
+
+def _norm(name):
+    return _re.sub(r'[^a-z0-9]', '', name.lower())
+
+
+def _track(levels):
+    """L1..L5 as EFFECT sizes.  A track starting above 100 is a 'deal X% damage' total, so the
+    effect is X-100 (Art of War 120..200 -> 20..100); anything else is the effect directly."""
+    vals = []
+    for v in levels.values():
+        num = _re.sub(r'[^\d.]', '', v)
+        if num:
+            vals.append(float(num))
+    if not vals:
+        return []
+    return [x - 100 for x in vals] if vals[0] > 100 else vals
+
+
+SITE_TRACK, SITE_SOURCE = {}, {}
+if _os.path.exists(_SKILLS_JSON):
+    for _slug, _sks in _json.load(open(_SKILLS_JSON)).items():
+        for _sk in _sks:
+            _t = _track(_sk['levels'])
+            if _t:
+                SITE_TRACK[_norm(_sk['name'])] = _t
+                SITE_SOURCE[_norm(_sk['name'])] = (_slug, _sk['name'])
+
+# The game renames some skills; the site is behind.  The player's own report shows Rosa's third
+# skill as "Enchanting Dance" with the text the site files under "Rose of War" (enemy damage dealt
+# -20% at max, -16% at L4, which is exactly what her Lv.4 tooltip read).  Game name wins here;
+# the alias just points it at the right level track.
+SKILL_ALIAS = {'enchantingdance': 'roseofwar'}
+NO_SITE_ENTRY = []
+
+
+def apply_site_magnitudes():
+    """Scale every modelled skill to the site's MAX-level value, in place.
+
+    Scales rather than assigns, so a multi-component skill keeps its shape: Oath of Power's
+    (inf 20, cav 30, arch 30) scales as a unit off its largest component.  Effect KIND and SCOPE
+    are left alone -- the site gives magnitudes, not mechanics.
+    """
+    for h, info in HEROES.items():
+        for i, (name, effs) in enumerate(info['skills']):
+            key = _norm(name)
+            track = SITE_TRACK.get(key) or SITE_TRACK.get(SKILL_ALIAS.get(key, ''))
+            if not track or not effs:
+                NO_SITE_ENTRY.append((h, name))
+                continue
+            cur = max(e[1] for e in effs)
+            if cur <= 0:
+                continue
+            f = track[-1] / cur
+            info['skills'][i] = (name, [(k, round(v * f, 3), sc) for k, v, sc in effs])
+
+
+def level_scale(name, level):
+    """Multiplier taking a skill from MAX level down to `level` (1-5).  1.0 if unknown."""
+    key = _norm(name)
+    track = SITE_TRACK.get(key) or SITE_TRACK.get(SKILL_ALIAS.get(key, ''))
+    if not track or not (1 <= level <= len(track)) or track[-1] == 0:
+        return 1.0
+    return track[level - 1] / track[-1]
+
+
+apply_site_magnitudes()

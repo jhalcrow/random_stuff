@@ -78,6 +78,11 @@ FIGHTS = [
 # Narses at TG2 predates the reforges entirely: they sit above the base abilities he does not
 # even have on infantry.  A reforge adds no Battle Details row, so his rows cannot confirm this
 # directly -- but a TG2 account holding a top-tier reforge is not credible.
+# Narses' heroes are not fully upgraded: his tooltips read Long Fei Lv.4, Jabel Lv.5, Rosa Lv.4.
+# heroes.py now holds MAX-level magnitudes from the site, so his have to be scaled back down.
+# Round-trip check: Long Fei at L4 comes out 40 / 20 / 80, exactly his in-game tooltips.
+NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
+
 ENEMY_NO_REFORGE = {'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
@@ -102,7 +107,8 @@ def score(n=200, seed=1234):
             d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
                      joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
                      troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}),
-                     troop_reforges=(set() if lbl in ENEMY_NO_REFORGE else None))
+                     troop_reforges=(set() if lbl in ENEMY_NO_REFORGE else None),
+                     skill_levels=(NARSES_LEVELS if lbl in ENEMY_NO_REFORGE else {}))
             if mr == 'garrison':
                 a, d = d, a
                 r = battle_mc(a, d, rng)

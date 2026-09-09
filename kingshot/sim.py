@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 sys.path.insert(0, os.path.dirname(__file__))
 from heroes import (HEROES, LEGENDARIES, EPICS, ATTACK_JOINERS, DEFENSE_JOINERS, PROC_SPEC,
                     proc_uptime, STRIKE, TROOP_SKILLS, TROOP_REFORGE, PERMANENT,
-                    PER_ATTACK)
+                    PER_ATTACK, level_scale)
 
 TYPES = ('inf', 'cav', 'arch')
 _TNAME = {'inf': 'infantry', 'cav': 'cavalry', 'arch': 'archers'}
@@ -144,6 +144,10 @@ class Side:
     # Truegold reforges present on this account, by name.  None means all of them (a maxed TG
     # account); pass an explicit set -- including set() -- to restrict a lower-TG opponent.
     troop_reforges: set = None
+    # Skill level per hero (1-5).  An opponent's heroes are usually NOT maxed -- Narses' Long Fei
+    # and Rosa read Lv.4 -- and heroes.py now holds MAX-level magnitudes, so anything below max
+    # has to be scaled down here.  Heroes left out are treated as maxed.
+    skill_levels: dict = field(default_factory=dict)
     triangle: float = 0.0                        # counter bonus % (archers>infantry etc.) -- unsourced
     ambusher: float = 0.20                       # cavalry 'Ambusher': 20% chance to bypass Infantry
                                                  # and hit Archers -- tooltip-confirmed, Kingshot-specific
@@ -159,9 +163,11 @@ class Side:
         """List of (kind, value, scope, op_id) from lineup skills + joiner first skills."""
         out = []
         for h in self.heroes:
+            lvl = self.skill_levels.get(h)
             for i, (sname, effs) in enumerate(HEROES[h]['skills']):
+                f = 1.0 if lvl is None else level_scale(sname, lvl)
                 for kind, v, scope in effs:
-                    out.append((kind, v * SKILL_SCALE, scope, f'{h}:{sname}'))
+                    out.append((kind, v * f * SKILL_SCALE, scope, f'{h}:{sname}'))
         for h in self.joiners:
             sname, effs = HEROES[h]['skills'][0]
             for kind, v, scope in effs:
