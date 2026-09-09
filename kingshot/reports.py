@@ -1321,11 +1321,21 @@ NARSES_1500_INF = dict(my_troops={'inf': 1_500, 'cav': 0, 'arch': 0}, my_losses=
                        their_jabel=[(71, 0), (324, 83), (1, 0), (33, 0)],
                        their_rosa=[(87, 0), (1, 0), (1, 0), (18, 0)])
 
-# HIS DEFENCE CARRIES A +20% BUFF HERE THAT THE 500-TROOP FIGHT DID NOT HAVE.  Comparing the two
+# WHICH SIDE OWNS THE 20% IS AMBIGUOUS, AND IT DOES NOT MATTER FOR SCORING.  Comparing the two
 # reports: attack, lethality and health are identical to the decimal, while every defence line is
 # higher by a factor of exactly 1.200 (inf 411.9 -> 514.3, cav 271.3 -> 345.5, arch 372.7 ->
-# 467.2).  NARSES in this file holds the BUFFED numbers, and I scored the 500-troop fight with
+# 467.2).  NARSES in this file holds the HIGHER numbers, and I scored the 500-troop fight with
 # them -- 20% too much defence on his side, which understates my damage.
+#
+# Two readings fit.  (a) He gained a +20% defence buff: his multiplier is x1.200 exactly, a round
+# number.  (b) I LOST an Enemy Squads' Defense debuff worth 16.67%, which the panel folds into
+# his displayed defence -- the player's own account is that "the 20% bonuses" were theirs and
+# have since lapsed, which favours this, though 16.67% is not the round number (a) gives.
+# Not resolved, and not worth resolving: the panel already shows the net figure, so reading each
+# fight's defence off its own report is correct either way.  What must not happen again is
+# carrying one report's opponent panel into another fight, which is exactly the error here.
+# Note also that Special Bonuses is now nearly empty -- a single +5.0% Appointment-based Squads'
+# Attack for me, 0.0% for him -- so these two fights are the cleanest buff state in the set.
 NARSES_UNBUFFED = {t: dict(d, defense=(100 + d['defense']) / 1.2 - 100) for t, d in NARSES.items()}
 
 # WHAT THE TWO CORRECTIONS DO.  Both move toward 1, and the two fights I lost now agree:
