@@ -164,3 +164,35 @@ NUKE_ROWS = {
 #  * CORRECTION to the note in skill_log.py: trigger cadence is NOT generally deterministic.
 #    Only some rows are fixed (Charles rows 1-3 and Yang row 1 were identical across both runs);
 #    the rest vary.  Vivian's 12/12/12 across three rallies was a fixed row, not a general rule.
+
+
+# ---------------------------------------------------------------- first win
+# Solo, 10,000 troops at 50/20/30, vs [H8s]Narses (Long Fei / Jabel / Rosa), 2026-09-08 20:11.
+# VICTORY: their 123,570 wiped for 239 of mine (85 injured + 154 lightly).
+NARSES = {'inf': dict(attack=520.9, defense=514.3, lethality=251.4, health=294.6),
+          'cav': dict(attack=356.1, defense=345.5, lethality=259.4, health=227.3),
+          'arch': dict(attack=474.3, defense=467.2, lethality=311.3, health=243.9)}
+NARSES_TROOPS = {'inf': 41_190, 'cav': 41_190, 'arch': 41_190}
+
+# New damage rows for the catalogue: Long Fei deals damage on row 3, Jabel on row 2, Rosa on none.
+NARSES_ROWS = {'Long Fei': [(8, 0), (1, 0), (11, 11)],
+               'Jabel': [(6, 0), (17, 14), (1, 0), (1, 0)],
+               'Rosa': [(4, 0), (1, 0), (1, 0), (1, 0)],
+               'my Yang': [(9, 5_922), (6, 4_535), (4, 0), (5, 0), (4, 435)]}
+
+# "Residents" is the SURVIVORS row: squad - casualties = residents, checked on six reports
+# across both sides.  It retro-confirms casualty totals that were never shown directly.
+
+# OPEN PROBLEM this fight exposed -- enemy troop base stats are a free parameter.
+# Reading the icon as tier + Truegold level ("Lv 11.0" badge 8 = T11 TG8, which matches the
+# leader's own troops exactly) puts Narses and the Baron at T10 TG2.  That reading improves the
+# Narses fit (my losses 398 sim vs 239 observed, from 672 under the old T10/TG8 assumption) but
+# blows up the Baron fit (207,752 vs 117,957 observed, from 111,933).  The two cannot both be
+# right, and the likeliest explanation is that the Gilded Baron is an event monster with a
+# scripted stat block rather than normal troops.
+#
+# CONSEQUENCE for the earlier claim: the SHAPE of the engine validation stands -- base stats are
+# constant across the four Baron runs, so the march-size scaling result is untouched.  But the
+# ABSOLUTE level of that fit rests on an unobservable, so "mean ratio 0.98" is weaker than it
+# looked.  What would settle it is any fight where the opponent's troop tier and Truegold level
+# are known rather than inferred.
