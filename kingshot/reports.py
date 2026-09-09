@@ -966,3 +966,32 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # The default stays ambusher=0.20 because that is what the game says.  ambusher=0.0 currently fits
 # better, and that is recorded here as a measurement, NOT adopted as a setting -- fitting a
 # confirmed-real mechanic out of existence is the error this file has already made once.
+
+
+# ------------------------------------------------- the ceil() bias, and what it does not explain
+# allfights.py scores every fight where one side's losses are uncensored -- my own when I won, the
+# enemy's when I was wiped.  In both cases that is the LOSING side's cumulative damage output.
+#
+# Tested and REJECTED as the residual: recomputing army_min each round (rms 0.494 -> 0.482), the
+# engagement exponents (ENG_A 0.6 and 0.7 both worse), and Skill.protect() as a flat absorption
+# pool (0.458 -> 0.417, and it largely cancels because both sides carry it).
+#
+# FOUND: math.ceil() on the per-attack kill term.  The reference uses it and is right to -- it
+# runs a battle once.  This file averages 200 Monte Carlo runs, where ceil() is a systematic
+# upward bias that never averages out: a side whose army is nearly dead still books >=1 kill per
+# troop type per round, for as long as the fight runs.  Rounding up with probability equal to the
+# fractional part is unbiased in the mean.
+#
+#   rounding      N-arch  N-atk  N-def  N-i+a  T-arch  T-inf   opp2  T-mix   mean  rms log
+#   ceil            1.16   1.17   1.23   2.38    1.53   1.84   1.68   2.07   1.63    0.458
+#   stochastic      1.14   1.04   1.13   1.53    1.49   1.83   1.64   2.01   1.48    0.364
+#
+# The prediction was that it would bite hardest in LONG fights, and it does: the 1,000-troop
+# Narses grind (the longest in the set) goes 2.38 -> 1.53 while the short lopsided wins barely
+# move.  ROUND_MODE now defaults to stochastic.
+#
+# WHAT IT DOES NOT EXPLAIN.  The four Terry and opponent-2 cells hardly shift (1.49/1.83/1.64/2.01)
+# and they are the ones where I am WIPED.  Every fight I WIN now sits at 1.04-1.53; every fight I
+# LOSE sits at 1.49-2.01.  That is a cleaner split than anything earlier in this file, and it says
+# the remaining error is specific to being annihilated -- the regime where the sqrt(n_u) term
+# drives my output to near zero while the model still has me fighting.  That is the next thread.

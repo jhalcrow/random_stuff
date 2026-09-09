@@ -60,6 +60,16 @@ TROOP_SKILLS_ON = os.environ.get('TROOP_SKILLS', '1') == '1'
 TROOP_SKILLS_OFF = {s.strip() for s in os.environ.get('TROOP_SKILLS_OFF', '').split(',') if s.strip()}
 # Ambusher as a discrete per-round roll (tooltip wording) rather than a permanent damage split.
 AMBUSH_ROLL = os.environ.get('AMBUSH_ROLL', '1') == '1'
+# Reference Skill.protect() (effects 801/901): the DEFENDER soaks a share of the incoming dead
+# from a pool set at `dead * value/100` once per round and depleted across that round's attacks.
+# sim.py has never had this channel.  PROTECT is that share, 0 = off.
+PROTECT = float(os.environ.get('PROTECT', '0.0'))
+# Rounding of the per-attack kill term.  The reference uses ceil(), correct for a single battle,
+# but this file averages hundreds of Monte Carlo runs and ceil() is a systematic upward bias that
+# never averages out -- worst in long fights, where a nearly-dead side still books >=1 kill per
+# troop type per round for hundreds of rounds.  'stochastic' rounds up with probability equal to
+# the fractional part, which is unbiased in the mean.
+ROUND_MODE = os.environ.get('ROUND_MODE', 'stochastic')
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -413,7 +423,13 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                         mod = skill_mod(src, my_effs, u, other, their_effs, tgt)
                         dead = share * army * A[(src.name, u)] / D[(other.name, tgt)] / 100 * mod
                         dead -= dead * WEAR * rnd          # reference engine's per-round attrition
-                        kills[tgt] += math.ceil(dead)
+                        if PROTECT:
+                            dead *= (1 - PROTECT)          # defender absorption, Skill.protect()
+                        if ROUND_MODE == 'stochastic':
+                            f = math.floor(dead)
+                            kills[tgt] += f + (1 if rng.random() < dead - f else 0)
+                        else:
+                            kills[tgt] += math.ceil(dead)
             for t in TYPES:
                 nd[t] = max(0, nd[t] - kills_on_d[t])
                 na[t] = max(0, na[t] - kills_on_a[t])
