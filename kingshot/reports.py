@@ -605,3 +605,33 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # the enemy's heroes did the largest share of the killing, which is consistent with the missing
 # direct-damage channel being what is left -- but the spread got wider, not narrower, so the
 # single-constant reading of k is dead and should not be revived.
+
+
+# ------------------------------------------------- how tier and Truegold actually enter
+# Yes, both are modelled, and Side.tier/Side.tg now take per-troop-type dicts.  But the way they
+# enter is worth writing down, because it is counter-intuitive and it bounds how much they can
+# explain.
+#
+# Base defense and base lethality are 10 for EVERY entry in the 198-row table -- all 11 tiers,
+# all 6 Truegold levels.  Only base attack and base health scale, and they scale by the same
+# factor: a tier step multiplies attack by 1.199 and health by 1.200; a Truegold step multiplies
+# attack by 1.051 and health by 1.050.  Since
+#     A = base_atk * M_atk * 10 * M_leth / 100      D = base_hp * M_hp * 10 * M_def / 100
+# that common factor CANCELS out of A/D whenever both armies move together.  Measured:
+#     both T11 TG8   k = 1.47
+#     both T11 TG5   k = 1.46
+#     both T5  TG0   k = 1.47
+# Tier and Truegold only ever act through the DIFFERENCE between the two sides -- and there they
+# are powerful:
+#     me T11 vs him T10   k = 2.07
+#     me T10 vs him T11   k = 1.04
+# One tier of relative advantage is worth 1.44x on the damage ratio.
+#
+# TWO CONSEQUENCES.
+# 1. The TG6-8 values are EXTRAPOLATED (table stops at TG5; TG_STEP = 1.05 per level).  That
+#    guess is harmless in every fight where both sides are TG8, which is all the Terry and
+#    opponent-2 cells, so it cannot be behind the residual k there.  It is NOT harmless against
+#    Narses (me TG8, him TG2) -- that fit carries the extrapolation error in full.
+# 2. Reading a troop icon wrongly is expensive.  Getting opponent 2's cavalry tier wrong by one
+#    step moved k from 1.56 to 2.18, which is wider than the entire effect being chased.  The
+#    per-type dict exists because of that.
