@@ -372,8 +372,20 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                 for kind, v, scope, nm in effs:
                     who = nm.split(':', 1)[0]
                     t = scope if who == 'Troop' else (HEROES[who]['type'] if who in HEROES else None)
-                    if t in TYPES and start.get(t, 0) > 0 and counts.get(t, 0) <= 0:
-                        continue
+                    if t in TYPES:
+                        if who == 'Troop':
+                            # A troop ability belongs to the TROOPS, not to the hero whose panel
+                            # row displays it, so it needs that type alive NOW -- whether or not
+                            # the march ever had any.  Evidence: Yang shows 5 rows with archers
+                            # present and 3 without.  His own skills keep firing at zero archers
+                            # (row 1 still books kills); Volley and Howling Wind vanish entirely.
+                            # The old rule only skipped a type that started alive and then died,
+                            # so a pure-infantry march fired archer and cavalry abilities all
+                            # fight -- worst exactly in the single-type cells used to isolate them.
+                            if counts.get(t, 0) <= 0:
+                                continue
+                        elif start.get(t, 0) > 0 and counts.get(t, 0) <= 0:
+                            continue
                     out.append((kind, v, scope, nm))
                 return out
             ae = _alive(live['a'], na, a.troops)

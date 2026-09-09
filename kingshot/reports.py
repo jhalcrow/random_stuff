@@ -1273,3 +1273,27 @@ NARSES_500 = dict(my_troops={'inf': 250, 'cav': 100, 'arch': 150}, my_losses=500
 # WHY NOT MORE ENGINE FITTING: ENG_B and ARMY_MIN_LIVE were both tested against the round count
 # and neither touches the residual (Terry/opponent-2 stay at 1.6-1.9, the 500-solo at 0.67).
 # Chasing the damage core while a quarter of the skill schedules are 2x wrong is fitting noise.
+
+# ATTACK WITH ALL THREE HEROES.  The whole measurement is hero panel rows: no heroes means no
+# Battle Details, hence no Avalanche round count and no Unyielding Shield count, and the fight
+# yields nothing.  Yang supplies the round count even in a pure-infantry march -- confirmed on
+# the Terry 10,000 all-infantry report, where he still books kills with zero archers.
+#
+# The composition also buys a second, free reading of the same question.  Yang shows 5 rows when
+# archers are present and 3 when they are not: his own skills keep firing at zero archers, while
+# Volley and Howling Wind vanish outright.  So a pure-infantry march predicts Yang shows 3 rows.
+# If instead they appear, troop abilities are not gated on their type at all and the dilution
+# story is dead without needing Unyielding Shield at all.
+#
+# That observation exposed a real inconsistency in sim._alive: it skipped a troop ability only
+# for a type that STARTED alive and then died, so a pure-infantry march kept firing archer and
+# cavalry abilities all fight.  Fixed to require the type alive now.  NO NUMERICAL EFFECT --
+# those effects carry scope=ttype and _prod already filtered them out for absent types, so every
+# figure above and the 19,337 / 207 pre-registration are unchanged.  Correctness only.
+#
+# A NO-HERO ATTACK IS A GOOD SEPARATE TEST, for the opposite reason: it switches off my entire
+# skill layer, which is where 15 of 21 measurable quantities are wrong, and measures the damage
+# core nearly clean.  Three caveats: Narses keeps his heroes, so only half the skill layer goes;
+# there is no round count without my panel rows; and the Stat Bonuses panel will change once hero
+# expedition stats drop out, which is itself a direct check on the hero_stats=False decision.
+# Worth running after the infantry test, not instead of it.
