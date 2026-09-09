@@ -1245,3 +1245,31 @@ NARSES_500 = dict(my_troops={'inf': 250, 'cav': 100, 'arch': 150}, my_losses=500
 #                        flips, every fight still early.  Better shape, smaller aggregate gain.
 # Neither touches the real residual: Terry/opponent-2 totals stay at 1.6-1.9 and the 500-solo at
 # 0.67 under both.  Judge candidates per-fight and by sign, never by the aggregate alone.
+
+
+# ------------------------------------------------- next test, pre-registered
+# The engine knobs are not where the measurable error is.  15 of 21 skill rows are wrong by more
+# than 1.5x, they are now directly observable, and nothing in sim.py's damage core is.  So fit
+# the SKILL LAYER, and start by asking whether the ~0.55 shortfall is a real mechanism or just
+# wrong numbers.  Volley and Howling Wind are tooltip values, not scrapes, and still measure
+# ~0.55, which is what makes a mechanism plausible -- something like a troop ability only rolling
+# when its own type acts, so a 50/20/30 march dilutes it.
+#
+# THE TEST: 1,500 PURE INFANTRY solo on Narses at 50/20/30, recovered from his mail.
+# Pure infantry is the discriminator because it removes the dilution entirely -- one troop type,
+# so Unyielding Shield can only roll for the type that is present.  It is also the longest fight
+# available at this march size, which is what makes the trigger counts precise.
+#
+#     simulator: 207 rounds, he loses 19,337, I am wiped   (300 runs, seed 11)
+#     Unyielding Shield triggers   ~78  if the tooltip .375 is simply right and dilution is real
+#                                 ~171  if .822 is the true rate regardless of composition
+# Those cannot be confused: the gap is a factor of 2.2 on a count in the hundreds, where Poisson
+# noise is a few percent.  Read Avalanche off the same report for the round count and divide.
+#
+# Do NOT use pure archer for this.  It caps out around 38-51 rounds at any march size that still
+# loses (5,000 archers wins outright), giving under 15 Avalanche triggers -- too few to separate
+# .10 from .053 on Volley.  Infantry survives, so infantry is where the statistics are.
+#
+# WHY NOT MORE ENGINE FITTING: ENG_B and ARMY_MIN_LIVE were both tested against the round count
+# and neither touches the residual (Terry/opponent-2 stay at 1.6-1.9, the 500-solo at 0.67).
+# Chasing the damage core while a quarter of the skill schedules are 2x wrong is fitting noise.
