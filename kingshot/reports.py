@@ -566,3 +566,42 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # roughly half the error is the missing channel and roughly half is something else not yet found.
 # Implementing the channel is now both the fix and the measurement: whatever k remains afterwards
 # is the real residual bug.
+
+
+# ------------------------------------------------- checked against the reference engine
+# Source: request-laurent/sos.battle (Java), the 6-month reverse-engineering effort that claims
+# >99% reproduction of real battles.  Read Fight.java and Fighter.java directly rather than the
+# prose guides this file was originally built from.
+#
+# CONFIRMED CORRECT in sim.py:
+#   Fight.java:118   army = Math.pow(nbUnit,0.5) * Math.pow(armyMin,0.5)   -> sqrt(n_u*army_min)
+#   Fight.java:155   deadValue = army * attack / defense / 100.0, then Math.ceil
+#   Fighter.java:215 attack  = attack * (1+troopAttack) * damage * (1+troopLethality) / 100
+#   Fighter.java:216 defense = health * (1+troopHealth) * defense * (1+troopDefense) / 100
+#   targeting: the loop over unit types skips types with no troops and stops after the first one
+#   it damages (needContinue() is false except for one specific skill effect), i.e. first living
+#   type -- which is what sim.py already did.
+#
+# TWO MECHANICS IN sim.py WERE INVENTED and appear nowhere in the reference:
+#   * a +10% counter-triangle bonus (archers>infantry etc.)
+#   * a 20% per-round cavalry bypass onto archers
+#   The reference has no counter bonus at all, and reorders targeting only on every 20th round
+#   and only for units carrying the biker/sniper perk -- not a flat per-round split.  The bypass
+#   mattered a lot: archers are ~5x squishier than infantry, so routing a fifth of cavalry damage
+#   into them every round inflated exactly the cells that field cavalry.  Both defaults are now 0.
+#
+# ONE MECHANIC WAS MISSING: Fight.java applies 0.01% attrition per round,
+#   deadValue -= deadValue * 0.0001 * round.  sim.py had the parameter but defaulted it to zero,
+#   and battle_mc ignored it entirely.  Now WEAR = 0.0001 and both loops apply it.
+#
+# EFFECT ON k:
+#   before  mix 2.00  arch 1.68  inf 1.94  opp2 1.65   mean 1.82
+#   after   mix 1.47  arch 1.54  inf 2.05  opp2 1.29   mean 1.59
+# The two cells that field cavalry drop hard (2.00->1.47, 1.65->1.29) and the two that do not
+# barely move -- the signature of a real bug rather than a fitted constant.  The Bear Trap
+# regression still reproduces 16,797 exactly.
+#
+# The residual is now concentrated in the all-infantry cell (2.05).  That is also the cell where
+# the enemy's heroes did the largest share of the killing, which is consistent with the missing
+# direct-damage channel being what is left -- but the spread got wider, not narrower, so the
+# single-constant reading of k is dead and should not be revived.

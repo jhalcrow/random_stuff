@@ -41,6 +41,8 @@ ARMY_MIN_LIVE = os.environ.get('ARMY_MIN_LIVE', '0') == '1'
 # Scanning these is how we test whether that compression is the reason the model runs hot.
 ENG_A = float(os.environ.get('ENG_A', '0.5'))
 ENG_B = float(os.environ.get('ENG_B', '0.5'))
+# Reference engine applies a per-round attrition of 0.01%: dead -= dead * 0.0001 * round.
+WEAR = float(os.environ.get('WEAR', '0.0001'))
 
 
 def base_stats(ttype, tier=10, tg=8):
@@ -99,8 +101,13 @@ class Side:
     # inflates them.  Any hero not named here defaults to WIDGET_DEFAULT.
     widget_levels: dict = field(default_factory=dict)
     widget_default: float = 1.0
-    triangle: float = 10.0                       # innate counter bonus % (archers>infantry etc.)
-    ambusher: float = 0.20                       # cavalry chance to bypass the front line and hit archers
+    # Both of these were invented when this file was written from prose guides, and NEITHER
+    # appears in the reference engine (request-laurent/sos.battle, Fight.java).  That engine has
+    # no counter bonus at all, and reorders targeting only on every 20th round and only for units
+    # carrying the biker/sniper perk -- not a flat per-round bypass.  Defaults are now 0; the
+    # fields stay so the assumption can be re-tested.
+    triangle: float = 0.0                        # counter bonus % (archers>infantry etc.) -- unsourced
+    ambusher: float = 0.0                        # cavalry share bypassing the front line -- unsourced
 
     # ---- derived
     def tier_of(self, ttype):
@@ -191,7 +198,7 @@ def skill_mod(att, att_effs, u, dfn, def_effs, v):
     return dmg_up * opp_def_down / (opp_dmg_down * def_up) * tri
 
 
-def battle(a: Side, d: Side, max_rounds=5000, wear=0.0, verbose=False):
+def battle(a: Side, d: Side, max_rounds=5000, wear=WEAR, verbose=False):
     """Simulate a to the end. Returns dict with losses and winner."""
     A = {}
     D = {}
@@ -317,6 +324,7 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                     for tgt, share in shares:
                         mod = skill_mod(src, my_effs, u, other, their_effs, tgt)
                         dead = share * army * A[(src.name, u)] / D[(other.name, tgt)] / 100 * mod
+                        dead -= dead * WEAR * rnd          # reference engine's per-round attrition
                         kills[tgt] += math.ceil(dead)
             for t in TYPES:
                 nd[t] = max(0, nd[t] - kills_on_d[t])
