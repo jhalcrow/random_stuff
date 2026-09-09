@@ -934,3 +934,35 @@ OPP2_CELL1 = dict(my_troops={'inf': 5_000, 'cav': 2_000, 'arch': 3_000}, my_loss
 # That makes the base-stat table, not Ambusher, the live suspect: it is the one input to the
 # mixed cells that has never been checked, Ambusher's value is entirely determined by it, and
 # a table that exaggerates the archer/infantry gap would produce exactly this signature.
+
+
+# ------------------------------------------------- base stats cleared; Ambusher isolated
+# The pure-archer probe: Narses fielded 116,040 ARCHERS AND NOTHING ELSE (T10 TG2).  I attacked
+# with 5,000 at 50/20/30 and won, losing 72 while wiping all 116,040.  My losses are the
+# uncensored quantity.
+#     OBSERVED  I lost 72        SIM  I lost 75        k = 1.04
+# troops_base.json is therefore NOT the problem.  Archer durability is right, measured against a
+# target made entirely of archers, and the previous note's suspect is closed.
+#
+# But Ambusher is INERT in that fight -- with no enemy infantry there is no front line to bypass.
+# Re-testing it on the Narses MIXED fights (41,190 of each type), where it does fire:
+#
+#     configuration      I attack (obs 239)   I defend (obs 292)
+#     Ambusher on              1.20                 1.26
+#     Ambusher off             1.04                 1.09
+#
+# Across five independent fights the pattern is now exact: whenever Ambusher is inert or disabled
+# the model reproduces reality at k = 1.04-1.09.  Whenever it is active, k rises -- 1.20/1.26 on
+# Narses, and 2.04/1.66 on the tougher Terry and opponent-2 mixed cells.
+#
+# CONCLUSION.  Ambusher exists -- the tooltip says so and the reports carry it as its own row with
+# a ~19% trigger rate.  So this is an IMPLEMENTATION bug, not a case for deleting the mechanic
+# again.  Everything it depends on has now been independently verified: archer durability (this
+# fight), the engine (k=1 with skills off), my heroes' nine skills (tooltips), the troop abilities
+# (tooltips), tier and Truegold.  What remains unverified is only how the redirect itself resolves
+# -- whether the bypass rolls per cavalry unit rather than per round, whether the redirected
+# attack lands at full strength, or whether the front line still absorbs part of it.
+#
+# The default stays ambusher=0.20 because that is what the game says.  ambusher=0.0 currently fits
+# better, and that is recorded here as a measurement, NOT adopted as a setting -- fitting a
+# confirmed-real mechanic out of existence is the error this file has already made once.
