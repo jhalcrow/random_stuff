@@ -4,6 +4,9 @@
 upgrade decisions, calibrated against real battle reports from two accounts the player owns
 (`[PRO]Belisarius`, attacker; `[H8s]Narses`, target) in kingdom 203.
 
+Every number in `battles.py` was read off a screenshot in `reports_raw/`, so a transcription can
+always be re-checked rather than trusted — see `reports_raw/MANIFEST.md` for the index.
+
 **Owning both accounts is the whole method.** The game censors a badly-beaten loser's mail, but the
 winner's copy is always intact, so no fight is ever lost — and Narses can be reconfigured
 (heroes on/off, one at a time) to turn a live game into a controlled experiment.
@@ -41,6 +44,7 @@ Two corollaries learned the hard way:
 | `ladder.py` | The hero ladder diagnostic (loss + round columns). |
 | `elo.py`, `run.py` | Rankings. These run **calibrated**; everything else runs raw. |
 | `hero_skills.json` | Crawled L1–L5 skill tracks for 35 heroes (`crawl_heroes.py`). |
+| `reports_raw/` | **The primary source.** All 215 report screenshots + `MANIFEST.md` indexing them. |
 
 ```
 python3 kingshot/battles.py       # verify the data
