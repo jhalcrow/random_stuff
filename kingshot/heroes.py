@@ -382,40 +382,54 @@ if _os.environ.get('JOINERS_DEF'):
 # upgraded, so ranking his own march options against a Lv. 4 Long Fei under-rates that hero.
 #
 # Long Fei, Jabel and Rosa are all in LEGENDARIES, which run.py, elo.py, gear.py, waves.py and
-# research_value.py draw on to rank Belisarius' lineups.  Two of the three are under-levelled here.
+# research_value.py draw on to rank Belisarius' lineups.  All three now carry the site's MAX
+# magnitudes; the levels below only record where each value was first read.
 SKILL_LEVEL = {
-    # read at Lv. 5 -- believed max, so usable as canonical
+    # WHERE A VALUE WAS FIRST READ.  Historical bookkeeping only -- it does NOT say what the
+    # canonical table now holds, because apply_site_magnitudes() below overwrites every modelled
+    # magnitude with the site's MAX-level value.  Kept because it records which readings came off
+    # an opponent's account rather than a maxed one.
     'Command of Power': 5, 'Warfare of Power': 5, 'Oath of Power': 5,          # Triton
     'Dissolution': 5, 'Chiaroscuro': 5, 'Light and Cold': 5,                   # Ava
     'Rally Flag': 5, "Hero's Domain": 5, 'Youthful Rage': 5,                   # Jabel
-    # read at Lv. 4 on Narses' account -- BELOW MAX, do not treat as canonical
+    # read at Lv. 4 on Narses' account -- since SUPERSEDED by the site's full L1-L5 tracks
     'Mighty Paragon': 4, 'Celestial Sustenance': 4, 'Art of War': 4,           # Long Fei
     'Chaos Gambit': 4, 'Enchanting Dance': 4, 'Golden Rhythm': 4,              # Rosa
 }
 MAX_SKILL_LEVEL = 5
-UNDERLEVELLED = {h for h, d in HEROES.items()
-                 for n, _ in d['skills']
-                 if SKILL_LEVEL.get(n, MAX_SKILL_LEVEL) < MAX_SKILL_LEVEL}
 
-# The Lv. 4 -> Lv. 5 step cannot be inferred from what is recorded.  The two levels are never seen
-# for the same skill, and the scraped values these replaced were wrong by inconsistent factors
-# (Chiaroscuro 25 vs a true 50, Warfare of Power 6 vs a true 30), so they carry no curve either.
-# Guessing one would be exactly the kind of fitted constant this project keeps having to retract.
+# THE Lv.4 -> Lv.5 STEP IS NO LONGER UNKNOWN.  An earlier version of this file said it "cannot be
+# inferred from what is recorded" and refused to guess it, which was right at the time.  The
+# kingshotoptimizer crawl then supplied the whole L1-L5 track for every modelled skill, so the step
+# is READ rather than fitted -- Mighty Paragon 40 -> 50, Art of War 80 -> 100, and so on -- and
+# apply_site_magnitudes() puts the L5 value in the table while level_scale() takes it back down for
+# an opponent whose skills are not maxed (see NARSES_LEVELS in allfights.py).
+#
+# SO "UNDERLEVELLED" IS NOT ABOUT LEVELS ANY MORE.  Long Fei and Rosa were flagged for years of
+# this file's history because their numbers came off Narses' Lv.4 account; they now carry the
+# site's max values like everyone else, and flagging them under-rated a lineup that was in fact
+# rated correctly.  What genuinely remains uncertain is a skill the site has NO entry for, which
+# keeps whatever magnitude was hand-entered from prose.  That is what this now tracks.
+# UNSOURCED / UNDERLEVELLED are derived after apply_site_magnitudes() runs, at the end of this
+# file -- they depend on NO_SITE_ENTRY, which that call populates.
 
 
 def warn_underlevelled(lineup, where=''):
-    """Return a warning string if a lineup contains a hero whose magnitudes are below max.
+    """Return a warning if a lineup contains a hero carrying an UNSOURCED skill magnitude.
 
-    Use this anywhere Belisarius' OWN options are being ranked -- his heroes are all maxed, so a
-    hero carrying an opponent's Lv. 4 numbers is silently under-rated in that comparison.
+    The site crawl covers every modelled skill but four, and those four keep a magnitude typed in
+    from prose with nothing to check it against.  A lineup containing one is uncertain in a way the
+    others are not -- it could be over- or under-rated, unlike the old level warning which always
+    meant under-rated.
     """
-    bad = [h for h in lineup if h in UNDERLEVELLED]
+    bad = [h for h in lineup if h in UNSOURCED]
     if not bad:
         return ''
     verb = 'carries' if len(bad) == 1 else 'carry'
-    return (f"  !! {', '.join(bad)} {verb} Lv.4 magnitudes read off Narses' account, below max"
-            + (f" ({where})" if where else "")
-            + " -- under-rated here; see heroes.SKILL_LEVEL")
+    skills = ', '.join(f'{h}/{n}' for h, n in NO_SITE_ENTRY if h in bad)
+    return (f"  !! {', '.join(bad)} {verb} an UNSOURCED skill magnitude ({skills}) with no site"
+            + (f" entry to check it against ({where})" if where else " entry to check it against")
+            + " -- rating uncertain in either direction; see heroes.NO_SITE_ENTRY")
 
 
 # ---------------------------------------------------------------- per-attack procs
@@ -515,3 +529,7 @@ def level_scale(name, level):
 
 
 apply_site_magnitudes()
+
+# Derived only after the site pass: NO_SITE_ENTRY now lists exactly the skills it could not cover.
+UNSOURCED = {h for h, _ in NO_SITE_ENTRY}
+UNDERLEVELLED = UNSOURCED          # name kept so existing callers keep working

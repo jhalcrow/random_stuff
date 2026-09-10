@@ -2824,3 +2824,28 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # validates the opposite one); the calibration touches only skill effects so it does not interact
 # with that, but the base stats underneath are unverified.  And the scales remain two constants
 # with no mechanism.  READ THE ORDER, NOT THE NUMBERS.
+
+
+# --------------------------------- THE "LONG FEI IS UNDER-RATED" CAVEAT WAS WRONG
+# Asked by the player: why not use the Long Fei data we scraped?  We already were.
+# apply_site_magnitudes() runs at import and overwrites every modelled magnitude with the site's
+# MAX-level value, so the canonical table has held Mighty Paragon 50 / Celestial Sustenance 25 /
+# Art of War 100 -- his L5 column -- since the crawl.  elo.py never passes skill_levels, so the
+# Elo run rated him at max.  THE RANKING WAS RIGHT; THE WARNING PRINTED ABOVE IT WAS NOT, AND SO
+# WAS THE CAVEAT I ATTACHED TO IT.  His garrison at 1750 is his real rating, not a floor.
+# WHY THE FLAG WAS STALE.  UNDERLEVELLED was derived from SKILL_LEVEL, which records WHERE EACH
+# VALUE WAS FIRST READ -- Long Fei and Rosa off Narses' Lv.4 account.  That was the right flag
+# when those readings WERE the table.  The crawl replaced the readings and nobody replaced the
+# flag, so it kept warning about a correction that had already been made.  A derived set is only
+# as good as the thing it is derived from.
+# ALSO SUPERSEDED: the comment insisting "the Lv.4 -> Lv.5 step cannot be inferred from what is
+# recorded" and refusing to guess it.  Correct when written; the site supplies the whole L1-L5
+# track, so the step is READ (Mighty Paragon 40 -> 50, Art of War 80 -> 100), not fitted.
+# WHAT THE FLAG NOW TRACKS.  The site covers every modelled skill but FOUR -- Saul/Resourceful,
+# Yeonwoo/Well-Traveled, Amane/Exorcism, Fahd/Pathfinder -- which keep magnitudes typed in from
+# prose with nothing to check them against.  UNSOURCED now names those four heroes, and the
+# warning says the rating is uncertain IN EITHER DIRECTION rather than under-rated, which is the
+# honest shape of that uncertainty.
+# The two mechanisms are now cleanly separated and both verified: the canonical table holds MAX
+# (50 / 25 / 100), and skill_levels + level_scale takes an opponent's copy down to his actual
+# level (Narses' Long Fei: 40 / 20 / 80, exactly x0.8).  allfights is unchanged at rms 0.395.
