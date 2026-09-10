@@ -13,12 +13,13 @@ from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops, score,
 from heroes import warn_underlevelled, UNDERLEVELLED
 from sim import enable_hero_calibration
 
-# RANKINGS RUN CALIBRATED.  The raw model over-credits hero skills by 2-3x (measured across nine
-# controlled fights against the same target; see reports.py), and the correction is asymmetric --
-# offensive x0.30, defensive x0.60 -- so it reorders offensive against defensive heroes rather
-# than cancelling out of a relative ranking.  Validated out of sample twice: on a two-hero march
-# it was not fitted on, and on a fight where the HERO WAS THE OPPONENT'S.
-_CAL = enable_hero_calibration()
+# THE HERO CALIBRATION IS RETIRED.  It was two fitted constants (offensive x0.30, defensive
+# x0.60) standing in for a bug: apply_site_magnitudes() had overwritten every proc's stored
+# EXPECTED VALUE with the site's raw MAGNITUDE, and sim._split_effects still divided by uptime,
+# so every chance/periodic proc went live at magnitude / uptime -- Ice Zone at +250%, Avalanche
+# at +400%.  With that fixed the RAW engine scores rms log err 0.390 over nineteen fights, better
+# than the calibrated engine's 0.395, with no fitted parameters at all.  Rankings run raw.
+_CAL = (1.0, 1.0)
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side (the GARRISON's size)
