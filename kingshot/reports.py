@@ -2779,3 +2779,48 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # reorders offensive against defensive heroes instead of cancelling out of a relative ranking --
 # which is exactly the kind of error a ranking cannot absorb.  It remains two constants with no
 # mechanism; that search is not closed, it is just no longer blocking the rankings.
+
+
+# --------------------------------- ELO RERUN, CALIBRATED (2026-09-10)
+# TWO THINGS HAD TO BE FIXED BEFORE THE RANKING MEANT ANYTHING.
+# 1. The banner was stale: it quoted "rms log err 0.90" from an engine several fixes ago and said
+#    nothing about the calibration being on.  Rewritten to print the live scales and what they do
+#    and do not justify.
+# 2. THE ROUND-ROBIN WAS DEGENERATE AT EQUAL TROOPS.  A garrison beats a rally of the same size in
+#    essentially every cell, so win rates pinned at 0 or 100 and the Bradley-Terry fit ran into a
+#    separation boundary -- FIVE DEFENDERS TIED AT EXACTLY 2028, which is the fit failing, not a
+#    result.  A rally is several marches against one garrison anyway, so ATT_SIZE now sizes the
+#    attacker as a multiple of the garrison.  Probed at N=60: 2x gives a 51% mean win rate, 3x
+#    gives 79%, 4x gives 87%.  DEFAULT 2.0.  Same lesson as the 500-troop calibration marches --
+#    pick the matchup where the observable actually varies.
+#
+# ATTACK, calibrated (raw in brackets):
+#     2106 [1850]  Charles / Sophia / Marlin      55/45/0
+#     1991 [1760]  Charles / Sophia / Yang        60/40/0
+#     1770 [1946]  Triton / Thrud / Yang          50/20/30
+#     1687 [1570]  Charles / Sophia / Wee & Woo   55/45/0
+#     1474 [1389]  Charles / Ava / Yang           45/30/25
+#     1201 [1014]  Charles / Ava / Wee & Woo      40/35/25
+#      848 [ 759]  Amadeus / Ava / Wee & Woo      50/20/30
+# DEFENCE, calibrated (raw in brackets):
+#     1951 [1961]  Charles / Sophia / Wee & Woo   60/15/25
+#     1750 [1736]  Long Fei / Sophia / Wee & Woo  40/60/0     <- UNDER-rated, Lv.4 magnitudes
+#     1606 [1841]  Charles / Sophia / Wee & Woo   35/65/0
+#     1588 [1761]  Triton / Sophia / Vivian       60/15/25
+#     1514 [1474]  Charles / Jabel / Wee & Woo    60/15/25
+#      850 [1093]  Charles / Ava / Wee & Woo      35/25/40
+#      665 [ 846]  Alcar / Sophia / Wee & Woo     40/60/0
+#
+# THE CALIBRATION CHANGES THE ANSWER, WHICH IS THE POINT OF IT BEING ASYMMETRIC.  Triton / Thrud /
+# Yang falls from FIRST attacker (1946) to THIRD (1770) and Charles / Sophia / Marlin takes the
+# top spot.  That is the proc-heavy lineup being demoted, exactly the reorder predicted when the
+# correction was wired in: a uniform error would have cancelled out of a mirror-stat ranking, an
+# offensive-vs-defensive one does not.  The defence order is more stable -- the same lineup leads
+# both -- because defence leans less on the channel that was most over-credited.
+#
+# CAVEATS THAT STILL STAND.  Long Fei carries Lv.4 magnitudes read off Narses' account, so his
+# garrison is under-rated and would place higher with maxed skills.  This file runs hero_stats=True
+# and widget_default=1.0 against USER_STATS, a configuration no report has validated (allfights
+# validates the opposite one); the calibration touches only skill effects so it does not interact
+# with that, but the base stats underneath are unverified.  And the scales remain two constants
+# with no mechanism.  READ THE ORDER, NOT THE NUMBERS.

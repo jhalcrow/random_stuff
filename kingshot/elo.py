@@ -21,7 +21,14 @@ from sim import enable_hero_calibration
 _CAL = enable_hero_calibration()
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
-SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side
+SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side (the GARRISON's size)
+# A rally is several marches against a single garrison, so equal troops is not the realistic
+# matchup -- and it is not an informative one either: at 1:1 the garrison wins essentially every
+# cell, every win rate pins at 0 or 100, and the Bradley-Terry fit degenerates (five defenders
+# tied at exactly the same rating is the fit hitting a separation boundary, not a finding).
+# Sizing the attacker so win rates land in the informative middle is the same lesson the 500-troop
+# calibration marches taught: pick the matchup where the observable actually varies.
+ATT_SIZE = float(os.environ.get('ATT_SIZE', '2.0'))     # attacker troops as a multiple of SIZE
 ATT_SCALE = float(os.environ.get('ATT_SCALE', '1.0'))    # attacker stats relative to yours
 DEF_SCALE = float(os.environ.get('DEF_SCALE', '1.0'))    # defender stats relative to yours
 rng = random.Random(2026)
@@ -49,7 +56,8 @@ DEFENDERS = [
 def fight(att, dfn):
     sa = {t: {k: v * ATT_SCALE for k, v in USER_STATS[t].items()} for t in TYPES}
     sd = {t: {k: v * DEF_SCALE for k, v in USER_STATS[t].items()} for t in TYPES}
-    a = Side('A', sa, ratio_troops(SIZE, *att[2]), heroes=att[1], role='rally', joiners=ATTACK_JOINERS)
+    a = Side('A', sa, ratio_troops(int(SIZE * ATT_SIZE), *att[2]), heroes=att[1], role='rally',
+             joiners=ATTACK_JOINERS)
     d = Side('D', sd, ratio_troops(SIZE, *dfn[2]), heroes=dfn[1], role='garrison', joiners=DEFENSE_JOINERS)
     wins = draws = 0
     ratios = []
@@ -82,14 +90,19 @@ def bradley_terry(players, games, iters=2000):
 
 if __name__ == '__main__':
     print(f'{N} Monte Carlo battles per pairing, {SIZE:,} troops each side, attacker stats x{ATT_SCALE}, defender stats x{DEF_SCALE}\n')
-    print('  CALIBRATION STATE: allfights.py currently scores rms log err 0.90 with tooltip-verified')
-    print('  magnitudes in place -- Narses\' output over-predicted about 3x.  These are MIRROR-stat')
-    print('  pairings, so an error hitting both sides equally largely cancels out of a RELATIVE')
-    print('  ranking; it does not cancel where two lineups differ in how much they lean on procs,')
-    print('  which is exactly what moved most in the last rerun.  Treat the ORDER as usable and any')
-    print('  single rating as soft.  Note also that this file runs Side() with hero_stats=True and')
-    print('  widget_default=1.0 against USER_STATS, a configuration no report has ever validated;')
-    print('  allfights.py validates the opposite one (panel stats, both switches off).')
+    print(f'  CALIBRATION: hero skills scaled offensive x{_CAL[0]:.2f}, defensive x{_CAL[1]:.2f}.')
+    print('  Measured across nine controlled fights against one heroless target and validated OUT')
+    print('  OF SAMPLE twice -- on a two-hero march it was not fitted on, and on a fight whose only')
+    print('  hero was the OPPONENT\'s.  Over nineteen measured fights it takes rms log err from')
+    print('  0.613 to 0.395.  It is two constants with no mechanism, so treat any single rating as')
+    print('  soft; but it is ASYMMETRIC, so unlike a uniform error it does NOT cancel out of a')
+    print('  relative ranking -- it demotes proc-heavy lineups against defensive ones.  Set')
+    print('  HERO_CAL_OFF=1.0 HERO_CAL_DEF=1.0 to see the raw model instead.')
+    print('  STILL UNVALIDATED: this file runs Side() with hero_stats=True and widget_default=1.0')
+    print('  against USER_STATS, a configuration no report has checked; allfights.py validates the')
+    print('  opposite one (reported panel, both switches off).  The calibration touches only skill')
+    print('  effects, so it does not interact with that -- but the base stats it sits on are')
+    print(f'  unverified.  Attacker fields {ATT_SIZE:g}x the garrison\'s troops (ATT_SIZE).')
     # Some lineups here contain heroes whose magnitudes were read off an opponent's under-levelled
     # account.  Belisarius' own heroes are all maxed, so those lineups are UNDER-rated below.
     used = {h for _, hs, _ in ATTACKERS + DEFENDERS for h in hs} & UNDERLEVELLED
