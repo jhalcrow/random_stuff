@@ -2912,3 +2912,46 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # one-sided rule wins, meaning the correction must never touch an opponent -- which would also
 # retract the conclusion I drew from the Long Fei fight.  ABOVE 1,049 and neither rule works and
 # the enemy-hero channel needs its own treatment entirely.
+
+
+# --------------------------------- NARSES' SKILL LEVELS: ACCOUNTED FOR AND VERIFIED
+# Asked by the player: Long Fei and Rosa are at 4, Jabel at 5.  That is exactly NARSES_LEVELS, and
+# it is passed as skill_levels in every scoring run and every pre-registration above.  Verified on
+# all NINE skills rather than the one I had checked before:
+#     Long Fei  Mighty Paragon 50 -> 40   Celestial Sustenance 25 -> 20   Art of War 100 -> 80
+#     Jabel     Rally Flag 40             Hero's Domain 50                Youthful Rage 25 (Lv.5, unchanged)
+#     Rosa      Chaos Gambit 50 -> 40     Enchanting Dance 20 -> 16       Golden Rhythm 30 -> 24
+# All three of Rosa's scale despite Enchanting Dance needing the SKILL_ALIAS -> 'roseofwar' lookup,
+# which was the one place this could have silently no-opped (level_scale returns 1.0 on a miss).
+#
+# --------------------------------- BUT HIS WIDGETS ARE NOT ACCOUNTED FOR, AND THAT IS A REAL GAP
+# The question exposed a different omission on the same side of the board.  Every fight in this
+# file runs widget_default=0.0 for BOTH sides, which is right for MY side (validated that way) and
+# right for a HEROLESS Narses (no heroes, no widgets) -- but wrong the moment he fields heroes.
+# Two of his three carry 'defender' widgets that apply in a garrison:
+#     Long Fei ('defender','attack',15)   Jabel ('defender','lethality',15)   Rosa ('rally',...) inert
+# Widgets are Special Bonuses, so they multiply AFTER the panel sum and are NOT in the reported
+# Stat Bonuses -- giving him zero silently under-credits him, which is exactly the direction the
+# trio fight's failure needs.
+#     TRIO FIGHT (observed 8,142 in ~90 rounds)
+#         raw          widgets off  29,352  k 3.60  160r      widgets on  21,836  k 2.68  118r
+#         calibrated   widgets off  23,723  k 2.91  171r      widgets on  17,606  k 2.16  127r
+#     LONG FEI FIGHT (observed 4,206 in ~60 rounds)
+#         raw          widgets off   2,032  k 0.48   43r      widgets on   1,791  k 0.43   38r
+#         calibrated   widgets off   3,905  k 0.93   62r      widgets on   3,415  k 0.81   54r
+# HIS WIDGETS MOVE EVERYTHING THE RIGHT WAY ON THE TRIO FIGHT and cost a little on the Long Fei
+# one, and the conclusion drawn from Long Fei survives either way (0.81 calibrated against 0.43
+# raw).  They do NOT resolve the contradiction: the trio fight is still 2.16x off with widgets on
+# and the calibration applied to both sides, while "mine only" fits it.
+# UNKNOWN AND WORTH ASKING: his actual widget levels.  Long Fei's slot reads as a LOCKED padlock in
+# the Hero Comparison panel while the other two look unlocked, so widget_default=1.0 for all three
+# is probably too generous and 0.0 is definitely too stingy.  Not fitted -- asked.
+#
+# --------------------------------- pre-registration REVISED for the widget cases
+# Me heroless 500 (250/100/150) vs Narses 83,600 with all three heroes, skills 4/5/4:
+#     rule                       his widgets OFF              his widgets ON
+#     calibration on BOTH     766 (515-1,047)  25r          587 (369-850)  19r
+#     calibration MINE ONLY      259 (84-475)  14r           199 (45-395)  11r
+# The two RULES still separate cleanly whichever widget state turns out to be right -- 766 vs 259,
+# or 587 vs 199 -- because the widget effect is much smaller than the rule difference.  That is
+# what makes the test still worth running before his widget levels are known.
