@@ -12,6 +12,11 @@ casualties = kills * 2.855.  That is how the 50/20/30 total is reconstructed (it
 screen was not captured).
 
   python3 kingshot/reports.py      # replay all three through the simulator
+
+THE DATA NOW LIVES IN battles.py.  This file is the ARGUMENT -- what each fight meant, what it
+refuted, which claims were retracted and why.  battles.py is the transcription, checked against
+the report screenshots and self-verifying on casualty arithmetic; where the two disagree about a
+number, battles.py wins.  HANDOFF.md is the summary of both.
 """
 import random, statistics, sys, os
 sys.path.insert(0, os.path.dirname(__file__))
