@@ -2471,27 +2471,81 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # over-credited".  Every claim above is safe under either reading; the distinction is what the
 # next test is for.
 
-# --------------------------------- next test, pre-registered: SOPHIA ONLY at 500
-# SOPHIA BREAKS THE CONFOUND, because her first skill is a DEFENSIVE PROC:
-#     Arcane Pact          proc_taken, 40% chance of -50% damage taken   <- defensive, PROC
-#     Terror Deathblow     proc, 1-in-2 turns, +200% cavalry damage      <- offensive, proc
-#     Terror Annihilation  proc, 1-in-2 turns, +75% all squads           <- offensive, proc
-# Charles' defensive effects are AURAS and are over-credited 1.25x.  Sophia's defensive effect is
-# a PROC.  If the fault is procs, Arcane Pact should over-credit her survivability by something
-# near 3.3x rather than 1.25x, and the two defensive channels will disagree by that factor.  If
-# instead the fault is offensive skills, her defensive proc should behave like Charles' auras.
-# Same 500 at 250/100/150, Infantry and Archer slots Vacant, same heroless Narses.
+# --------------------------------- SOPHIA ONLY at 500 (mail 223407017280638)
+#     VICTORY: I lose 102 + 186 = 288 of 500 (212 residents).  Narses wiped at exactly 83,600,
+#     so his side censors and mine is the observable.
+#     PRE-REGISTERED 128 +/- 21 (band 94-163).  OBSERVED 288.  k = 0.44, z = +7.6.  The worst
+#     miss in the file, and the third pre-registered failure in a row in the same direction.
+# THE PANEL LANDED EXACTLY FOR A SEVENTH CONSECUTIVE HERO: cavalry 1820.7 / 1809.7 / 1727.4 /
+# 1729.6, infantry and archer unchanged.
+#
+# THE CLOCK PREDICTION WAS CONFIRMED: "his Ambusher well above 12" -> observed 16.
+# TERROR DEATHBLOW IS A SECOND DETERMINISTIC CLOCK.  It is periodic 1-in-2 and fired 46 times,
+# dating the fight at 92 rounds with no chance involved at all -- the first clock in this file
+# that is independent of Yang's Avalanche.  Corroborated by Arcane Pact (39 -> 98), my Ambusher
+# (20 -> 100), Assault Lance (15 -> 100), Volley (9 -> 90), Howling Wind (33 -> 110).
+#     SIMULATED 60.4 ROUNDS AGAINST 92.  The clock is 1.52x too fast (Yang was 2.0x).
+#
+# HER FIRING RATES ALL MATCH THE MODEL, WHICH YANG'S DID NOT:
+#     Arcane Pact         39/92 = 0.424/round   modelled 0.400   ratio 1.06
+#     Terror Deathblow    46/92 = 0.500/round   modelled 0.500   ratio 1.00
+#     Terror Annihilation 1 trigger -- an AURA row, exactly as heroes.PERMANENT treats it
+# So the schedule anomaly found on Yang (Ice Zone 1.39x nominal, Ambush 0.62x) is specific to
+# Yang, not a property of procs.  Yang is the odd hero, not the representative one.
+
+# --------------------------------- RETRACTION: THE PROC/AURA FRAMING IS DEAD
+# The previous entry concluded "the aura channel is ~25% too strong, the proc channel ~3.3x".
+# SOPHIA REFUTES IT.  Reading each hero's loss total as a RATE against its own MEASURED round
+# count -- which is only possible now that two deterministic clocks exist:
+#     Charles   defensive effects are AURAS      model credits 1.34x the survivability given
+#     Sophia    defensive effect is a PROC       model credits 1.48x the survivability given
+# Those are the same number within noise.  THE PROC/AURA DISTINCTION DOES NOT EXPLAIN THE
+# DEFENSIVE CHANNEL.
+# WHERE THE 3.3x CAME FROM, AND WHY IT WAS WRONG: it compared the scale needed to fix CHARLES'
+# LOSSES (0.80) against the scale needed to fix YANG'S CLOCK (0.30).  Those are two different
+# observables, and the comparison was not valid.  My error, and exactly the kind the round-count
+# work was supposed to prevent -- a number quoted across observables that do not correspond.
+#
+# --------------------------------- WHAT THE CORRECTED SCAN SHOWS
+# Same treatment for every hero, both observables, sim/observed (1.00 = model matches reality):
+#     s      Charles loss  Charles rnd   Yang loss  Yang rnd   Sophia loss  Sophia rnd
+#     1.00       0.74         0.98         0.61       0.49        0.44         0.66
+#     0.80       1.01         1.09         0.72       0.58        0.59         0.76
+#     0.50       1.49         1.40         1.00       0.77        0.96         1.02
+# A SINGLE PER-HERO SCALE FIXES BOTH OBSERVABLES AT ONCE for Charles (s ~ 0.82: 1.01 and 1.09)
+# and for Sophia (s = 0.50: 0.96 and 1.02).  For those two heroes the model's error is a pure
+# over-scaling of their skill effects, nothing structural.  YANG IS THE EXCEPTION: his losses
+# want 0.50 and his clock wants about 0.30, and he is also the hero whose measured firing rates
+# disagree with his tooltips.  Both anomalies point at the same hero.
+#
+# THE OPEN QUESTION IS NOW NARROW: what sets the per-hero scale?  It is not skill magnitude in
+# any simple way -- Charles' hero-only DEFENSIVE multiplier is 2.37 and needs only s 0.82, while
+# Sophia's is 2.06 and needs 0.50, so the hero with the LARGER modelled effect needs the SMALLER
+# correction.  A saturation-by-magnitude law is refuted by that pair.
+# WHAT DOES TRACK, ACROSS ALL THREE, IS THE HERO'S SHARE OF THE MARCH:
+#     Charles  infantry 250/500 = 50%   s 0.82
+#     Yang     archers  150/500 = 30%   s 0.50 (losses)
+#     Sophia   cavalry  100/500 = 20%   s 0.50
+# Three points and a monotone trend is weak evidence, and the share is confounded with which
+# skills each hero has.  It is a hypothesis, not a finding.  The next test is built to break it.
+
+# --------------------------------- next test, pre-registered: SOPHIA AT 100/250/150
+# THE SAME HERO AT A DIFFERENT TROOP MIX.  Same Sophia, same total 500, same target, same slots
+# (Infantry and Archer Vacant) -- only the composition changes, so her cavalry goes from 20% of
+# the march to 50%, matching Charles' infantry share.
+#     IF the required scale moves from 0.50 toward 0.82, the error tracks the hero's troop share
+#     and the fault is in SCOPE or TARGETING -- how a skill scoped to one type is spread over an
+#     army of three.  That is a structural bug and a small place to look.
+#     IF it stays at 0.50, the scale is a property of the hero's skills and troop share was a
+#     coincidence of three points; the search goes back to per-skill magnitudes.
+# Either way this is the first test in the file that varies the march rather than the lineup,
+# which is the one dimension the whole 500-troop series has held fixed.
 # PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11):
-#     panel must read  cavalry 1820.7 / 1809.7 / 1727.4 / 1729.6
-#                      infantry 1102.3 / 1090.7 / 1045.2 / 1042.4  (unchanged)
-#                      archer   1083.1 / 1069.0 / 1012.0 / 1006.6  (unchanged)
-#     I win 100% of runs, losing 128 +/- 21 of 500 (90% band 94-163); Narses wiped, so my losses
-#     are the observable.
-#     60.4 +/- 1.0 rounds -> his Ambusher 12.1, his archer row 6.0
-#                         -> my rows Arcane Pact 24, Terror Deathblow 30, Terror Annihilation 30
-# WHAT DECIDES IT.  Sophia has two offensive procs, so the clock should break as it did for Yang:
-# his Ambusher well above 12 means the fight ran long again and confirms the offensive over-credit
-# on a second, independent hero.  Then read the losses AGAINST that measured length: if her
-# defensive proc is over-credited like Yang's offensive procs, my losses will overshoot 128 by far
-# more than Charles' 1.34x.  Her own three rows also give three more measured firing rates, two of
-# them PERIODIC (1-in-2) and therefore a second deterministic clock alongside his Ambusher.
+#     panel unchanged from the Sophia report: cavalry 1820.7 / 1809.7 / 1727.4 / 1729.6,
+#           infantry 1102.3 / 1090.7 / 1045.2 / 1042.4, archer 1083.1 / 1069.0 / 1012.0 / 1006.6
+#     I win 100% of runs, losing 91 +/- 18 of 500 (90% band 61-122); Narses wiped.
+#     43.6 +/- 0.9 rounds -> Terror Deathblow 22 (the deterministic clock), Arcane Pact 17,
+#                            Terror Annihilation 1, his Ambusher 8.7, his archer row 4.4
+# READ TERROR DEATHBLOW FIRST: at 22 the clock is right and the whole error is in the loss rate;
+# at 35-46 the fight again ran ~1.5-2x long and the offensive over-credit survives the change of
+# composition.  Then s is recovered from the two numbers together, exactly as above.

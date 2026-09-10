@@ -40,6 +40,11 @@ YANG_PANEL_V2 = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1045.2, he
 CHARLES_PANEL_V2 = {'inf': dict(attack=1952.8, defense=1941.2, lethality=1805.7, health=1802.9),
                     'cav': dict(attack=1080.3, defense=1069.3, lethality=993.9,  health=996.1),
                     'arch':dict(attack=1083.1, defense=1069.0, lethality=1012.0, health=1006.6)}
+# Sophia alone on the same base: cavalry +740.43 attack/defense, +733.5 lethality/health.
+# Predicted to the decimal -- the SEVENTH consecutive hero.
+SOPHIA_PANEL_V2 = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1045.2, health=1042.4),
+                   'cav': dict(attack=1820.7, defense=1809.7, lethality=1727.4, health=1729.6),
+                   'arch':dict(attack=1083.1, defense=1069.0, lethality=1012.0, health=1006.6)}
 NOHERO_PANEL = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1042.4, health=1040.6),
                 'cav': dict(attack=1080.3, defense=1069.3, lethality=990.8, health=992.6),
                 'arch': dict(attack=1083.1, defense=1069.0, lethality=1009.2, health=1004.1)}
@@ -110,6 +115,10 @@ FIGHTS = [
     # wiped, so again my losses are the observable.  79 + 144 = 223 (residents 277).
     ('Narses 500 CHARLES ONLY', CHARLES_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
      NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 223),
+    # Sophia alone, third rung of the 500-troop bisection.  Victory, Narses wiped, so my losses
+    # (102 + 186 = 288, residents 212) are the observable.
+    ('Narses 500 SOPHIA ONLY', SOPHIA_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 288),
 ]
 
 
@@ -131,13 +140,13 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
 MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
-             'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles']}
+             'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -148,6 +157,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 500 NO HEROES':  {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 YANG ONLY':  {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 CHARLES ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 500 SOPHIA ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},
