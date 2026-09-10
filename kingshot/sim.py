@@ -250,13 +250,14 @@ OPP_DEF_DOWN = ('e_taken', 'e_def', 'proc_e_taken')
 # ---------------------------------------------------------------- empirical hero calibration
 # MEASURED, NOT DERIVED.  Across five single-hero fights against the same heroless target, the
 # model over-credits a hero's skills in BOTH channels, and by different factors: the channels that
-# raise my damage need about x0.40 and those that lower what I take about x0.65 (rms log err over
-# ten observables 0.60 -> 0.170).  See reports.py for the fits and for everything this is NOT --
+# raise my damage need about x0.30 and those that lower what I take about x0.60 (rms log err over
+# ten observables 0.60 -> 0.165), with the heroless fight carried as a control row that must stay
+# at 1.0 -- it does (1.01), which is what tells you troop abilities are being left alone.  See reports.py for the fits and for everything this is NOT --
 # proc-vs-aura, troop share, single-skill isolation and saturation-by-magnitude were each tested
 # and refuted, so these two numbers are the surviving description of the error, not an explanation
 # of it.  They were then VALIDATED OUT OF SAMPLE on a two-hero march they were not fitted on
-# (Charles + Sophia: predicted 68 losses and his Ambusher 17, observed 80 and 16), which also
-# showed per-hero errors COMPOSE rather than compound.
+# (Charles + Sophia: held out of the fit, and calibrated it scores 0.95 on losses and 1.20 on the
+# round count), which also showed per-hero errors COMPOSE rather than compound.
 #
 # OFF BY DEFAULT.  Turning it on makes the simulator match reality far better on every hero fight
 # measured; it also bakes in two constants nobody has explained.  Keep it off when hunting the
@@ -264,8 +265,8 @@ OPP_DEF_DOWN = ('e_taken', 'e_def', 'proc_e_taken')
 # where the raw model's 2-3x hero over-credit is a much larger error than these constants are --
 # and note it is not a uniform rescale, so it genuinely reorders offensive against defensive
 # heroes rather than cancelling out.
-HERO_CAL_OFF = float(os.environ.get('HERO_CAL_OFF', '1.0'))   # 0.40 when calibrated
-HERO_CAL_DEF = float(os.environ.get('HERO_CAL_DEF', '1.0'))   # 0.65 when calibrated
+HERO_CAL_OFF = float(os.environ.get('HERO_CAL_OFF', '1.0'))   # 0.30 when calibrated
+HERO_CAL_DEF = float(os.environ.get('HERO_CAL_DEF', '1.0'))   # 0.60 when calibrated
 _TROOP_NAMES = {n for n, _, _, _, _ in TROOP_SKILLS} | {'Ambusher'} | set(TROOP_REFORGE)
 
 

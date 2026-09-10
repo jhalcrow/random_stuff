@@ -2685,3 +2685,47 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # exact, Charles exact, Yang 2.0x, Sophia 1.5x), the proc-vs-aura refutation (rate comparisons),
 # the troop-share refutation (raw ratios 0.44 / 0.39 / 0.40), and the single-skill isolation
 # (pre-registered from the raw model).  What needed redoing is every fitted number.
+
+# --------------------------------- THE CLEAN REFIT, WITH A CONTROL ROW
+# Troop abilities properly excluded this time, and the heroless fight carried as a control that
+# must stay at 1.0 whatever the scales do.
+#     BEST FIT: offensive x0.30, defensive x0.60   rms log err 0.165 over ten observables
+#     fight                    raw loss / rnd     calibrated loss / rnd
+#     Charles 250/100/150         0.74  0.98          1.18   1.15
+#     Yang    250/100/150         0.61  0.49          1.08   0.89
+#     Sophia  250/100/150         0.44  0.66          1.01   1.20
+#     Sophia  100/250/150         0.39  0.61          0.97   1.15
+#     Sophia  500/0/500           0.40  0.63          0.68   0.90
+#     Charles+Sophia              0.35  0.70          0.95   1.20   <- HELD OUT of the fit
+#     0 heroes 500 (control)        --    --            --   1.01   <- untouched, as required
+# The clean fit is BETTER than the contaminated one (0.165 against 0.170) as well as legitimate.
+# Over all eighteen measured fights: rms log err 0.608 -> 0.406, mean|log| 0.500 -> 0.276.
+#
+# WHERE IT STILL FAILS, AND WHY THAT IS THE NEXT TEST.  The Terry-class fights stay at 1.45 to
+# 2.98 -- and they are precisely the fights with HEROES ON BOTH SIDES.  Every one of the eight
+# calibration fights was against a HEROLESS Narses, so the correction has only ever been measured
+# on MY heroes.  Whether it applies to the opponent's is untested, and it is the largest remaining
+# residual in the file.
+
+# --------------------------------- next test, pre-registered: NARSES WITH ONE HERO
+# THE MIRROR OF THE CHARLES TEST, using the two-account advantage: put a hero on NARSES and field
+# NONE myself.  My heroless side is the configuration this file has validated twice (k 1.04-1.05,
+# clock exact), so the only hero in the fight is his, and the enemy-hero channel is isolated as
+# cleanly as mine was.
+#     ME: 500 at 250/100/150, ALL THREE SLOTS VACANT.  NARSES: 83,600, LONG FEI ONLY.
+#     I lose -- I am wiped -- so HIS losses are the uncensored observable, exactly as in the
+#     heroless 500 fight whose 16,059 they should be compared against.
+# LONG FEI IS THE RIGHT CHOICE OF HIS THREE: he separates the hypotheses most sharply, and his
+# skills span both channels (Mighty Paragon proc_taken 40 and Celestial Sustenance def 20 are
+# defensive, Art of War proc 80 offensive) so the test exercises both scales at once.  His level
+# is 4, already in NARSES_LEVELS and round-trip checked against his in-game tooltips.
+# PRE-REGISTERED, generated at 3,000 runs, seed 11:
+#     RAW MODEL     he loses 4,482 +/- 805  (90% band 3,178-5,846),  51 rounds, his Ambusher ~10
+#     CALIBRATED    he loses 8,614 +/- 869  (90% band 7,203-10,077), 73 rounds, his Ambusher ~15
+#     control: with Narses heroless both give 16,808, and the measured value is 16,059.
+# The bands are nearly 2x apart and do not overlap, and his Ambusher separates them independently.
+# IF THE OBSERVED VALUE LANDS NEAR 8,600, the calibration applies to BOTH sides' heroes and the
+# Terry residuals are explained by the same correction applied symmetrically.  IF IT LANDS NEAR
+# 4,500, the model is right about ENEMY heroes and wrong only about mine -- which would be a
+# strange and very informative asymmetry, and would mean the correction must never be applied to
+# an opponent.  Either answer resolves the largest residual left in this file.
