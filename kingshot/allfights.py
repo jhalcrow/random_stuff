@@ -29,6 +29,12 @@ TE20 = {'inf': 94_555, 'cav': 37_822, 'arch': 56_733}
 NOHERO_PANEL_V2 = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1045.2, health=1042.4),
                    'cav': dict(attack=1080.3, defense=1069.3, lethality=993.9,  health=996.1),
                    'arch':dict(attack=1083.1, defense=1069.0, lethality=1012.0, health=1006.6)}
+# Yang alone on the same base: archer +740.43 attack/defense and +733.5 lethality/health, which
+# is his expedition stats plus the measured +200 / +600 gear.  PREDICTED TO THE DECIMAL before
+# the report arrived, the fifth consecutive hero for which that has held.
+YANG_PANEL_V2 = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1045.2, health=1042.4),
+                 'cav': dict(attack=1080.3, defense=1069.3, lethality=993.9,  health=996.1),
+                 'arch':dict(attack=1823.5, defense=1809.4, lethality=1745.5, health=1740.1)}
 NOHERO_PANEL = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1042.4, health=1040.6),
                 'cav': dict(attack=1080.3, defense=1069.3, lethality=990.8, health=992.6),
                 'arch': dict(attack=1083.1, defense=1069.0, lethality=1009.2, health=1004.1)}
@@ -91,6 +97,10 @@ FIGHTS = [
     # against 22% for the 10,000-troop marches).
     ('Narses 500 NO HEROES', NOHERO_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
      NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'him', 16_059),
+    # Yang alone at the same size and target -- the matched partner to the fight above.  A
+    # VICTORY with Narses wiped, so HIS losses censor at 83,600 and mine are the observable.
+    ('Narses 500 YANG ONLY', YANG_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 232),
 ]
 
 
@@ -112,12 +122,13 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
-MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': []}
+MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
+             'Narses 500 YANG ONLY': ['Yang']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -126,6 +137,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 1000 NO HEROES': {'inf': 0, 'cav': 0, 'arch': 1},
     # Same two rows on his side of the 500 report: cavalry Ambusher 17, one archer ability 9.
     'Narses 500 NO HEROES':  {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 500 YANG ONLY':  {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},

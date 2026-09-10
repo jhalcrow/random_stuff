@@ -2355,27 +2355,82 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # defensive and offensive procs are NOT rolled the same number of times.  That asymmetry is new,
 # and it is measured rather than assumed.
 
-# --------------------------------- next test, pre-registered: YANG ONLY at 500
-# The pure-archer test is SUPERSEDED -- its main question (is the clock wrong in the core loop?)
-# is answered above.  The live question is now which hero breaks it, and the bisection has to be
-# re-run at the power-optimal size, because the original Charles/Yang rungs were fought at 10,000
-# where the fight ends in four rounds and Avalanche fires once.
-# YANG ONLY, 500 at 250/100/150, same heroless Narses, Infantry and Cavalry slots Vacant.  Yang
-# rather than Charles because the simulator's error is that fights end TOO FAST, and Yang is the
-# hero that shortens them: the sim puts this fight at 46 rounds against 91 with no heroes at all.
-# A HIGH observed trigger count is then an unambiguous refutation, where a low one could always be
-# blamed on troop lifetime.  Charles is the opposite case (the sim stretches his fight to 201
-# rounds) and is the follow-up, not the first test.
+# --------------------------------- YANG ONLY at 500 (mail 223407017275279) -- THE TEST FAILED
+# The pre-registered test, fought exactly as specified: 500 at 250/100/150, Infantry and Cavalry
+# slots Vacant, same heroless Narses.  A DESIGNED experiment with numbers written down first.
+#     VICTORY: I lose 82 + 150 = 232 of 500 (268 residents).  NARSES IS WIPED, 29,262 + 54,338 =
+#     83,600, zero residents -- so HIS losses censor at the squad size and MINE are the observable.
+#
+#     PRE-REGISTERED  141 +/- 11, 90% band 123-160.   OBSERVED 232.   k = 0.61, z = +8.0.
+# THE PREDICTION FAILED, AND FAILING IS THE POINT: it failed in the direction and by roughly the
+# factor the round-count work said it would, on a fight sized so that noise could not do it.
+#
+# THE PANEL LANDED EXACTLY FOR A FIFTH CONSECUTIVE HERO: archer 1823.5 / 1809.4 / 1745.5 / 1740.1,
+# infantry and cavalry unchanged from the heroless report.  The stat half of the hero layer has
+# now been predicted to the decimal on five heroes and three troop types.  It is not the problem.
+#
+# THE CLOCK IS BROKEN BY 2x WITH A SINGLE HERO -- three independent readings:
+#     Avalanche      periodic 4, deterministic     23 triggers  ->  92 rounds
+#     HIS Ambusher   chance .20                    19 triggers  ->  95 rounds
+#     HIS archer row chance .10                    10 triggers  -> 100 rounds
+#     SIMULATED 45.6 ROUNDS.
+# The pre-registered refutation threshold was "his Ambusher at 20 or more".  It came in at 19 --
+# one short of the number I named, with Avalanche and his archer row independently putting the
+# fight at 92 and 100.  The threshold is met on the evidence; the single number I picked was
+# marginally too aggressive, which is worth recording as a lesson about naming one statistic when
+# three are available.  Recorded either way: the clock is 2.0x too fast with ONE hero.
+#
+# THE MATCHED PAIR IS THE RESULT.  Same 500 troops, same composition, same target, heroless
+# against Yang-only, an hour apart:
+#                            heroless    +Yang     ratio
+#         REAL kills/round        178      909      5.1x
+#         SIM  kills/round        185     1834      9.9x
+#     THE MODEL CREDITS YANG WITH 1.94x THE OUTPUT BOOST HE REALLY GIVES.
+# With no heroes, output and clock are both right (k 1.04, rounds 90.6 against 85-100 observed).
+# Add one hero carrying three procs and nothing else, and the output error is a clean factor of
+# two.  This is the proc channel, isolated, quantified, and measured on a well-powered pair rather
+# than inferred from a noisy ladder.  Note what it does NOT say: the earlier framing "the model
+# over-credits each additional HERO" is still dead.  One hero is enough.
+#
+# THE PER-ROUND LOSS RATE IS A SECOND, SMALLER ERROR, still in the same direction as before.
+#     sim   141 losses in 45.6 rounds = 3.09/round      real  232 in 92 = 2.52/round   -> 1.23x
+# So output is over-modelled 2.0x and my own casualty rate 1.2x.  They partly cancel in the loss
+# total, which is why k came out 0.61 rather than 0.50.  Two errors, as the ladder work concluded.
+#
+# --------------------------------- THE SHARPEST OPEN LEAD: YANG'S PROC RATES DISAGREE
+# With the fight dated at 92 rounds, every one of Yang's rows becomes a measured firing rate:
+#     Ice Zone   51 triggers -> 0.554/round   tooltip .40   RATIO 1.39x
+#     Avalanche  23 triggers -> 0.250/round   periodic 4    exact by construction
+#     Ambush     23 triggers -> 0.250/round   tooltip .40   RATIO 0.62x
+# TWO SKILLS WITH THE SAME NOMINAL .40 CHANCE FIRE AT 0.554 AND 0.250 IN THE SAME FIGHT.  That is
+# not sampling noise: at 92 rounds the binomial sd on a .40 chance is about 4.7 triggers, and
+# these differ by 28.
+# ICE ZONE CANNOT BE EXPLAINED BY LIFETIME.  51 triggers at .40 needs 127 rounds, more than the
+# fight lasted, and troop lifetime only pushes an implied count DOWN.  So Ice Zone is rolled more
+# than once per round, exactly as Unyielding Shield was shown to be in the heroless report.
+# AND ITS RATE IS NOT CONSTANT ACROSS FIGHTS.  In the 500-troop three-hero fight, at the SAME
+# march composition (250/100/150), Ice Zone fired 59 times in ~156 rounds = 0.378/round, which
+# matches the tooltip.  Here the same skill in the same composition fires at 0.554.  Something
+# conditions the roll count that is not in the model, and it is not march composition.
+# THAT IS THE NEXT THING TO IDENTIFY, and it is a per-skill question now rather than a
+# combination-rule question, which is a much smaller search.
+
+# --------------------------------- next test, pre-registered: CHARLES ONLY at 500
+# Completes the bisection at the power-optimal size.  Charles is three permanent auras and ZERO
+# procs, so if the clock holds for him, the 2x error belongs to the proc channel outright; if it
+# breaks for him too, procs are not the mechanism and flat auras are also over-credited.
+#     CHARLES ONLY, 500 at 250/100/150, Cavalry and Archer slots Vacant, same heroless Narses.
 # PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11):
-#     panel must read  archer 1823.5 / 1809.4 / 1745.5 / 1740.1
-#                      infantry 1102.3 / 1090.7 / 1045.2 / 1042.4  (unchanged from this report)
-#                      cavalry  1080.3 / 1069.3 /  993.9 /  996.1  (unchanged)
-#     I win 100% of runs, losing 141 +/- 11 of 500 (90% band 123-160); Narses is wiped, so HIS
-#     losses are censored at 83,600 and carry no information -- mine are the observable this time.
-#     45.6 rounds -> my rows Avalanche 11.4, Ice Zone 18.2, Ambush 18.2
-#                 -> his rows Ambusher 9.1, archer row 4.6
-# WHAT DECIDES IT.  His Ambusher at 20 or more means 100+ rounds against the simulator's 46, and
-# lifetime cannot explain a count that HIGH -- one hero, three procs, and the clock is broken, so
-# the fault is in the proc channel.  Avalanche near 11 with Ambusher near 9 means Yang alone does
-# not break the clock, and the next suspect is Charles' aura channel or the two-hero combination
-# itself.  Either way it is read off one row, and both observables now sit at 8% noise.
+#     panel must read  infantry 1952.8 / 1941.2 / 1805.7 / 1802.9
+#                      cavalry  1080.3 / 1069.3 /  993.9 /  996.1   (unchanged)
+#                      archer   1083.1 / 1069.0 / 1012.0 / 1006.6   (unchanged)
+#     I win 100% of runs, losing 164 of 500; Narses is wiped, so my losses are the observable.
+#     201.5 +/- 6.7 rounds -> his Ambusher 40.3 triggers, his archer row 20.2,
+#                             my Unyielding Shield large (Charles' row 4).
+# READ THE DIRECTION CAREFULLY.  Charles LENGTHENS the fight in the model (201 rounds against 91
+# heroless and 46 with Yang), so here the simulator errs long, not short, and the asymmetry of the
+# lifetime confound flips: a HIGH observed count would confirm the model, a LOW one is the
+# interesting outcome but is the direction lifetime could also produce.  His Ambusher near 40
+# means Charles is modelled correctly and the fault is procs alone.  Near 20 or below means the
+# fight really ran ~100 rounds or less and the aura channel is over-credited too -- and since his
+# cavalry survives to the very end of a fight he loses, lifetime cannot account for much of it.
