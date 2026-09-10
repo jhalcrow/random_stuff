@@ -2415,22 +2415,83 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # THAT IS THE NEXT THING TO IDENTIFY, and it is a per-skill question now rather than a
 # combination-rule question, which is a much smaller search.
 
-# --------------------------------- next test, pre-registered: CHARLES ONLY at 500
-# Completes the bisection at the power-optimal size.  Charles is three permanent auras and ZERO
-# procs, so if the clock holds for him, the 2x error belongs to the proc channel outright; if it
-# breaks for him too, procs are not the mechanism and flat auras are also over-credited.
-#     CHARLES ONLY, 500 at 250/100/150, Cavalry and Archer slots Vacant, same heroless Narses.
+# --------------------------------- CHARLES ONLY at 500 (mail 223407017277424)
+# The other half of the bisection, same size, same target, Cavalry and Archer slots Vacant.
+#     VICTORY: I lose 79 + 144 = 223 of 500 (277 residents).  Narses wiped: 6,434 + 22,828 +
+#     54,338 = 83,600 exactly.  His "Losses" row is non-zero here only because the player's
+#     infirmary was full, so some wounded became deaths -- the three rows still sum to the squad
+#     and the total casualty figure is unaffected.  His side censors at 83,600; mine is the
+#     observable.
+# THE PANEL LANDED EXACTLY FOR A SIXTH CONSECUTIVE HERO: infantry 1952.8 / 1941.2 / 1805.7 /
+# 1802.9, cavalry and archer unchanged.
+#
+# THE CLOCK PREDICTION LANDED, AND THAT IS THE RESULT.
+#     pre-registered  his Ambusher 40.3, his archer row 20.2, 201.5 +/- 6.7 rounds
+#     OBSERVED        his Ambusher 41,   his archer row 22    -> 205 and 220 rounds
+#     my own rows corroborate: Ambusher 39 -> 195, Assault Lance 28 -> 187, Howling Wind 53 -> 177
+# Simulated 201.5 against 205 observed, a ratio of 0.98.  CHARLES DOES NOT BREAK THE CLOCK.
+# Set against Yang at the same size, where the clock ran 2.0x fast, the bisection is complete:
+#     heroless   clock right (90.6 vs 85-100)      output right (k 1.04)
+#     Charles    clock RIGHT (201.5 vs 205)
+#     Yang       clock 2.0x TOO FAST (45.6 vs 92)
+# All three of Charles' skills are defensive -- e_leth 20, taken 20, hp 25 -- so he contributes
+# NOTHING to my output, and the fight length being exact is precisely what that predicts.
+#
+# HIS LOSS TOTAL IS STILL WRONG, AND BECAUSE THE CLOCK IS RIGHT IT IS CLEANLY INTERPRETABLE.
+#     sim 164 +/- 20 against 223 observed.  k = 0.74, z = +3.0.
+#     losses per round: sim 0.814, real 1.088 -> the model is 0.75x, i.e. it credits Charles with
+#     1.34x the survivability he really provides.
+# This is the first time a loss total can be read as a RATE rather than a product, because the
+# denominator is independently confirmed.  Every earlier k in this file was rate x rounds.
+#
+# --------------------------------- TWO ERRORS, NOT ONE -- AND THEY ARE VERY DIFFERENT SIZES
+# Scale every hero skill effect (troop abilities untouched) by s and ask what s fixes each fight.
+# DIAGNOSTIC ONLY, not a proposed fix: the question is whether ONE mechanism covers both.
+#     s        Charles losses (obs 223)     Yang rounds (obs 92)
+#     1.00        163      0.73                45.5      0.49
+#     0.80        225      1.01                53.1      0.58
+#     0.30        471      2.11                94.0      1.02
+# CHARLES NEEDS 0.80 AND YANG NEEDS 0.30.  No single factor fixes both -- at Charles' value Yang
+# is still off by 1.7x, and at Yang's value Charles is off by 2.1x.  So this is NOT a uniform
+# over-credit of the hero layer.  The aura channel is about 25% too strong; the proc channel is
+# about 3.3x too strong.  That difference is the finding.
+#
+# THE ERROR IS NOT IN THE SCHEDULE, THE MAGNITUDE, OR THE SCOPE.  All three were checked:
+#   - firing rates are not uniformly high -- Ice Zone fires 1.39x nominal and Ambush 0.62x, so a
+#     blanket "procs fire too often" is refuted by the rows themselves;
+#   - magnitudes and scopes are tooltip-verified six for six (Ice Zone .40/100/arch, Avalanche
+#     1-in-4/100/all, Ambush .40/50/all, and Sophia's three);
+#   - sim.py converts the stored expected value back to full magnitude correctly
+#     (`mag = v / proc_uptime(sname)`), so the chance is not being applied twice.
+# So the over-credit is in how a LIVE proc enters the damage calculation, not in whether or how
+# often it goes live.  That is a much smaller place to look than where this started.
+#
+# ONE CONFOUND, STATED PLAINLY.  Charles is auras AND defensive; Yang is procs AND offensive.
+# These two fights cannot separate "procs are over-credited" from "offensive skills are
+# over-credited".  Every claim above is safe under either reading; the distinction is what the
+# next test is for.
+
+# --------------------------------- next test, pre-registered: SOPHIA ONLY at 500
+# SOPHIA BREAKS THE CONFOUND, because her first skill is a DEFENSIVE PROC:
+#     Arcane Pact          proc_taken, 40% chance of -50% damage taken   <- defensive, PROC
+#     Terror Deathblow     proc, 1-in-2 turns, +200% cavalry damage      <- offensive, proc
+#     Terror Annihilation  proc, 1-in-2 turns, +75% all squads           <- offensive, proc
+# Charles' defensive effects are AURAS and are over-credited 1.25x.  Sophia's defensive effect is
+# a PROC.  If the fault is procs, Arcane Pact should over-credit her survivability by something
+# near 3.3x rather than 1.25x, and the two defensive channels will disagree by that factor.  If
+# instead the fault is offensive skills, her defensive proc should behave like Charles' auras.
+# Same 500 at 250/100/150, Infantry and Archer slots Vacant, same heroless Narses.
 # PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11):
-#     panel must read  infantry 1952.8 / 1941.2 / 1805.7 / 1802.9
-#                      cavalry  1080.3 / 1069.3 /  993.9 /  996.1   (unchanged)
-#                      archer   1083.1 / 1069.0 / 1012.0 / 1006.6   (unchanged)
-#     I win 100% of runs, losing 164 of 500; Narses is wiped, so my losses are the observable.
-#     201.5 +/- 6.7 rounds -> his Ambusher 40.3 triggers, his archer row 20.2,
-#                             my Unyielding Shield large (Charles' row 4).
-# READ THE DIRECTION CAREFULLY.  Charles LENGTHENS the fight in the model (201 rounds against 91
-# heroless and 46 with Yang), so here the simulator errs long, not short, and the asymmetry of the
-# lifetime confound flips: a HIGH observed count would confirm the model, a LOW one is the
-# interesting outcome but is the direction lifetime could also produce.  His Ambusher near 40
-# means Charles is modelled correctly and the fault is procs alone.  Near 20 or below means the
-# fight really ran ~100 rounds or less and the aura channel is over-credited too -- and since his
-# cavalry survives to the very end of a fight he loses, lifetime cannot account for much of it.
+#     panel must read  cavalry 1820.7 / 1809.7 / 1727.4 / 1729.6
+#                      infantry 1102.3 / 1090.7 / 1045.2 / 1042.4  (unchanged)
+#                      archer   1083.1 / 1069.0 / 1012.0 / 1006.6  (unchanged)
+#     I win 100% of runs, losing 128 +/- 21 of 500 (90% band 94-163); Narses wiped, so my losses
+#     are the observable.
+#     60.4 +/- 1.0 rounds -> his Ambusher 12.1, his archer row 6.0
+#                         -> my rows Arcane Pact 24, Terror Deathblow 30, Terror Annihilation 30
+# WHAT DECIDES IT.  Sophia has two offensive procs, so the clock should break as it did for Yang:
+# his Ambusher well above 12 means the fight ran long again and confirms the offensive over-credit
+# on a second, independent hero.  Then read the losses AGAINST that measured length: if her
+# defensive proc is over-credited like Yang's offensive procs, my losses will overshoot 128 by far
+# more than Charles' 1.34x.  Her own three rows also give three more measured firing rates, two of
+# them PERIODIC (1-in-2) and therefore a second deterministic clock alongside his Ambusher.
