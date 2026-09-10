@@ -1,0 +1,1312 @@
+{
+ "alcar": {
+  "skills": [
+   {
+    "desc": "Alcar's utter dedication to keeping his men safe is well-proved. Reduces Infantry and Archer's Damage Taken by 70% every 5 turns for 2 turns.",
+    "levels": {
+     "L1": "14%",
+     "L2": "28%",
+     "L3": "42%",
+     "L4": "56%",
+     "L5": "70%"
+    },
+    "name": "Rescuing Hands"
+   },
+   {
+    "desc": "The fighting belligerence of a Praetorian is something for others to study. Increases Infantry Damage Dealt by 100% and Cavalry and Archer's Damage Dealt by 10%.",
+    "levels": {
+     "L1": "2%",
+     "L2": "4%",
+     "L3": "6%",
+     "L4": "8%",
+     "L5": "10%"
+    },
+    "name": "Praetorian Will"
+   },
+   {
+    "desc": "Years of training have taught Alcar how to exploit enemy weakness, increasing Infantry Damage Dealt per attack by 60% and target Damage Taken by 25% for 1 turn.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Carpe Diem"
+   }
+  ],
+  "stats": {
+   "attack": 370.29,
+   "defense": 370.29,
+   "health": 92.5,
+   "lethality": 92.5
+  }
+ },
+ "amadeus": {
+  "skills": [
+   {
+    "desc": "Young ranger Amadeus excels in boosting morale, increasing the total Squads' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Battle Ready"
+   },
+   {
+    "desc": "Amadeus imparts the secrets of swordsmanship, increasing the total Squads' Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Way of the Blade"
+   },
+   {
+    "desc": "Amadeus' unique swordplay has a 40% chance of increasing damage dealt by 50% for all squads.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Unrighteous Strike"
+   }
+  ],
+  "stats": {
+   "attack": 260.2,
+   "defense": 260.2,
+   "health": 62.5,
+   "lethality": 62.5
+  }
+ },
+ "amane": {
+  "skills": [
+   {
+    "desc": "Amane's trademark formation increases all Squads' total Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Tri-Phalanx"
+   },
+   {
+    "desc": "Amane's skill at warding off evil increases Infirmary Healing Speed by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Exorcism"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "ava": {
+  "skills": [
+   {
+    "desc": "An artist sees what others cannot. Ava's deconstructive gaze sees vulnerabilities, reducing total enemy Defense by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Dissolution"
+   },
+   {
+    "desc": "Bright light and dark shadow can blind enemies who do not expect it. All enemy soldiers receive 50% increased damage for 2 turns every 4 turns.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Chiaroscuro"
+   },
+   {
+    "desc": "Ava's weapons are like twin beacons for all to follow, increasing soldiers' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Light and Cold"
+   }
+  ],
+  "stats": {
+   "attack": 650.52,
+   "defense": 650.52,
+   "health": 160.5,
+   "lethality": 160.5
+  }
+ },
+ "charles": {
+  "skills": [
+   {
+    "desc": "The terrifying presence of the massive Angel of Justice on the battlefield reduces enemy Squad's Total Lethality by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Intimidation"
+   },
+   {
+    "desc": "Superior metal armor forging blunts the impact of conventional weapons, reducing damage taken by all soldiers by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Iron Bodies"
+   },
+   {
+    "desc": "The Angel of Justice comes outfitted with state-of-the-art battlefield medkits, increasing Squad's total Health by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Great Justice"
+   }
+  ],
+  "stats": {
+   "attack": 650.52,
+   "defense": 650.52,
+   "health": 160.5,
+   "lethality": 160.5
+  }
+ },
+ "chenko": {
+  "skills": [
+   {
+    "desc": "Chenko implements advanced weaponry for our soldiers, increasing the total Squads' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Stand of Arms"
+   },
+   {
+    "desc": "Enhances troop armor with a keen engineering eye, reducing damage taken by 20% for all troops.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Shield Wall"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "diana": {
+  "skills": [
+   {
+    "desc": "The unique arts of the wilderness rangers reduce Governor Stamina Cost by 20%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "12%",
+     "L3": "15%",
+     "L4": "18%",
+     "L5": "20%"
+    },
+    "name": "Iron Constitution"
+   },
+   {
+    "desc": "Diana takes care of tough enemies with ease, increasing Hunting March Speed by 100%.",
+    "levels": {
+     "L1": "20%",
+     "L2": "40%",
+     "L3": "60%",
+     "L4": "80%",
+     "L5": "100%"
+    },
+    "name": "Quick Paced"
+   }
+  ],
+  "stats": {
+   "attack": 110.08,
+   "defense": 110.08
+  }
+ },
+ "edwin": {
+  "skills": [
+   {
+    "desc": "Edwin uses his knowledge of minerals, increasing the Town's Quarry Output by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Demolitions Expert"
+   },
+   {
+    "desc": "Edwin's expert quarrying techniques increases his Stone Mining Speed in the Wilderness by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Stone Mining"
+   }
+  ],
+  "stats": {
+   "attack": 90.07,
+   "defense": 90.07
+  }
+ },
+ "eric": {
+  "skills": [
+   {
+    "desc": "The purity of Eric's faith can cause even his enemies to stumble, reducing total Enemy Squads' Attack by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Holy Warrior"
+   },
+   {
+    "desc": "Conviction is a shield for the righteous, reducing Squads' Damage Taken by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Conviction"
+   },
+   {
+    "desc": "An inspiring leader can unlock new reserves of vitality. Eric increases total Squads' Health by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Exhortation"
+   }
+  ],
+  "stats": {
+   "attack": 290.23,
+   "defense": 290.23,
+   "health": 70.0,
+   "lethality": 70.0
+  }
+ },
+ "fahd": {
+  "skills": [
+   {
+    "desc": "A rising cloud of sand is terrible for visibility, reducing all Enemy Squads' Damage Dealt by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Desert Eclipse"
+   },
+   {
+    "desc": "Fahd has always been a pathfinder for his warriors, increasing Solo Hunting March Speed by 100%.",
+    "levels": {
+     "L1": "20%",
+     "L2": "40%",
+     "L3": "60%",
+     "L4": "80%",
+     "L5": "100%"
+    },
+    "name": "Pathfinder"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "forrest": {
+  "skills": [
+   {
+    "desc": "Forrest's expert lumberjack skills increase the Town's Sawmill Output by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Woodland Inheritor"
+   },
+   {
+    "desc": "Forrest utilizes his logging expertise, increasing Wood Gathering Speed in the Wilderness by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Master Woodcutter"
+   }
+  ],
+  "stats": {
+   "attack": 90.07,
+   "defense": 90.07
+  }
+ },
+ "gordon": {
+  "skills": [
+   {
+    "desc": "Gordon's culinary masterpieces invigorate our soldiers, increasing total Squads' Health by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Super Nutrients"
+   },
+   {
+    "desc": "Beyond delicious meals, Gordon's trash talk increases the total Squads' Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Trash Talk"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "helga": {
+  "skills": [
+   {
+    "desc": "Helga has a 40% chance of reducing damage taken by 50% for all squads.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Oath of Guardian"
+   },
+   {
+    "desc": "Helga blows the horn to motivate the squad, increasing the total Squads' Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Echoes of Valhalla"
+   },
+   {
+    "desc": "Helga invites everyone to embrace nature, increasing the total Squads' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Nature's Balance"
+   }
+  ],
+  "stats": {
+   "attack": 200.16,
+   "defense": 200.16,
+   "health": 55.5,
+   "lethality": 55.5
+  }
+ },
+ "hilde": {
+  "skills": [
+   {
+    "desc": "Hilde's exhaustive discipline develops soldiers into true weapons, increasing the total Squads' Attack and Defense by 15% and 10%.",
+    "levels": {
+     "L1": "2%",
+     "L2": "4%",
+     "L3": "6%",
+     "L4": "8%",
+     "L5": "10%"
+    },
+    "name": "Noble Path"
+   },
+   {
+    "desc": "Hilde uses her secret tonic to enhance the warriors' strength, granting all squads' attack a 25% chance of dealing 200% damage.",
+    "levels": {
+     "L1": "120%",
+     "L2": "140%",
+     "L3": "160%",
+     "L4": "180%",
+     "L5": "200%"
+    },
+    "name": "Elixir of Strength"
+   },
+   {
+    "desc": "Hilde's devout prayer has a 40% chance of reducing damage taken by 50% for all squads.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Trial by Fire"
+   }
+  ],
+  "stats": {
+   "attack": 240.1,
+   "defense": 240.1,
+   "health": 60.0,
+   "lethality": 60.0
+  }
+ },
+ "howard": {
+  "skills": [
+   {
+    "desc": "Howard guards our troops with his shield, reducing damage taken by 20% for all troops.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Defenders' Edge"
+   },
+   {
+    "desc": "Howard's intimidating presence reduces the total Enemy Squads' Attack by 20%.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Weaken"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "jabel": {
+  "skills": [
+   {
+    "desc": "Jabel, with her banner-like red armor, has a 40% chance of reducing damage taken by 50% for all squads.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Rally Flag"
+   },
+   {
+    "desc": "Jabel, a fearless knight, grants all squads a 50% chance of dealing 50% more damage when attacking.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Hero's Domain"
+   },
+   {
+    "desc": "Jabel's valiant spirit inspires everyone, increasing Squads' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Youthful Rage"
+   }
+  ],
+  "stats": {
+   "attack": 200.16,
+   "defense": 200.16,
+   "health": 50.0,
+   "lethality": 50.0
+  }
+ },
+ "jaeger": {
+  "skills": [
+   {
+    "desc": "Jaeger's triumphant music is a fine tool of intimidation, granting a 20% chance of increasing Squads' damage dealt by 40% for 3 turns.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "The Tempest"
+   },
+   {
+    "desc": "Music focuses the soldier's mind. Jaeger grants all squads a 20% chance of reducing the total Enemy Squads' Lethality by 50% for 2 turns when attacking.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "The Resistance"
+   },
+   {
+    "desc": "A rousing song unlocks new reserves of strength. Increases total Squads' Health by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "The Celebration"
+   }
+  ],
+  "stats": {
+   "attack": 290.23,
+   "defense": 290.23,
+   "health": 70.0,
+   "lethality": 70.0
+  }
+ },
+ "long-fei": {
+  "skills": [
+   {
+    "desc": "Long Fei's courage in the teeth of the enemy points the way toward the warrior within, granting a 40% chance of reducing damage taken by all squads by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Mighty Paragon"
+   },
+   {
+    "desc": "The sweet nectar of Long Fei's potions have born fruit in soldiers' vitality, increasing total Squads' Defense by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Celestial Sustenance"
+   },
+   {
+    "desc": "\"All warfare is based on deception\". Long Fei's war wisdom is ingrained in his soldiers, granting all squads' attacks a 25% chance of dealing 200% damage.",
+    "levels": {
+     "L1": "120%",
+     "L2": "140%",
+     "L3": "160%",
+     "L4": "180%",
+     "L5": "200%"
+    },
+    "name": "Art of War"
+   }
+  ],
+  "stats": {
+   "attack": 444.35,
+   "defense": 444.35,
+   "health": 111.0,
+   "lethality": 111.0
+  }
+ },
+ "margot": {
+  "skills": [
+   {
+    "desc": "Margot's focus on armor-penetration increases total Squads' Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Warbringer"
+   },
+   {
+    "desc": "Within Margot's haphazard positioning lies careful strategy. Her presence grants all Squads a 20% chance of dodging Normal Attacks.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Subterfuge"
+   },
+   {
+    "desc": "Margot's Cavalry have a 25% chance of performing an extra attack, dealing 200% damage.",
+    "levels": {
+     "L1": "120%",
+     "L2": "140%",
+     "L3": "160%",
+     "L4": "180%",
+     "L5": "200%"
+    },
+    "name": "Sleight Hand"
+   }
+  ],
+  "stats": {
+   "attack": 370.29,
+   "defense": 370.29,
+   "health": 92.5,
+   "lethality": 92.5
+  }
+ },
+ "marlin": {
+  "skills": [
+   {
+    "desc": "Marlin, being unpredictable, has a 40% chance of increasing damage dealt by 50% for all squads.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Wild Card"
+   },
+   {
+    "desc": "\"Stiff rum can drown 'most any battlefield sorrow\". Marlin grants all squads a 20% chance of reducing the total Enemy Squads' Lethality by 50% for 2 turns when attacking.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Rumhead"
+   },
+   {
+    "desc": "Grants your squads' attack a 50% chance of increasing damage dealt by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Dynamo"
+   }
+  ],
+  "stats": {
+   "attack": 240.1,
+   "defense": 240.1,
+   "health": 60.0,
+   "lethality": 60.0
+  }
+ },
+ "olive": {
+  "skills": [
+   {
+    "desc": "Olive' unmatched baking skills increase the Town's Mill Output by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Green Thumb"
+   },
+   {
+    "desc": "Olive's expertise in logistics increases her Bread Gathering Speed in the Wilderness by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Forager's Luck"
+   }
+  ],
+  "stats": {
+   "attack": 90.07,
+   "defense": 90.07
+  }
+ },
+ "petra": {
+  "skills": [
+   {
+    "desc": "Grants all Squads\u2019 Attack a 50% chance of cursing the target, increasing their damage taken by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Evil Eye"
+   },
+   {
+    "desc": "Petra is known as a lucky fortune-teller to her soldiers, granting a 50% chance of increasing Squads' Attack by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "The Favor"
+   },
+   {
+    "desc": "Petra's divination navigates bad outcomes with a 40% chance of reducing damage taken by 50% for all squads.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "The Shield"
+   }
+  ],
+  "stats": {
+   "attack": 290.23,
+   "defense": 290.23,
+   "health": 70.0,
+   "lethality": 70.0
+  }
+ },
+ "quinn": {
+  "skills": [
+   {
+    "desc": "Senses for dangers ahead, reducing damage taken by 20% for all troops.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Sixth Sense"
+   },
+   {
+    "desc": "Quinn grants all soldiers a 50% chance of dealing 50% more damage when attacking.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Precision Shot"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "rosa": {
+  "skills": [
+   {
+    "desc": "Well-placed chaos is prologue to success. Rosa grants a 40% chance of increasing all Squads' Damage Dealt by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Chaos Gambit"
+   },
+   {
+    "desc": "No soldier wishes to harm this wild rose of war, reducing damage dealt by 20% for all enemy squads.",
+    "levels": {
+     "L1": "4%",
+     "L2": "8%",
+     "L3": "12%",
+     "L4": "16%",
+     "L5": "20%"
+    },
+    "name": "Rose of War"
+   },
+   {
+    "desc": "A dance of distraction is the perfect complement to archer fire, increasing Archers' total Attack by 30%.",
+    "levels": {
+     "L1": "6%",
+     "L2": "12%",
+     "L3": "18%",
+     "L4": "24%",
+     "L5": "30%"
+    },
+    "name": "Golden Rhythm"
+   }
+  ],
+  "stats": {
+   "attack": 370.29,
+   "defense": 370.29,
+   "health": 92.5,
+   "lethality": 92.5
+  }
+ },
+ "saul": {
+  "skills": [
+   {
+    "desc": "As a member of the task force, Saul's unique training program is highly empowering, increasing the total Squads' Defense and Health by 10% and 15%.",
+    "levels": {
+     "L1": "3%",
+     "L2": "6%",
+     "L3": "9%",
+     "L4": "12%",
+     "L5": "15%"
+    },
+    "name": "Taskforce Training"
+   },
+   {
+    "desc": "Saul's efficient construction management increases Construction Speed by 15%, and his proficiency in maximizing resource utilization reduces Construction Costs by 15%.",
+    "levels": {
+     "L1": "3%",
+     "L2": "6%",
+     "L3": "9%",
+     "L4": "12%",
+     "L5": "15%"
+    },
+    "name": "Resourceful"
+   },
+   {
+    "desc": "Saul masterfully manipulates the battlefield, increasing the total Squads' Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Positional Battler"
+   }
+  ],
+  "stats": {
+   "attack": 200.16,
+   "defense": 200.16,
+   "health": 50.0,
+   "lethality": 50.0
+  }
+ },
+ "seth": {
+  "skills": [
+   {
+    "desc": "Seth passes on his passion for iron mining to everyone, increasing the Town's Iron Output by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Burnished Iron"
+   },
+   {
+    "desc": "Seth has a special bond with Iron, increasing his Iron Mining Speed in the Wilderness by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Craftsmanship"
+   }
+  ],
+  "stats": {
+   "attack": 90.07,
+   "defense": 90.07
+  }
+ },
+ "sophia": {
+  "skills": [
+   {
+    "desc": "The arcane pact grants Sophia the protection of night, and a 40% chance of reducing all squad damage received by 50% every turn.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Arcane Pact"
+   },
+   {
+    "desc": "Sophia radiates a fearsome aura that has a chance to inflict Terror on enemy targets. Enemy targets suffer the effects of Terror every 2 turns and will receive 200% increased Cavalry damage on the following turn. Terror lasts 1 turn.",
+    "levels": {
+     "L1": "40%",
+     "L2": "80%",
+     "L3": "120%",
+     "L4": "160%",
+     "L5": "200%"
+    },
+    "name": "Terror - Deathblow"
+   },
+   {
+    "desc": "Terror increases fragility. All Squads deal 75% increased damage to Terrified targets.",
+    "levels": {
+     "L1": "15%",
+     "L2": "30%",
+     "L3": "45%",
+     "L4": "60%",
+     "L5": "75%"
+    },
+    "name": "Terror - Annihilation"
+   }
+  ],
+  "stats": {
+   "attack": 540.43,
+   "defense": 540.43,
+   "health": 133.5,
+   "lethality": 133.5
+  }
+ },
+ "thrud": {
+  "skills": [
+   {
+    "desc": "Thrud's battle fever inspires her Infantry and Archers, reducing their damage taken by 15% and increasing their damage dealt by 15%.",
+    "levels": {
+     "L1": "3%",
+     "L2": "6%",
+     "L3": "9%",
+     "L4": "12%",
+     "L5": "15%"
+    },
+    "name": "Battle Hunger"
+   },
+   {
+    "desc": "No plans. No finesse. Just brutally charging into battle. Thrud's Cavalry has a 20% chance of dealing 100% extra damage to all enemies on attack.",
+    "levels": {
+     "L1": "20%",
+     "L2": "40%",
+     "L3": "60%",
+     "L4": "80%",
+     "L5": "100%"
+    },
+    "name": "Reckless Charge"
+   },
+   {
+    "desc": "Ancestral spirits guide the brave to Valhalla. For every 4 attacks made by Cavalry, all squads' damage dealt is increased by 25% and damage taken is reduced by 25% for 2 turns.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Ancestral Guidance"
+   }
+  ],
+  "stats": {
+   "attack": 444.35,
+   "defense": 444.35,
+   "health": 111.0,
+   "lethality": 111.0
+  }
+ },
+ "tier-list": {
+  "skills": [],
+  "stats": {}
+ },
+ "triton": {
+  "skills": [
+   {
+    "desc": "Acceptance of Triton's authority enables the fruits to be shared thereof, increasing total Squads' Defense by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Command of Power"
+   },
+   {
+    "desc": "The power of warfare lies in shared fearlessness in the face of battle, increasing total Squads' skill damage dealt by 30%.",
+    "levels": {
+     "L1": "6%",
+     "L2": "12%",
+     "L3": "18%",
+     "L4": "24%",
+     "L5": "30%"
+    },
+    "name": "Warfare of Power"
+   },
+   {
+    "desc": "Great power stems from a willingness to keep oaths, increasing Infantry Health by 20% as well as Cavalry and Archer Health by 30%.",
+    "levels": {
+     "L1": "6%",
+     "L2": "12%",
+     "L3": "18%",
+     "L4": "24%",
+     "L5": "30%"
+    },
+    "name": "Oath of Power"
+   }
+  ],
+  "stats": {
+   "attack": 540.43,
+   "defense": 540.43,
+   "health": 133.5,
+   "lethality": 133.5
+  }
+ },
+ "vivian": {
+  "skills": [
+   {
+    "desc": "Vivian is a patient commander willing to wait for just the right moment to strike. All squads' attacks increase enemy damage taken by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Crouching Tiger"
+   },
+   {
+    "desc": "Vivian's sharp focus exposes enemy weaknesses, granting all squads' attack 100% extra damage after every four attacks, and causes the target to receive 15% extra damage for its next attack received.",
+    "levels": {
+     "L1": "5%",
+     "L2": "7.5%",
+     "L3": "10%",
+     "L4": "12.5%",
+     "L5": "15%"
+    },
+    "name": "Focus Fire"
+   },
+   {
+    "desc": "Vivian equips her Archers with custom coin traps, her Archers deal 60% extra damage to all enemies on the next attack of every 4 attacks.",
+    "levels": {
+     "L1": "12%",
+     "L2": "24%",
+     "L3": "36%",
+     "L4": "48%",
+     "L5": "60%"
+    },
+    "name": "Trap of Greed"
+   }
+  ],
+  "stats": {
+   "attack": 444.35,
+   "defense": 444.35,
+   "health": 111.0,
+   "lethality": 111.0
+  }
+ },
+ "wee-and-woo": {
+  "skills": [
+   {
+    "desc": "The inclusion of the artillerymen has an overall helpful effect of increasing Squad's total Attack by 15% and total Lethality by 10%.",
+    "levels": {
+     "L1": "2%",
+     "L2": "4%",
+     "L3": "6%",
+     "L4": "8%",
+     "L5": "10%"
+    },
+    "name": "Artillerymen"
+   },
+   {
+    "desc": "Wee &amp; Woo's devastating back-to-back rounds tear shreds through the enemy lines, increasing Squad's Damage Dealt to Archer by 30% and to Infantry by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Chain Shelling"
+   },
+   {
+    "desc": "\"There's always someone in every cannon duo who can aim well.\" Wee &amp; Woo's presence gives all Squad's Attack a 50% chance of dealing 50% extra damage.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Boom Boom"
+   }
+  ],
+  "stats": {
+   "attack": 650.52,
+   "defense": 650.52,
+   "health": 160.5,
+   "lethality": 160.5
+  }
+ },
+ "yang": {
+  "skills": [
+   {
+    "desc": "An avalanche for Yang is just another weapon in his arsenal, resulting in an additional strike against a target by all Squads every 4 turns for 100% damage.",
+    "levels": {
+     "L1": "20%",
+     "L2": "40%",
+     "L3": "60%",
+     "L4": "80%",
+     "L5": "100%"
+    },
+    "name": "Avalanche"
+   },
+   {
+    "desc": "Years of arctic adversity have taught Yang to seize advantages. Yang's Archers have a 40% chance of dealing 100% extra damage with every attack.",
+    "levels": {
+     "L1": "20%",
+     "L2": "40%",
+     "L3": "60%",
+     "L4": "80%",
+     "L5": "100%"
+    },
+    "name": "Ice Zone"
+   },
+   {
+    "desc": "Yang is an advanced thinker who can easily grasp the principles of almost any phenomena, granting a 40% chance of increasing Squad's Damage Dealt by 50%.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Ambush"
+   }
+  ],
+  "stats": {
+   "attack": 540.43,
+   "defense": 540.43,
+   "health": 133.5,
+   "lethality": 133.5
+  }
+ },
+ "yeonwoo": {
+  "skills": [
+   {
+    "desc": "\"My blade and I are one\". Yeonwoo's sword skills increases all Squads' total Lethality by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "On Guard"
+   },
+   {
+    "desc": "Yeonwoo's travels have secured a technological edge, increasing Research Speed by 15%.",
+    "levels": {
+     "L1": "3%",
+     "L2": "6%",
+     "L3": "9%",
+     "L4": "12%",
+     "L5": "15%"
+    },
+    "name": "Well-Traveled"
+   }
+  ],
+  "stats": {
+   "attack": 140.11,
+   "defense": 140.11
+  }
+ },
+ "zoe": {
+  "skills": [
+   {
+    "desc": "Your squads' attacks gain a 20% chance of inflicting Sunder, dealing 40% damage per turn for 3 turns.",
+    "levels": {
+     "L1": "8%",
+     "L2": "16%",
+     "L3": "24%",
+     "L4": "32%",
+     "L5": "40%"
+    },
+    "name": "Sundering Wound"
+   },
+   {
+    "desc": "Zoe is a gifted female orator, and her rousing battle speeches increase the total Squads' Attack by 25%.",
+    "levels": {
+     "L1": "5%",
+     "L2": "10%",
+     "L3": "15%",
+     "L4": "20%",
+     "L5": "25%"
+    },
+    "name": "Charisma"
+   },
+   {
+    "desc": "Zoe strikes the enemy so completely and utterly that your squads' attacks gain a 50% chance of amplifying enemy squads' damage taken by 50%.",
+    "levels": {
+     "L1": "10%",
+     "L2": "20%",
+     "L3": "30%",
+     "L4": "40%",
+     "L5": "50%"
+    },
+    "name": "Infinite Arsenal"
+   }
+  ],
+  "stats": {
+   "attack": 240.1,
+   "defense": 240.1,
+   "health": 60.0,
+   "lethality": 60.0
+  }
+ }
+}

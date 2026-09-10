@@ -1,0 +1,209 @@
+{
+ "Alcar": {
+  "exp_atk": 370.3,
+  "exp_def": 370.3,
+  "stars": 31,
+  "weapon_lv1": 9.25,
+  "weapon_lv10": 92.5
+ },
+ "Amadeus": {
+  "exp_atk": 260.21,
+  "exp_def": 260.21,
+  "stars": 31,
+  "weapon_lv1": 6.25,
+  "weapon_lv10": 62.5
+ },
+ "Amane": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Ava": {
+  "exp_atk": 650.52,
+  "exp_def": 650.52,
+  "stars": 31,
+  "weapon_lv1": 16.05,
+  "weapon_lv10": 160.5
+ },
+ "Charles": {
+  "exp_atk": 650.52,
+  "exp_def": 650.52,
+  "stars": 31,
+  "weapon_lv1": 16.05,
+  "weapon_lv10": 160.5
+ },
+ "Chenko": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "source": "kingshotoptimizer.com",
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Eric": {
+  "exp_atk": 290.23,
+  "exp_def": 290.23,
+  "stars": 31,
+  "weapon_lv1": 7.0,
+  "weapon_lv10": 70.0
+ },
+ "Fahd": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "source": "kingshotoptimizer.com",
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Gordon": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "source": "kingshotoptimizer.com",
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Helga": {
+  "exp_atk": 200.16,
+  "exp_def": 200.16,
+  "source": "kingshotoptimizer.com",
+  "stars": 31,
+  "weapon_lv1": 5.55,
+  "weapon_lv10": 55.5
+ },
+ "Hilde": {
+  "exp_atk": 240.19,
+  "exp_def": 240.19,
+  "stars": 31,
+  "weapon_lv1": 6.0,
+  "weapon_lv10": 60.0
+ },
+ "Howard": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Jabel": {
+  "exp_atk": 200.16,
+  "exp_def": 200.16,
+  "stars": 31,
+  "weapon_lv1": 5.0,
+  "weapon_lv10": 50.0
+ },
+ "Jaeger": {
+  "exp_atk": 290.23,
+  "exp_def": 290.23,
+  "stars": 31,
+  "weapon_lv1": 7.0,
+  "weapon_lv10": 70.0
+ },
+ "Long Fei": {
+  "exp_atk": 444.36,
+  "exp_def": 444.36,
+  "stars": 31,
+  "weapon_lv1": 11.1,
+  "weapon_lv10": 111.0
+ },
+ "Margot": {
+  "exp_atk": 370.3,
+  "exp_def": 370.3,
+  "stars": 31,
+  "weapon_lv1": 9.25,
+  "weapon_lv10": 92.5
+ },
+ "Marlin": {
+  "exp_atk": 240.19,
+  "exp_def": 240.19,
+  "stars": 31,
+  "weapon_lv1": 6.0,
+  "weapon_lv10": 60.0
+ },
+ "Petra": {
+  "exp_atk": 290.23,
+  "exp_def": 290.23,
+  "stars": 31,
+  "weapon_lv1": 7.0,
+  "weapon_lv10": 70.0
+ },
+ "Quinn": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Rosa": {
+  "exp_atk": 370.3,
+  "exp_def": 370.3,
+  "stars": 31,
+  "weapon_lv1": 9.25,
+  "weapon_lv10": 92.5
+ },
+ "Saul": {
+  "exp_atk": 200.16,
+  "exp_def": 200.16,
+  "stars": 31,
+  "weapon_lv1": 5.0,
+  "weapon_lv10": 50.0
+ },
+ "Sophia": {
+  "exp_atk": 540.43,
+  "exp_def": 540.43,
+  "stars": 31,
+  "weapon_lv1": 13.35,
+  "weapon_lv10": 133.5
+ },
+ "Thrud": {
+  "exp_atk": 444.36,
+  "exp_def": 444.36,
+  "stars": 31,
+  "weapon_lv1": 11.1,
+  "weapon_lv10": 111.0
+ },
+ "Triton": {
+  "exp_atk": 540.43,
+  "exp_def": 540.43,
+  "stars": 31,
+  "weapon_lv1": 13.35,
+  "weapon_lv10": 133.5
+ },
+ "Vivian": {
+  "exp_atk": 444.36,
+  "exp_def": 444.36,
+  "stars": 31,
+  "weapon_lv1": 11.1,
+  "weapon_lv10": 111.0
+ },
+ "Wee & Woo": {
+  "exp_atk": 650.52,
+  "exp_def": 650.52,
+  "stars": 31,
+  "weapon_lv1": 16.05,
+  "weapon_lv10": 160.5
+ },
+ "Yang": {
+  "exp_atk": 540.43,
+  "exp_def": 540.43,
+  "stars": 31,
+  "weapon_lv1": 13.35,
+  "weapon_lv10": 133.5
+ },
+ "Yeonwoo": {
+  "exp_atk": 140.11,
+  "exp_def": 140.11,
+  "stars": 31,
+  "weapon_lv1": null,
+  "weapon_lv10": 0
+ },
+ "Zoe": {
+  "exp_atk": 240.19,
+  "exp_def": 240.19,
+  "stars": 31,
+  "weapon_lv1": 6.0,
+  "weapon_lv10": 60.0
+ }
+}
