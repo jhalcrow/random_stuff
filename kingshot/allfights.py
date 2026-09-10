@@ -119,6 +119,10 @@ FIGHTS = [
     # (102 + 186 = 288, residents 212) are the observable.
     ('Narses 500 SOPHIA ONLY', SOPHIA_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
      NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 288),
+    # The SAME Sophia at a different mix -- her cavalry 20% -> 50% of the march.  The pre-
+    # registered troop-share test.  Victory, Narses wiped, my losses 83 + 151 = 234 (residents 266).
+    ('Narses 500 SOPHIA 100/250/150', SOPHIA_PANEL_V2, {'inf': 100, 'cav': 250, 'arch': 150},
+     'solo', NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 234),
 ]
 
 
@@ -140,13 +144,14 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
 MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
-             'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia']}
+             'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia'],
+             'Narses 500 SOPHIA 100/250/150': ['Sophia']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -158,6 +163,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 500 YANG ONLY':  {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 CHARLES ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 SOPHIA ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 500 SOPHIA 100/250/150': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},

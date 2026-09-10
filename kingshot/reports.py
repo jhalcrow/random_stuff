@@ -2529,23 +2529,60 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # Three points and a monotone trend is weak evidence, and the share is confounded with which
 # skills each hero has.  It is a hypothesis, not a finding.  The next test is built to break it.
 
-# --------------------------------- next test, pre-registered: SOPHIA AT 100/250/150
-# THE SAME HERO AT A DIFFERENT TROOP MIX.  Same Sophia, same total 500, same target, same slots
-# (Infantry and Archer Vacant) -- only the composition changes, so her cavalry goes from 20% of
-# the march to 50%, matching Charles' infantry share.
-#     IF the required scale moves from 0.50 toward 0.82, the error tracks the hero's troop share
-#     and the fault is in SCOPE or TARGETING -- how a skill scoped to one type is spread over an
-#     army of three.  That is a structural bug and a small place to look.
-#     IF it stays at 0.50, the scale is a property of the hero's skills and troop share was a
-#     coincidence of three points; the search goes back to per-skill magnitudes.
-# Either way this is the first test in the file that varies the march rather than the lineup,
-# which is the one dimension the whole 500-troop series has held fixed.
-# PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11):
-#     panel unchanged from the Sophia report: cavalry 1820.7 / 1809.7 / 1727.4 / 1729.6,
-#           infantry 1102.3 / 1090.7 / 1045.2 / 1042.4, archer 1083.1 / 1069.0 / 1012.0 / 1006.6
-#     I win 100% of runs, losing 91 +/- 18 of 500 (90% band 61-122); Narses wiped.
-#     43.6 +/- 0.9 rounds -> Terror Deathblow 22 (the deterministic clock), Arcane Pact 17,
-#                            Terror Annihilation 1, his Ambusher 8.7, his archer row 4.4
-# READ TERROR DEATHBLOW FIRST: at 22 the clock is right and the whole error is in the loss rate;
-# at 35-46 the fight again ran ~1.5-2x long and the offensive over-credit survives the change of
-# composition.  Then s is recovered from the two numbers together, exactly as above.
+# --------------------------------- SOPHIA AT 100/250/150 (mail 223407017281728)
+# The pre-registered troop-share test: same hero, same 500 total, same target, same Vacant slots,
+# only the composition changed so her cavalry went from 20% of the march to 50%.
+#     VICTORY: I lose 83 + 151 = 234 of 500 (266 residents).  Narses wiped at exactly 83,600.
+#     PRE-REGISTERED 91 +/- 18 (band 61-122).  OBSERVED 234.  z = +7.9.
+#     Terror Deathblow (periodic 1-in-2) fired 36 -> 72 ROUNDS, corroborated by Arcane Pact
+#     (30 -> 75) and his Volley (7 -> 70).  SIMULATED 43.6 -> the clock is 1.65x too fast.
+#     Warding Impaler appears as a sixth cavalry row (6 triggers) now that cavalry is 250; it was
+#     omitted at 100 cavalry because it fired zero times.  Consistent with the row-omission rule.
+#
+# THE TROOP-SHARE HYPOTHESIS IS REFUTED.
+#     composition          loss ratio   round ratio   s that fixes BOTH
+#     cavalry 20%             0.44         0.66            ~0.50
+#     cavalry 50%             0.39         0.61            ~0.45
+# The hypothesis predicted s would climb from 0.50 toward Charles' 0.82 as her share rose to
+# match his.  It went DOWN slightly instead.  Troop share does not set the per-hero scale, and
+# the monotone 50/30/20% ordering across three heroes was the coincidence it was flagged as.
+#
+# WHAT THE TEST GAVE INSTEAD IS WORTH MORE THAN WHAT IT WAS ASKED.  At BOTH compositions a SINGLE
+# scale fixes BOTH observables at once, and it is the same scale (0.50 and 0.45, one sampling
+# interval apart).  So for Sophia the model's error is a clean multiplicative over-credit of her
+# skill effects, STABLE ACROSS MARCH COMPOSITION -- a per-hero constant, not an interaction with
+# the army she is leading.  That is a much stronger statement than any single fight could make,
+# and it is what makes isolating individual SKILLS worth doing: a per-hero constant is an
+# aggregate over three skills, so it can be decomposed.
+#
+# STATE OF THE PER-HERO SCALES:
+#     Charles   3 defensive auras, 0 offensive              s ~ 0.82
+#     Sophia    1 defensive proc + 2 offensive procs        s ~ 0.48  (two compositions)
+#     Yang      3 offensive procs                           s ~ 0.50 losses / 0.30 clock (split)
+# Ordered by offensive content, which is the surviving hypothesis now that both proc/aura and
+# troop share are dead.  It is NOT explained by offensive magnitude: Sophia's offensive EV totals
+# 137.5 against Yang's 85, yet she needs the LARGER scale.  Recorded as unexplained.
+
+# --------------------------------- next test, pre-registered: SOPHIA WITH ZERO CAVALRY
+# ISOLATE A SINGLE SKILL.  Terror Deathblow is cav-scoped and carries EV 100, by far the largest
+# single magnitude in the modelled roster (+200% cavalry damage on one turn in two).  Field Sophia
+# with NO CAVALRY AT ALL and it goes inert -- the same structural gate already measured on
+# Avalanche, which cannot fire without archers.  Arcane Pact and Terror Annihilation are scoped
+# 'all' and stay live.  Her cavalry panel boost is irrelevant with no cavalry to carry it.
+#     1,000 at 500 INFANTRY / 0 CAVALRY / 500 ARCHERS, same heroless Narses, Cavalry and Archer
+#     hero slots Vacant.
+# WHY 1,000 AND NOT 500.  Dropping cavalry also drops three troop abilities (Ambusher, Assault
+# Lance, Warding Impaler), which costs enough output that 500 sits on the win/loss boundary and
+# 700 is a WIPE once the measured over-credit is taken out -- and a wipe censors my losses.  At
+# 1,000 the march wins under both hypotheses, so the observable survives either way.  Checking the
+# calibrated case before choosing the march is new practice in this file and should be standard.
+# THE TWO HYPOTHESES GIVE SHARPLY DIFFERENT NUMBERS, which is the point:
+#     if the scale is unchanged (s ~ 0.48, Terror Deathblow was NOT carrying the error):
+#         I win, losing about 537 +/- 40 of 1,000 (band 474-606), ~124 rounds,
+#         his Ambusher about 25, his archer row about 12, my Arcane Pact about 50
+#     if removing Terror Deathblow removes the over-credit (the model becomes right):
+#         I win, losing about 270 +/- 36 of 1,000 (band 212-332), ~85 rounds,
+#         his Ambusher about 17, his archer row about 8, my Arcane Pact about 34
+# The bands do not overlap on either observable, and his Ambusher alone separates them (25 vs 17).
+# Terror Deathblow's own row must read ZERO and be omitted; if it appears with a non-zero count on
+# a march with no cavalry, the scope gate itself is wrong and that supersedes everything above.
