@@ -247,6 +247,48 @@ OPP_DMG_DOWN = ('e_atk', 'e_leth', 'e_dmg', 'proc_e_dmg')
 OPP_DEF_DOWN = ('e_taken', 'e_def', 'proc_e_taken')
 
 
+# ---------------------------------------------------------------- empirical hero calibration
+# MEASURED, NOT DERIVED.  Across five single-hero fights against the same heroless target, the
+# model over-credits a hero's skills in BOTH channels, and by different factors: the channels that
+# raise my damage need about x0.40 and those that lower what I take about x0.65 (rms log err over
+# ten observables 0.60 -> 0.170).  See reports.py for the fits and for everything this is NOT --
+# proc-vs-aura, troop share, single-skill isolation and saturation-by-magnitude were each tested
+# and refuted, so these two numbers are the surviving description of the error, not an explanation
+# of it.  They were then VALIDATED OUT OF SAMPLE on a two-hero march they were not fitted on
+# (Charles + Sophia: predicted 68 losses and his Ambusher 17, observed 80 and 16), which also
+# showed per-hero errors COMPOSE rather than compound.
+#
+# OFF BY DEFAULT.  Turning it on makes the simulator match reality far better on every hero fight
+# measured; it also bakes in two constants nobody has explained.  Keep it off when hunting the
+# mechanism, so the raw error stays visible.  Turn it on for RANKINGS (run.py, elo.py, gear.py),
+# where the raw model's 2-3x hero over-credit is a much larger error than these constants are --
+# and note it is not a uniform rescale, so it genuinely reorders offensive against defensive
+# heroes rather than cancelling out.
+HERO_CAL_OFF = float(os.environ.get('HERO_CAL_OFF', '1.0'))   # 0.40 when calibrated
+HERO_CAL_DEF = float(os.environ.get('HERO_CAL_DEF', '1.0'))   # 0.65 when calibrated
+_TROOP_NAMES = {n for n, _, _, _, _ in TROOP_SKILLS} | {'Ambusher'} | set(TROOP_REFORGE)
+
+
+def _calibrate(effs):
+    """Apply the measured hero-skill calibration.  Troop abilities are untouched: they are War
+    Academy research, they were validated on heroless fights at k 1.04, and nothing measured
+    suggests they are mis-scaled."""
+    if HERO_CAL_OFF == 1.0 and HERO_CAL_DEF == 1.0:
+        return effs
+    out = []
+    for kind, v, scope, name in effs:
+        # Effect names are emitted with a 'Troop:' prefix for troop abilities.  Matching the
+        # bare name silently scaled them too, which the heroless fights (k 1.04, clock exact)
+        # say is wrong -- and which contaminated the first round of fits.  Match the prefix.
+        if not name.startswith('Troop:') and name not in _TROOP_NAMES:
+            if kind in DMG_UP or kind in OPP_DEF_DOWN:
+                v *= HERO_CAL_OFF
+            elif kind in TAKEN or kind in DEF_UP or kind in OPP_DMG_DOWN:
+                v *= HERO_CAL_DEF
+        out.append((kind, v, scope, name))
+    return out
+
+
 def _prod(effs, kinds, scope_ok, sign=+1, reciprocal=False):
     """Combine every skill contribution in one channel into a single coefficient.
 
@@ -271,7 +313,7 @@ def _prod(effs, kinds, scope_ok, sign=+1, reciprocal=False):
     side ones do not, because Skill.damage() really does accumulate into a coefficient of 1.
     """
     tot = 0.0
-    for kind, v, scope, name in effs:
+    for kind, v, scope, name in _calibrate(effs):
         if kind in kinds and scope_ok(scope):
             tot += v * PROC_SCALE if kind.startswith('proc') else v
     if reciprocal:

@@ -128,6 +128,16 @@ FIGHTS = [
     # wiped, my losses 235 + 435 = 670 (residents 330).
     ('Narses 1000 SOPHIA no cav', SOPHIA_PANEL_V2, {'inf': 500, 'cav': 0, 'arch': 500},
      'solo', NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 670),
+    # TWO heroes -- the out-of-sample test.  Victory, Narses wiped, my losses 29 + 51 = 80.
+    # NOTE the panel: every DEFENSE value is 5.0 below the sum of the single-hero panels, while
+    # attack/lethality/health are exact.  A +5% Defense bonus lapsed between this report and the
+    # previous one; scored against the panel as reported, so it self-corrects.
+    ('Narses 500 CHARLES+SOPHIA',
+     {'inf': dict(attack=1952.8, defense=1936.2, lethality=1805.7, health=1802.9),
+      'cav': dict(attack=1820.7, defense=1804.7, lethality=1727.4, health=1729.6),
+      'arch':dict(attack=1083.1, defense=1064.0, lethality=1012.0, health=1006.6)},
+     {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 80),
 ]
 
 
@@ -149,7 +159,7 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses 500 CHARLES+SOPHIA', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
@@ -157,7 +167,8 @@ ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500
 MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
              'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia'],
              'Narses 500 SOPHIA 100/250/150': ['Sophia'],
-             'Narses 1000 SOPHIA no cav': ['Sophia']}
+             'Narses 1000 SOPHIA no cav': ['Sophia'],
+             'Narses 500 CHARLES+SOPHIA': ['Charles', 'Sophia']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -171,6 +182,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 500 SOPHIA ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 SOPHIA 100/250/150': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 1000 SOPHIA no cav': {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 500 CHARLES+SOPHIA': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},

@@ -2636,3 +2636,52 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # A THIRD OUTCOME MATTERS TOO: if the observed values land BEYOND the two-scale branch (Terror
 # Deathblow well above 43, losses above 90), the per-hero errors COMPOUND when heroes are combined
 # and the whole per-hero-constant picture needs the combination term the ladder originally chased.
+
+
+# --------------------------------- CHARLES + SOPHIA at 500 (mail 223407017282381)
+# The out-of-sample test.  500 at 250/100/150, Archer slot Vacant, same heroless Narses.
+#     VICTORY: I lose 29 + 51 = 80 of 500 (420 residents).  Narses wiped, so mine is the
+#     observable.  Terror Deathblow fired 38 -> 76 ROUNDS (periodic 1-in-2, deterministic).
+#     observable        PRE-REG raw   PRE-REG two-scale   OBSERVED
+#     losses            27 (15-40)        68 (48-90)          80
+#     rounds                    53                87          76
+#     Terror Deathblow          27                43          38
+#     Arcane Pact               21                35          28
+#     his Ambusher              11                17          16
+# THE TWO-SCALE CORRECTION, FITTED ON SINGLE-HERO FIGHTS ONLY, PREDICTED A TWO-HERO MARCH
+# SUBSTANTIALLY CORRECTLY on all four observables; the raw model is wrong on every one.
+# AND THE COMPOUNDING BRANCH DID NOT HAPPEN.  Terror Deathblow came in at 38 against the
+# "compounds" threshold of >43, and losses at 80 against >90.  PER-HERO ERRORS COMPOSE, THEY DO
+# NOT COMPOUND.  That closes out the original ladder's framing for good: "the model over-credits
+# each additional hero, and it compounds with how many" is now refuted on a powered, pre-
+# registered test, not merely shown to be underpowered.
+#
+# --------------------------------- A PANEL MISS, THE FIRST IN EIGHT, AND IT IS SYSTEMATIC
+# Predicted infantry 1952.8 / 1941.2 / 1805.7 / 1802.9, cavalry 1820.7 / 1809.7 / 1727.4 / 1729.6,
+# archer 1083.1 / 1069.0 / 1012.0 / 1006.6.
+# Observed    infantry 1952.8 / 1936.2 / 1805.7 / 1802.9, cavalry 1820.7 / 1804.7 / 1727.4 / 1729.6,
+#             archer   1083.1 / 1064.0 / 1012.0 / 1006.6.
+# EVERY DEFENSE VALUE IS EXACTLY 5.0 LOW; attack, lethality and health are exact on all three
+# types.  A uniform -5.0 on ONE stat across ALL types is not a hero-stat error -- it is a single
+# missing term, and the natural reading is a +5% Defense bonus that lapsed.  The previous report
+# (22:54:20) still had it; this one (23:03:32) does not, and the player has said buffs have been
+# expiring through the session.  WORTH CHECKING ON THE SPECIAL BONUSES PAGE, because it means the
+# 500-troop series is not perfectly matched: the earlier fights carried +5% Defense and this one
+# did not.  It does not corrupt the scoring -- every fight is run against its OWN reported panel
+# with hero_stats=False -- but it is a real inhomogeneity in an otherwise controlled series.
+
+# --------------------------------- A BUG THAT INVALIDATED THE FIRST ROUND OF FITS
+# Implementing the calibration exposed it.  Side.effects() emits troop-ability effects with a
+# 'Troop:' PREFIX on the name ('Troop:Unyielding Shield'), and every scale scan in this file
+# matched the BARE name against TROOP_SKILLS.  Nothing matched, so TROOP ABILITIES WERE BEING
+# SCALED ALONGSIDE HERO SKILLS in all of them -- the per-hero s values (0.82, 0.48, 0.50/0.30)
+# and the first two-scale fit (0.40 / 0.65) alike.
+# WHY IT MATTERS: the heroless fights say troop abilities are RIGHT (k 1.04, clock exact within
+# noise), so a fit that quietly scales them down is absorbing a correction the data forbids.  The
+# scans only ever ran hero fights, so the heroless control that would have caught it immediately
+# was never in the scan.  THE FIX IS TO PUT IT THERE: the clean refit below carries the heroless
+# fight as a control row that must stay at 1.0 whatever the scales do.
+# WHAT SURVIVES UNTOUCHED, because it never went through a scan: every clock measurement (heroless
+# exact, Charles exact, Yang 2.0x, Sophia 1.5x), the proc-vs-aura refutation (rate comparisons),
+# the troop-share refutation (raw ratios 0.44 / 0.39 / 0.40), and the single-skill isolation
+# (pre-registered from the raw model).  What needed redoing is every fitted number.
