@@ -138,6 +138,18 @@ FIGHTS = [
       'arch':dict(attack=1083.1, defense=1064.0, lethality=1012.0, health=1006.6)},
      {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
      NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 80),
+    # THE MIRROR TEST: a hero on HIS side, none on mine.  I am wiped, so HIS 4,206 is the
+    # uncensored observable.  Note his INFANTRY panel: Long Fei brings expedition stats as well as
+    # skills, so 238.6 -> 520.9 attack.  Cavalry and archer lines are unchanged, as they must be.
+    ('Narses 500 + LONG FEI',
+     {'inf': dict(attack=1102.3, defense=1085.7, lethality=1045.2, health=1042.4),
+      'cav': dict(attack=1080.3, defense=1064.3, lethality=993.9,  health=996.1),
+      'arch':dict(attack=1083.1, defense=1064.0, lethality=1012.0, health=1006.6)},
+     {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     {'inf': dict(attack=520.9, defense=514.3, lethality=251.4, health=294.6),
+      'cav': dict(attack=217.3, defense=206.7, lethality=160.8, health=158.6),
+      'arch':dict(attack=239.1, defense=232.0, lethality=176.8, health=177.2)},
+     {'inf': 27_866, 'cav': 27_877, 'arch': 27_877}, 10, 2, ['Long Fei'], 'him', 4_206),
 ]
 
 
@@ -159,7 +171,7 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses 500 CHARLES+SOPHIA', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses 500 CHARLES+SOPHIA', 'Narses 500 + LONG FEI', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
@@ -168,7 +180,8 @@ MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
              'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia'],
              'Narses 500 SOPHIA 100/250/150': ['Sophia'],
              'Narses 1000 SOPHIA no cav': ['Sophia'],
-             'Narses 500 CHARLES+SOPHIA': ['Charles', 'Sophia']}
+             'Narses 500 CHARLES+SOPHIA': ['Charles', 'Sophia'],
+             'Narses 500 + LONG FEI': []}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -183,6 +196,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 500 SOPHIA 100/250/150': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 1000 SOPHIA no cav': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 CHARLES+SOPHIA': {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 500 + LONG FEI': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},

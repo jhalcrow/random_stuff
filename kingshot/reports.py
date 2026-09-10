@@ -2729,3 +2729,53 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # 4,500, the model is right about ENEMY heroes and wrong only about mine -- which would be a
 # strange and very informative asymmetry, and would mean the correction must never be applied to
 # an opponent.  Either answer resolves the largest residual left in this file.
+
+
+# --------------------------------- NARSES + LONG FEI (mail 223407017290304) -- THE MIRROR TEST
+# Me heroless at 500 (250/100/150), all three slots Vacant.  Narses 83,620 with LONG FEI ONLY.
+#     DEFEAT: I am wiped, 176 + 324 = 500.  HE LOSES 1,473 + 2,733 = 4,206 (residents 79,414).
+#     His losses are the uncensored observable, as designed.
+#
+# I GOT THE PRE-REGISTRATION WRONG, AND THE NAIVE READING OF IT POINTS THE OPPOSITE WAY.
+# I predicted his losses at 4,482 raw / 8,614 calibrated, and 4,206 lands squarely on RAW.  But
+# those numbers were generated against his HEROLESS panel.  Adding a hero adds his expedition
+# STATS as well as his skills, and his infantry line went 238.6 / 232.0 / 179.9 / 181.0 to
+# 520.9 / 514.3 / 251.4 / 294.6 -- his infantry attack more than doubled.  I predict MY panel
+# before every one of my own fights and had simply never done it for his.  Scored the way every
+# other fight in this file is scored, against the panels as reported:
+#     RAW MODEL     he loses 2,044 (band 1,315-2,882),  43 rounds   k 0.49
+#     CALIBRATED    he loses 3,918 (band 3,001-4,945),  62 rounds   k 0.93
+#     OBSERVED                4,206                     ~55-65 rounds
+# THE CALIBRATION IS RIGHT AND THE RAW MODEL IS WRONG BY 2x, on both observables.  The round count
+# is independently pinned by six rows: his Ambusher 12 -> 60, Mighty Paragon 23 -> 57, my Volley
+# 6 -> 60, his Volley 5 -> 50, my Ambusher 9 -> 45, and Art of War 49 -> 65 read as PER_ATTACK
+# over three attacking types.  Calibrated says 62.
+# SO THE CORRECTION APPLIES SYMMETRICALLY TO BOTH SIDES' HEROES.  It was fitted entirely on MY
+# heroes against a heroless opponent; it now predicts a fight in which the only hero on the board
+# is the OPPONENT'S, and one belonging to a different account at a different level (Lv.76, 4
+# stars, skills at 4).  That is the second out-of-sample validation, and the more demanding one.
+# THE LESSON IS ABOUT THE PRE-REGISTRATION, NOT THE MODEL: a pre-registered number is only as good
+# as the inputs it was generated from, and taking mine at face value would have produced exactly
+# the wrong conclusion.  Predict the OPPONENT's panel too, from now on, whenever his lineup changes.
+#
+# --------------------------------- SCOREBOARD, ALL NINETEEN FIGHTS
+#     raw         mean k 1.04   rms log err 0.613   mean|log| 0.511
+#     calibrated  mean k 1.24   rms log err 0.395   mean|log| 0.265
+# The whole controlled 500-troop series lands 0.70-1.18 calibrated, including the enemy-hero
+# fight at 0.92 and the held-out two-hero fight at 0.97.  The heroless fights are untouched.
+#
+# WHAT THE CALIBRATION DOES NOT FIX, STATED PLAINLY.  The Terry-class fights stay at 1.45 to 2.98
+# and some get WORSE (Terry 20k mixed 1.90 -> 2.10, Terry 10k all inf 2.54 -> 2.98).  I expected
+# the enemy-hero result to explain them; it does not, because the calibration was already being
+# applied to both sides in those runs.  So they have a different problem, and the honest reading
+# is that they are the least controlled data in the file: a real opponent whose buff state,
+# widget levels and research are all unknown, at 10-20k troops where a fight lasts a handful of
+# rounds and every observable is noisy.  They should NOT be used to tune anything.
+#
+# --------------------------------- CALIBRATION IS NOW ON FOR RANKINGS
+# sim.enable_hero_calibration() is called by run.py and elo.py.  It stays OFF in allfights.py and
+# the diagnostics, which exist to keep the raw error visible.  The justification is that the raw
+# model is wrong by 2-3x on every hero fight measured and the correction is ASYMMETRIC, so it
+# reorders offensive against defensive heroes instead of cancelling out of a relative ranking --
+# which is exactly the kind of error a ranking cannot absorb.  It remains two constants with no
+# mechanism; that search is not closed, it is just no longer blocking the rankings.

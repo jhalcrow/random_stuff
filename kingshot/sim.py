@@ -270,6 +270,20 @@ HERO_CAL_DEF = float(os.environ.get('HERO_CAL_DEF', '1.0'))   # 0.60 when calibr
 _TROOP_NAMES = {n for n, _, _, _, _ in TROOP_SKILLS} | {'Ambusher'} | set(TROOP_REFORGE)
 
 
+def enable_hero_calibration(off=0.30, dfn=0.60):
+    """Turn the measured hero calibration on.  Call this from the RANKING tools (run.py, elo.py,
+    gear.py, waves.py), where the raw model's 2-3x hero over-credit is a far larger error than
+    these two constants -- and where it genuinely reorders lineups, because it is not a uniform
+    rescale.  Do NOT call it from allfights.py or the diagnostics, which exist to keep the raw
+    error visible.  Environment variables still win if they were set."""
+    global HERO_CAL_OFF, HERO_CAL_DEF
+    if 'HERO_CAL_OFF' not in os.environ:
+        HERO_CAL_OFF = off
+    if 'HERO_CAL_DEF' not in os.environ:
+        HERO_CAL_DEF = dfn
+    return HERO_CAL_OFF, HERO_CAL_DEF
+
+
 def _calibrate(effs):
     """Apply the measured hero-skill calibration.  Troop abilities are untouched: they are War
     Academy research, they were validated on heroless fights at k 1.04, and nothing measured

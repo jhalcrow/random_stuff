@@ -11,6 +11,14 @@ import math, os, random, sys
 from sim import (Side, USER_STATS, MARCH, TYPES, battle_mc, ratio_troops, score,
                  ATTACK_JOINERS, DEFENSE_JOINERS)
 from heroes import warn_underlevelled, UNDERLEVELLED
+from sim import enable_hero_calibration
+
+# RANKINGS RUN CALIBRATED.  The raw model over-credits hero skills by 2-3x (measured across nine
+# controlled fights against the same target; see reports.py), and the correction is asymmetric --
+# offensive x0.30, defensive x0.60 -- so it reorders offensive against defensive heroes rather
+# than cancelling out of a relative ranking.  Validated out of sample twice: on a two-hero march
+# it was not fitted on, and on a fight where the HERO WAS THE OPPONENT'S.
+_CAL = enable_hero_calibration()
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 300
 SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side
