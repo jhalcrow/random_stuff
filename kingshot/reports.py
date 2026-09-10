@@ -2849,3 +2849,66 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # The two mechanisms are now cleanly separated and both verified: the canonical table holds MAX
 # (50 / 25 / 100), and skill_levels + level_scale takes an opponent's copy down to his actual
 # level (Narses' Long Fei: 40 / 20 / 80, exactly x0.8).  allfights is unchanged at rms 0.395.
+
+
+# --------------------------------- FULL TRIO vs FULL TRIO (mail 223407017291692) -- THE CALIBRATION BREAKS
+# Charles / Sophia / Yang, 500 at 300 infantry / 200 cavalry / ZERO archers, against Narses'
+# LARGE garrison (61,785 / 24,714 / 37,071 = 123,570) with Long Fei, Jabel AND Rosa.
+#     DEFEAT: I am wiped (500, -23,625 power).  HE LOSES 8,142 -- the uncensored observable.
+#     RAW         he loses 29,501   160 rounds   k 3.62
+#     CALIBRATED  he loses 23,760   172 rounds   k 2.92
+#     OBSERVED             8,142    ~90 rounds
+# NOT PRE-REGISTERED, so this is post-hoc scoring and weaker evidence than the designed tests.
+#
+# THE FIRST FIGHT WHERE THE SIMULATOR RUNS TOO LONG.  Sophia's Terror Deathblow is periodic 1-in-2
+# and fired 45 -> 90 ROUNDS, corroborated by Arcane Pact 31 -> 78, Ambush 30 -> 75, Assault Lance
+# 14 -> 93, Ice Zone 41 -> 103, and both Ambushers at 21 -> 105.  The simulator says 172.  Every
+# previous error had it ending fights EARLY.  I lose here, so the length is set by how fast HE
+# kills ME: his output is about 2x UNDER-modelled, and the calibration scales his heroes DOWN,
+# which makes it worse.
+#
+# TWO FIGHTS, TWO OPPOSITE ANSWERS.  Applying the calibration per side (k on his losses / round
+# ratio; 1.00 / 1.00 is perfect):
+#     fight                      neither        mine only          BOTH
+#     1 enemy hero (Long Fei)  0.48 / 0.72    0.48 / 0.72    0.93 / 1.03
+#     3 enemy heroes (trio)    3.62 / 1.78    0.91 / 0.98    2.91 / 1.90
+# The Long Fei fight needs the correction ON the opponent; this one needs it OFF.  NO SINGLE RULE
+# COVERS BOTH.  That is evidence the calibration is fitting a REGIME rather than a mechanism --
+# which was always the risk of adopting two constants, and it has now been caught by data rather
+# than by argument.  It does not undo the nine controlled fights it does describe; it bounds them.
+#
+# CONFOUNDS, STATED BEFORE ANYONE READS TOO MUCH INTO "1 vs 3 ENEMY HEROES".  The two fights also
+# differ in his garrison (83,600 in thirds vs 123,570 at 50/20/30), in my composition (250/100/150
+# vs 300/200/0), and in my own hero count (none vs three).  Enemy hero count is the most
+# interesting difference but it is NOT isolated, which is exactly what the next test fixes.
+# Also note this march had NO ARCHERS while Yang held the archer slot: his Avalanche collapsed to
+# 1 as the scope gate predicts, but ICE ZONE FIRED 41 TIMES FOR 686 KILLS with no archers on the
+# board.  Consistent with the Terry all-infantry report where Yang books kills without archers,
+# and still unexplained -- Ice Zone's tooltip says "Yang's ARCHERS".
+#
+# CONSEQUENCE FOR THE ELO TABLES, STATED PLAINLY.  They apply the calibration to BOTH sides, and
+# every pairing in them has three heroes a side -- the regime where "both" is worst (2.91).  The
+# rankings I reported an hour ago are therefore on weaker ground than I said at the time.  The
+# ORDER may still be usable, since mirror pairings cancel more than a one-sided fight does, but
+# that is now an assumption rather than something measured.  DO NOT treat the Elo numbers as
+# settled until the test below resolves which rule is right.
+
+# --------------------------------- next test, pre-registered: NARSES WITH ALL THREE HEROES
+# THE EXACT CONTINUATION OF THE LONG FEI TEST -- 1 enemy hero to 3, everything else held.
+#     ME: 500 at 250/100/150, ALL THREE SLOTS VACANT.  NARSES: 83,600 (27,866 / 27,877 / 27,877),
+#     LONG FEI + JABEL + ROSA.  Same garrison, same composition, same heroless me as the fight
+#     that produced 16,059 and the one that produced 4,206.
+#     His panel should read infantry 520.9 / 514.3 / 251.4 / 294.6, cavalry 356.1 / 345.5 /
+#     259.4 / 227.3, archer 474.3 / 467.2 / 311.3 / 243.9 -- the Stat Bonuses are percentages, so
+#     the trio's panel from the large-garrison fight should carry over unchanged.  If it does not,
+#     his research or buffs moved and that must be recorded before scoring.
+# PRE-REGISTERED, 3,000 runs, seed 11.  I field no heroes, so "mine only" is the same as no
+# calibration at all, and the two rules separate cleanly:
+#     CALIBRATION ON BOTH     he loses 768 +/- 163  (90% band 516-1,049),  25 rounds
+#     CALIBRATION MINE ONLY   he loses 259 +/- 120  (90% band 83-478),     14 rounds
+# The bands do not overlap.  Read the round count off HIS Ambusher (chance .20) and Jabel's rows.
+# WHAT EACH OUTCOME MEANS.  Near 768 and the two-sided rule survives, and the trio fight's failure
+# is about MY no-archer march or his larger garrison rather than his hero count.  Near 259 and the
+# one-sided rule wins, meaning the correction must never touch an opponent -- which would also
+# retract the conclusion I drew from the Long Fei fight.  ABOVE 1,049 and neither rule works and
+# the enemy-hero channel needs its own treatment entirely.
