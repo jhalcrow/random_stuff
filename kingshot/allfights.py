@@ -123,6 +123,11 @@ FIGHTS = [
     # registered troop-share test.  Victory, Narses wiped, my losses 83 + 151 = 234 (residents 266).
     ('Narses 500 SOPHIA 100/250/150', SOPHIA_PANEL_V2, {'inf': 100, 'cav': 250, 'arch': 150},
      'solo', NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 234),
+    # Sophia with ZERO CAVALRY, so her cav-scoped Terror Deathblow is inert.  1,000 troops because
+    # the calibrated model showed 700 would be a wipe, censoring the observable.  Victory, Narses
+    # wiped, my losses 235 + 435 = 670 (residents 330).
+    ('Narses 1000 SOPHIA no cav', SOPHIA_PANEL_V2, {'inf': 500, 'cav': 0, 'arch': 500},
+     'solo', NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 670),
 ]
 
 
@@ -144,14 +149,15 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
 MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
              'Narses 500 YANG ONLY': ['Yang'], 'Narses 500 CHARLES ONLY': ['Charles'], 'Narses 500 SOPHIA ONLY': ['Sophia'],
-             'Narses 500 SOPHIA 100/250/150': ['Sophia']}
+             'Narses 500 SOPHIA 100/250/150': ['Sophia'],
+             'Narses 1000 SOPHIA no cav': ['Sophia']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
@@ -164,6 +170,7 @@ ENEMY_TROOP_ABILITIES = {
     'Narses 500 CHARLES ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 SOPHIA ONLY': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses 500 SOPHIA 100/250/150': {'inf': 0, 'cav': 0, 'arch': 1},
+    'Narses 1000 SOPHIA no cav': {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},
