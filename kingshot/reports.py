@@ -3063,23 +3063,65 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 #    core handles an absent type and the trio residual is in the hero layer; if it is far off,
 #    the core itself mis-handles composition and that is a bug in a sixty-line loop.
 
-# --------------------------------- ELO, RAW ENGINE, BOTH FIXES, NO CALIBRATION (2026-09-10)
-# Same 7x7 round-robin, ATT_SIZE 2.0, 300 battles a pairing.  Read the ORDER, not the numbers.
-#          1960  ATTACK   Charles / Sophia / Yang  60/40/0
-#          1960  ATTACK   Charles / Sophia / Wee & Woo  55/45/0
-#          1960  ATTACK   Charles / Sophia / Marlin  55/45/0
-#          1960  ATTACK   Charles / Ava / Yang  45/30/25
-#          1960  ATTACK   Charles / Ava / Wee & Woo  40/35/25
-#          1955  ATTACK   Triton / Thrud / Yang  50/20/30
-#          1918  ATTACK   Amadeus / Ava / Wee & Woo  50/20/30
-#          1061  DEFENSE  Charles / Sophia / Wee & Woo  60/15/25
-#          1056  DEFENSE  Charles / Sophia / Wee & Woo  35/65/0
-#          1051  DEFENSE  Long Fei / Sophia / Wee & Woo  40/60/0
-#          1040  DEFENSE  Triton / Sophia / Vivian  60/15/25
-#          1040  DEFENSE  Charles / Jabel / Wee & Woo  60/15/25
-#          1040  DEFENSE  Charles / Ava / Wee & Woo  35/25/40
-#          1040  DEFENSE  Alcar / Sophia / Wee & Woo  40/60/0
-# Against the retired-calibration run: Charles / Sophia / Marlin still leads the attack table and
-# Charles / Sophia / Wee & Woo 60/15/25 the defence table, so the two headline recommendations
-# survive the change from "two fitted constants" to "no fitted constants".  Ratings themselves
-# are soft while the defence-coefficient form is unsettled.
+# --------------------------------- ELO, RAW ENGINE, BOTH FIXES -- FIRST RUN WAS DEGENERATE
+# The rerun at ATT_SIZE 2.0 came back with five attackers tied at exactly 1960 and every defender
+# at ~1040: the Bradley-Terry fit pinned at a separation boundary, as it was before ATT_SIZE
+# existed.  The two fixes shifted the attack/defence balance enough that a 2x attacker now wins
+# essentially every cell, so 2.0 is no longer the informative middle.  A sentence claiming "the
+# two headline recommendations survive" was written against that table and is RETRACTED -- a
+# degenerate fit supports no claim about order.  Re-probed and re-run below.
+
+# --------------------------------- THE SITE'S PER-LEVEL TRACK IS SOMETIMES THE CHANCE
+# Chasing the two "20% residuals" (Ambush and Arcane Pact live at 40 where the in-game tooltip
+# says 50) found a second convention split, this time on the site's side.  For every skill worded
+# "40% chance of ... by 50%" the site's L1-L5 track runs 8/16/24/32/40 -- it is the CHANCE that
+# levels, and the 50% magnitude is fixed.  For Mighty Paragon ("40% chance ... by 50%" as well,
+# but tracked 10/20/30/40/50) it is the MAGNITUDE that levels.  The site is not consistent, so no
+# rule on the numbers alone can tell them apart; the descriptions can.
+# A scan for every chance proc whose track max equals chance x 100 found fourteen candidates.
+# Read against their descriptions:
+#     CHANCE-TRACKS (EV was 16, should be 0.40 x 50 = 20):  Ambush, Arcane Pact, Unrighteous
+#         Strike, Oath of Guardian, Rally Flag (Jabel -- Narses' fights), Trial by Fire, Wild Card
+#     COINCIDENCES ("50% chance of ... 50%": both readings give EV 25):  Hero's Domain, Precision
+#         Shot, Infinite Arsenal, Dynamo, Evil Eye, The Favor -- already right, no flag needed
+#     Boom Boom (Wee & Woo) is not in the crawl at all.
+# heroes.SITE_TRACK_IS_CHANCE carries the seven with their fixed magnitude; apply_site_magnitudes
+# targets (track / 100) x magnitude for them.  All seven verified at EV 20.  The pre-crawl
+# hand-entered values had every one of these right; the crawl made them wrong; and it took a bug
+# hunt that started somewhere else entirely to notice.
+
+# --------------------------------- FINAL SCOREBOARD OF THE FRESH LOOK -- RAW, ALL FIXES, NO CONSTANTS
+# Proc EVs restored, seven chance-tracks flagged, linear defence.  Nothing fitted.
+#     rms log err 0.194   mean|log| 0.146   spread 0.79-1.74   (start of the day: 0.613 / 0.511)
+#     the controlled 500-troop series:
+#         NO HEROES 0.99   YANG 1.08   CHARLES 1.13   SOPHIA 1.01   SOPHIA 100/250/150 0.95
+#         CHARLES+SOPHIA 1.06   + LONG FEI 1.08                      SOPHIA no cav 0.79
+#     the older fights:
+#         mixed atk 10k 0.99   inf+arch 1k 0.94   mixed def 5k 1.11   opponent-2 1.10
+#         Terry 10k archer 1.18   Terry 20k 1.28   NO HEROES 1000 1.21   500 solo 0.81
+#     still out:
+#         Terry 10k all inf 1.74   Narses 1500 pure inf 1.33   pure-arch 5k 0.82   no cav 0.79
+# EVERY REMAINING OUTLIER IS A MARCH WITH A TROOP TYPE MISSING.  That is the composition thread,
+# the one thing never tested heroless, and the pre-registered 300/200/0 and 500/0/500 fights are
+# built to separate it from the hero layer.  The trio fight (2.82, clock right) is the same thread
+# with heroes on top.
+
+# --------------------------------- ELO, RAW ENGINE, ALL FIXES, ATT_SIZE 1.25 (2026-09-10)
+# 7x7 round-robin, 300 battles a pairing.  Non-degenerate: distinct ratings, win rates span the middle.
+#          1929  DEFENSE  Charles / Sophia / Wee & Woo  60/15/25
+#          1881  ATTACK   Charles / Ava / Yang  45/30/25
+#          1861  ATTACK   Charles / Sophia / Yang  60/40/0
+#          1755  ATTACK   Charles / Ava / Wee & Woo  40/35/25
+#          1576  DEFENSE  Charles / Sophia / Wee & Woo  35/65/0
+#          1538  DEFENSE  Charles / Jabel / Wee & Woo  60/15/25
+#          1524  ATTACK   Triton / Thrud / Yang  50/20/30
+#          1432  DEFENSE  Charles / Ava / Wee & Woo  35/25/40
+#          1431  DEFENSE  Triton / Sophia / Vivian  60/15/25
+#          1418  ATTACK   Amadeus / Ava / Wee & Woo  50/20/30
+#          1339  DEFENSE  Long Fei / Sophia / Wee & Woo  40/60/0
+#          1284  ATTACK   Charles / Sophia / Marlin  55/45/0
+#          1080  ATTACK   Charles / Sophia / Wee & Woo  55/45/0
+#           952  DEFENSE  Alcar / Sophia / Wee & Woo  40/60/0
+# Read the ORDER, not the numbers.  Ratings stay soft while the defence-coefficient form is an
+# open split verdict; the attacker-size ratio that makes the matrix informative fell from 2.0
+# to 1.25 with the fixes, which is itself a substantive shift in modelled attack/defence balance.

@@ -29,7 +29,11 @@ SIZE = int(os.environ.get('RALLY_SIZE', MARCH))          # troops per side (the 
 # tied at exactly the same rating is the fit hitting a separation boundary, not a finding).
 # Sizing the attacker so win rates land in the informative middle is the same lesson the 500-troop
 # calibration marches taught: pick the matchup where the observable actually varies.
-ATT_SIZE = float(os.environ.get('ATT_SIZE', '2.0'))     # attacker troops as a multiple of SIZE
+# RE-PROBED after the proc-magnitude and defence-form fixes: 1.0 gives a 23% mean attacker win
+# rate, 1.25 gives 50%, 1.5 gives 83%.  The old 2.0 now saturates (every cell 100%, fit pinned).
+# That the informative ratio fell from 2.0 to 1.25 is itself a result: the bug had inflated
+# defensive procs (Arcane Pact, Mighty Paragon) along with everything else, flattering garrisons.
+ATT_SIZE = float(os.environ.get('ATT_SIZE', '1.25'))     # attacker troops as a multiple of SIZE
 ATT_SCALE = float(os.environ.get('ATT_SCALE', '1.0'))    # attacker stats relative to yours
 DEF_SCALE = float(os.environ.get('DEF_SCALE', '1.0'))    # defender stats relative to yours
 rng = random.Random(2026)

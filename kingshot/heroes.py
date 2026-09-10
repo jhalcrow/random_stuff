@@ -498,6 +498,19 @@ SKILL_ALIAS = {'enchantingdance': 'roseofwar'}
 NO_SITE_ENTRY = []
 
 
+# FOR THESE SKILLS THE SITE'S PER-LEVEL TRACK IS THE TRIGGER CHANCE, NOT THE MAGNITUDE.  Ambush and
+# Arcane Pact read 8/16/24/32/40 on the site against a description of "40% chance of ... by 50%":
+# the level scales the chance and the 50% is fixed.  Mighty Paragon is the other way round
+# (10..50 with a fixed 40% chance), so the site is not consistent and a per-skill flag is the
+# only honest treatment.  Value = the fixed magnitude; EV at max = (track[-1]/100) x magnitude.
+# Every skill worded "40% chance of ... by 50%" on the site carries an 8..40 track: the chance,
+# with the 50% fixed.  Every "50% chance of ... 50%" skill is a coincidence where both readings
+# give the same EV at max level, so it needs no flag.  Verified from the crawl descriptions.
+SITE_TRACK_IS_CHANCE = {'Ambush': 50.0, 'Arcane Pact': 50.0, 'Unrighteous Strike': 50.0,
+                        'Oath of Guardian': 50.0, 'Rally Flag': 50.0, 'Trial by Fire': 50.0,
+                        'Wild Card': 50.0}
+
+
 def apply_site_magnitudes():
     """Scale every modelled skill to the site's MAX-level value, in place.
 
@@ -524,7 +537,10 @@ def apply_site_magnitudes():
             # That single convention break was the "hero over-credit" this project spent a
             # calibration layer papering over.  Target the EV, and scale from `cur` only for the
             # shape of multi-component skills, so it is right whatever convention `cur` was in.
-            target = track[-1] * (proc_uptime(name) if name in PROC_SPEC else 1.0)
+            if name in SITE_TRACK_IS_CHANCE:
+                target = track[-1] / 100.0 * SITE_TRACK_IS_CHANCE[name]
+            else:
+                target = track[-1] * (proc_uptime(name) if name in PROC_SPEC else 1.0)
             f = target / cur
             info['skills'][i] = (name, [(k, round(v * f, 3), sc) for k, v, sc in effs])
 

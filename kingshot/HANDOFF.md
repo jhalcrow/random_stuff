@@ -98,7 +98,9 @@ the division stayed. Every chance/periodic proc went live at `magnitude / uptime
 +250%, Avalanche +400%, Terror Deathblow +400% — while flat auras were untouched.
 
 Fixed at the source (`apply_site_magnitudes` targets `magnitude × uptime` for any skill in
-`PROC_SPEC`). **Raw engine, zero fitted constants:** the original 10k ladder goes from rms 0.287
+`PROC_SPEC`). A second convention split sits on the site's side: for skills worded "40% chance of
+… by 50%" the site's per-level track is the **chance**, not the magnitude — seven skills, flagged
+in `heroes.SITE_TRACK_IS_CHANCE`, including Jabel's Rally Flag. **Raw engine, zero fitted constants:** the original 10k ladder goes from rms 0.287
 to **0.048** (flat: 1.08 / 0.96 / 1.05 / 1.03 / 1.00); all nineteen fights 0.613 → **0.390**,
 better than the calibrated engine's 0.395. The calibration layer stays in `sim.py`, off, as a
 record. `elo.py` / `run.py` run raw.
@@ -108,6 +110,10 @@ defensive channel from the SoS reference's `1/(1−c)` to the Kingshot-cited `(1
 nineteen-fight rms to **0.182** and fixes Charles (0.74 → 1.11) — but takes the 10k ladder from
 0.048 to 0.280 with one powered miss (Charles+Yang 1k, z +3.4). Linear is the default; the
 conflict is recorded at `DEF_RECIP` in `sim.py`; the discriminating test is pre-registered.
+
+**Final raw scoreboard, all fixes, zero fitted constants: rms log err 0.194** (from 0.613 at the
+start of the day). The controlled 500-series lands 0.95–1.13. Every remaining outlier is a march
+with a troop type missing.
 
 **The trio fight (my 3 vs his 3, 300/200/0)** now has the right clock (96 vs ~90 rounds) and a
 loss total still 2.8× high — a clean per-round-output residual. Every single-type march still
