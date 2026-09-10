@@ -2989,3 +2989,97 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # 83,600 with all three heroes, skills 4/5/4, his widgets as above:
 #     CALIBRATION ON BOTH     he loses 766 +/- 163  (90% band 515-1,047),  25 rounds
 #     CALIBRATION MINE ONLY   he loses 259 +/- 120  (90% band 84-475),     14 rounds
+
+
+# =================================================================================================
+# FRESH LOOK (2026-09-10): THE HERO OVER-CREDIT WAS A UNIT-CONVENTION BUG, NOT A MECHANISM
+# =================================================================================================
+# Asked to look again with fresh eyes.  What turned up is a single line, and it accounts for
+# nearly everything the calibration layer was papering over.
+#
+# THE BUG.  heroes.py stores a rolled proc as its EXPECTED VALUE -- Ice Zone is 40, meaning
+# 0.40 x 100% -- and sim._split_effects recovers the live magnitude by dividing by uptime.  That
+# was the convention behind the "six for six" tooltip verification.  apply_site_magnitudes(),
+# added with the kingshotoptimizer crawl, then overwrote every stored value with the site's raw
+# MAGNITUDE (Ice Zone -> 100), and the division by uptime stayed.  Every chance and periodic proc
+# went live at magnitude / uptime:
+#     Ice Zone  +250% (tooltip +100%)    Avalanche  +400% (+100%)    Terror Deathblow  +400% (+200%)
+#     Ambush    +100% (+50%)             Arcane Pact -100% (-50%)    Mighty Paragon    -125% (-50%)
+# Flat auras were untouched, which is exactly why Charles needed almost no correction and Sophia's
+# firing RATES matched while her EFFECT was 2x too large; and why the fitted offensive scale came
+# out at 0.30, i.e. 1/(2 to 4).  Long Fei's values were the exception (raw Lv.4 magnitudes read
+# off Narses' tooltips), which is the mixed convention that hid this.
+#
+# THE FIX.  apply_site_magnitudes() now targets magnitude x uptime for any skill with a PROC_SPEC
+# entry, scaling from the stored value only for the shape of multi-component skills.  Verified:
+# every proc goes live at its tooltip magnitude.  Two 20% residuals noted, not chased -- Ambush and
+# Arcane Pact land at 40 where the in-game tooltip says 50; the site's L5 track reads 40.
+#
+# WHAT IT DOES, RAW, WITH NO FITTED CONSTANTS AT ALL:
+#     the original 10k ladder     rms 0.287 -> 0.048    1.08 / 0.96 / 1.05 / 1.03 / 1.00  -- FLAT
+#     all nineteen fights          rms 0.613 -> 0.390   (the calibrated engine, with two fitted
+#                                                        constants, was 0.395)
+#     Yang only  0.60 -> 1.04     Sophia only  0.45 -> 0.91     Long Fei  0.50 -> 0.95
+# THE CALIBRATION IS RETIRED.  elo.py and run.py run raw.  The layer stays in sim.py, off, as a
+# record.  The "two rules" contradiction is resolved for the fight that produced it: Long Fei
+# scores 0.96 / clock 1.07 with nothing applied to either side.
+#
+# WHAT THE BUG DID NOT EXPLAIN -- CHARLES -- AND THE FORM OF THE DEFENCE COEFFICIENT.
+# Charles has no procs, so he stayed at 0.74.  The candidate is the FORM of the defensive
+# channel: sim.py used the SoS reference's 1/(1 - c), imported over the Kingshot-cited (1 + c)
+# that skill_mod's own docstring quotes.  Tested as a binary form choice, not a magnitude:
+#     LINEAR, all nineteen fights   rms 0.390 -> 0.182   spread 0.80-1.69   17 of 19 improve
+#     Charles 0.74 -> 1.11   Charles+Sophia 0.55 -> 1.04   Long Fei 0.95 -> 1.08
+#     opponent-2 1.32 -> 1.03   Terry 20k 1.58 -> 1.26
+# BUT NOT SETTLED.  The same switch takes the 10k ladder from 0.048 to 0.280, and one rung is a
+# powered miss: Charles+Yang at 1,000 goes 25.9 -> 39.3 against an observed 26 with sd 3.9,
+# z +3.4.  Charles fits linear at 500 troops (his one powered fight, 223, sits inside linear's
+# 207-297 and outside reciprocal's 134-200) and reciprocal at 1k/10k.  Neither form is the
+# mechanism yet.  Linear is the DEFAULT -- larger and better-powered set, and the Kingshot-cited
+# form -- with the conflict recorded at the switch in sim.py.  DEF_RECIP=1 restores the reference.
+#
+# THE TRIO FIGHT, NOW ISOLATED.  With both fixes its CLOCK is right -- 96 rounds against ~90
+# observed, from 207 -- while its loss total stays 2.8x (22,870 against 8,142).  My survival is
+# now modelled correctly there; my per-round OUTPUT is not.  Sensitivity probes say the sim thinks
+# my missing archers barely matter (35,227 -> 33,945) while reality moved 6x between the two
+# matched fights, so the composition thread stays open and is exactly what the heroless
+# composition test below separates.
+#
+# THE SINGLE-TYPE OUTLIERS SURVIVE BOTH FIXES.  Terry 10k all inf 1.69, Narses 1500 pure inf
+# 1.30, Terry 10k all archer 1.12 -- every fight where I fielded one troop type still runs high.
+# Every heroless validation was a three-type march, so the damage core's behaviour with a type
+# ABSENT has never been tested on its own.
+
+# --------------------------------- next tests, pre-registered (raw engine, both fixes, no calibration)
+# 1. DEFENCE FORM.  Charles only, 1,000 at 500/200/300, all other slots Vacant, heroless Narses.
+#        LINEAR      I win, losing 157 (90% band 127-191), ~93 rounds
+#        RECIPROCAL  I win, losing 109 (90% band  84-136), ~92 rounds
+#    Bands do not overlap.  Either answer settles the form on a powered fight at the size where
+#    the two currently disagree.
+# 2. COMPOSITION.  Heroless me vs heroless Narses 83,620, composition varied, nothing else:
+#        300/200/  0   he loses 14,775 +/- 1,334  (12,613-17,073)   ~106 rounds
+#        500/  0/500   he loses 54,527 +/- 9,014  (42,306-71,456)   ~133 rounds   (I win 2%)
+#    (measured baseline 250/100/150: 16,059, sim 16,723.)  If 300/200/0 lands near 14,775 the
+#    core handles an absent type and the trio residual is in the hero layer; if it is far off,
+#    the core itself mis-handles composition and that is a bug in a sixty-line loop.
+
+# --------------------------------- ELO, RAW ENGINE, BOTH FIXES, NO CALIBRATION (2026-09-10)
+# Same 7x7 round-robin, ATT_SIZE 2.0, 300 battles a pairing.  Read the ORDER, not the numbers.
+#          1960  ATTACK   Charles / Sophia / Yang  60/40/0
+#          1960  ATTACK   Charles / Sophia / Wee & Woo  55/45/0
+#          1960  ATTACK   Charles / Sophia / Marlin  55/45/0
+#          1960  ATTACK   Charles / Ava / Yang  45/30/25
+#          1960  ATTACK   Charles / Ava / Wee & Woo  40/35/25
+#          1955  ATTACK   Triton / Thrud / Yang  50/20/30
+#          1918  ATTACK   Amadeus / Ava / Wee & Woo  50/20/30
+#          1061  DEFENSE  Charles / Sophia / Wee & Woo  60/15/25
+#          1056  DEFENSE  Charles / Sophia / Wee & Woo  35/65/0
+#          1051  DEFENSE  Long Fei / Sophia / Wee & Woo  40/60/0
+#          1040  DEFENSE  Triton / Sophia / Vivian  60/15/25
+#          1040  DEFENSE  Charles / Jabel / Wee & Woo  60/15/25
+#          1040  DEFENSE  Charles / Ava / Wee & Woo  35/25/40
+#          1040  DEFENSE  Alcar / Sophia / Wee & Woo  40/60/0
+# Against the retired-calibration run: Charles / Sophia / Marlin still leads the attack table and
+# Charles / Sophia / Wee & Woo 60/15/25 the defence table, so the two headline recommendations
+# survive the change from "two fitted constants" to "no fitted constants".  Ratings themselves
+# are soft while the defence-coefficient form is unsettled.

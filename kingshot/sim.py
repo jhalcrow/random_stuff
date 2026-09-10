@@ -50,7 +50,19 @@ WEAR = float(os.environ.get('WEAR', '0.0001'))
 # skill carries it makes the model far worse, so this defaults off.
 STRIKE_CONTINUE = os.environ.get('STRIKE_CONTINUE', '0') == '1'
 # Defence skills raise defence as 1/(1 - coef) in the reference, not (1 + coef).
-DEF_RECIP = os.environ.get('DEF_RECIP', '1') == '1'
+# LINEAR, NOT RECIPROCAL.  The reciprocal form 1/(1 - c) was imported from the SoS reference
+# (Fight.java:133) over the Kingshot-specific form cited in skill_mod's own docstring, which is
+# (1 + sum/100) per factor.  Tested as a binary form choice, not a fitted magnitude, once the
+# proc-magnitude bug was out of the way: linear takes rms log err over nineteen measured fights
+# from 0.390 to 0.182 and fixes the one hero the proc fix could not touch -- Charles, whose three
+# skills are all flat defensive auras, goes from k 0.74 to 1.11 at 500 troops.
+# NOT SETTLED.  The same switch takes the 10,000-troop ladder from rms 0.048 to 0.280, and one
+# rung is a powered miss: Charles+Yang at 1,000 goes from 25.9 to 39.3 against an observed 26
+# with sd 3.9 (z +3.4).  Charles fits linear at 500 troops and reciprocal at 1k/10k, so neither
+# form is the mechanism yet.  Linear is the default because it wins on the larger, better-powered
+# set and is the Kingshot-cited form; DEF_RECIP=1 restores the reference form.  The discriminating
+# test is pre-registered in reports.py.
+DEF_RECIP = os.environ.get('DEF_RECIP', '0') == '1'
 # Global multiplier on every hero skill magnitude.  PROC_SCALE only ever reached battle(), not
 # battle_mc(), so it was a dead knob on the Monte Carlo path used for all the report fits; this
 # one is applied where the effects are built and therefore reaches both.

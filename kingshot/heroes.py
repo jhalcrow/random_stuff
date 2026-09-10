@@ -515,7 +515,17 @@ def apply_site_magnitudes():
             cur = max(e[1] for e in effs)
             if cur <= 0:
                 continue
-            f = track[-1] / cur
+            # THE SITE GIVES MAGNITUDES; THIS TABLE STORES EXPECTED VALUES FOR PROCS.  A rolled
+            # skill is stored as magnitude x uptime (Ice Zone: 0.40 x 100 = 40) and
+            # sim._split_effects divides by uptime again to recover the live magnitude.  The first
+            # version of this function wrote the site's raw magnitude into that slot, so every
+            # chance and periodic proc went live at magnitude / uptime -- Ice Zone at +250%,
+            # Avalanche at +400%, Terror Deathblow at +400% -- while flat auras were untouched.
+            # That single convention break was the "hero over-credit" this project spent a
+            # calibration layer papering over.  Target the EV, and scale from `cur` only for the
+            # shape of multi-component skills, so it is right whatever convention `cur` was in.
+            target = track[-1] * (proc_uptime(name) if name in PROC_SPEC else 1.0)
+            f = target / cur
             info['skills'][i] = (name, [(k, round(v * f, 3), sc) for k, v, sc in effs])
 
 

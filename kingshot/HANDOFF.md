@@ -88,35 +88,30 @@ a two-digit number at 22% noise. **Size calibration marches for 30+ rounds while
 
 ---
 
-## The hero calibration — status: FAILING
+## The hero calibration — RETIRED: it was a bug
 
-The model over-credits hero **skills**. Measured across nine controlled fights against one
-heroless target, and the correction is **asymmetric**:
+The "hero over-credit" was a unit-convention bug, found on a fresh read of `_split_effects`
+next to `apply_site_magnitudes()`. `heroes.py` stores rolled procs as **expected values**
+(Ice Zone `40` = 0.40 × 100) and `_split_effects` divides by uptime to recover the magnitude;
+the crawl's `apply_site_magnitudes()` overwrote those EVs with the site's raw **magnitudes**, and
+the division stayed. Every chance/periodic proc went live at `magnitude / uptime` — Ice Zone
++250%, Avalanche +400%, Terror Deathblow +400% — while flat auras were untouched.
 
-```
-offensive channels (DMG_UP, OPP_DEF_DOWN)          × 0.30
-defensive channels (TAKEN, DEF_UP, OPP_DMG_DOWN)   × 0.60
-```
+Fixed at the source (`apply_site_magnitudes` targets `magnitude × uptime` for any skill in
+`PROC_SPEC`). **Raw engine, zero fitted constants:** the original 10k ladder goes from rms 0.287
+to **0.048** (flat: 1.08 / 0.96 / 1.05 / 1.03 / 1.00); all nineteen fights 0.613 → **0.390**,
+better than the calibrated engine's 0.395. The calibration layer stays in `sim.py`, off, as a
+record. `elo.py` / `run.py` run raw.
 
-Off by default in `sim.py`; `enable_hero_calibration()` is called by `elo.py` and `run.py` only.
-Over nineteen fights it takes rms log err 0.613 → 0.395. It **validated out of sample twice** — on
-a two-hero march it was not fitted on, and on a fight whose only hero was the *opponent's*.
+**Defence-coefficient form — open, split verdict.** With the proc bug gone, switching the
+defensive channel from the SoS reference's `1/(1−c)` to the Kingshot-cited `(1+c)` takes the
+nineteen-fight rms to **0.182** and fixes Charles (0.74 → 1.11) — but takes the 10k ladder from
+0.048 to 0.280 with one powered miss (Charles+Yang 1k, z +3.4). Linear is the default; the
+conflict is recorded at `DEF_RECIP` in `sim.py`; the discriminating test is pre-registered.
 
-**But it is two constants with no mechanism, and it has now met a case it cannot cover.**
-
-| fight | no calibration | mine only | both sides |
-|---|---|---|---|
-| 1 enemy hero (Long Fei) | 0.48 | 0.48 | **0.93** ✓ |
-| 3 enemy heroes (trio) | 3.62 | **0.91** ✓ | 2.91 |
-
-The two fights demand **opposite rules**. That is evidence it fits a *regime*, not a mechanism.
-Consequently **the Elo tables are on weaker ground than they look**: they apply the correction to
-both sides in the three-heroes-a-side regime, where "both" is worst. Read the order, not the
-numbers.
-
-What has been *ruled out* as the cause of the trio failure: his skill levels (verified on all
-nine), his expedition stats and gear (both in the reported panel), and his widgets (he owns almost
-none). **His side is fully specified from the report, so whatever is wrong is in the model.**
+**The trio fight (my 3 vs his 3, 300/200/0)** now has the right clock (96 vs ~90 rounds) and a
+loss total still 2.8× high — a clean per-round-output residual. Every single-type march still
+runs high. The composition thread is real and untested heroless.
 
 ---
 
@@ -158,25 +153,15 @@ none). **His side is fully specified from the report, so whatever is wrong is in
 
 ---
 
-## The next test, pre-registered
+## The next tests, pre-registered (raw engine, both fixes)
 
-**Me heroless, 500 at 250/100/150, all three slots Vacant. Narses at 83,600 (27,866/27,877/27,877)
-with all three heroes**, skills 4/5/4, widgets as recorded.
+**1. Defence form.** Charles only, 1,000 at 500/200/300, heroless Narses 83,620.
+Linear: **157** losses (127–191). Reciprocal: **109** (84–136). Non-overlapping.
 
-Same garrison, same composition, same heroless me as the fights that produced **16,059** (him
-heroless) and **4,206** (him with Long Fei alone). Isolates enemy hero count, 1 → 3.
+**2. Composition.** Heroless me vs heroless Narses, only the mix changed:
+300/200/0 → he loses **14,775** (12,613–17,073), ~106 rounds; 500/0/500 → **54,527**
+(42,306–71,456). Baseline 250/100/150 measured at 16,059. Far off 14,775 means the damage core
+itself mis-handles an absent type.
 
-His panel should read infantry 520.9 / 514.3 / 251.4 / 294.6, cavalry 356.1 / 345.5 / 259.4 /
-227.3, archer 474.3 / 467.2 / 311.3 / 243.9. **If it does not, his research moved and that must be
-recorded before scoring.**
-
-| rule | he loses | rounds |
-|---|---|---|
-| calibration on **both** | **766** ± 163 (band 515–1,047) | 25 |
-| calibration **mine only** | **259** ± 120 (band 84–475) | 14 |
-
-Bands do not overlap. Read the round count off his Ambusher (chance .20) and Jabel's rows.
-Near 766, the two-sided rule survives and the trio failure is about the march or his larger
-garrison. Near 259, the one-sided rule wins — **which also retracts the conclusion drawn from the
-Long Fei fight**. Above 1,049, neither rule works and the enemy-hero channel needs its own
-treatment.
+The earlier "Narses with all three heroes" test is superseded: the contradiction it was designed
+to resolve was the proc bug.
