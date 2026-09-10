@@ -2955,3 +2955,32 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # The two RULES still separate cleanly whichever widget state turns out to be right -- 766 vs 259,
 # or 587 vs 199 -- because the widget effect is much smaller than the rule difference.  That is
 # what makes the test still worth running before his widget levels are known.
+
+
+# --------------------------------- HIS WIDGET STATE, ANSWERED: THE GAP WAS NOT REAL
+# The player checked: the padlock means the widget is NOT OWNED.  Long Fei has none, Rosa has
+# none, Jabel's is level 1.  So the honest configuration is widget_default=0.0 on his side with a
+# sliver for Jabel -- which is what every fight in this file was ALREADY doing.
+#     TRIO FIGHT, calibrated, by Jabel's widget fraction:
+#         0.00 -> k 2.91 / 171r     0.05 -> 2.89 / 170r     0.10 -> 2.87 / 169r
+#         0.20 -> 2.82 / 166r       1.00 -> 2.50 / 147r  (impossible; shown only as a bound)
+#     Observed 8,142 in ~90 rounds.
+# SO THE WIDGET LEAD IS DEAD, and both of the previous entry's conclusions REVERT to their
+# widgets-off form -- which is to say they stand exactly as first scored:
+#     Long Fei fight   calibrated k 0.93, 62 rounds against ~60 observed.  He owns no widget, so
+#                      the 0.81 figure computed with one was the hypothetical, not the correction.
+#     Trio fight       calibrated k 2.87-2.91, ~170 rounds against ~90.  Still ~3x wrong.
+# The two-rules contradiction therefore stands in full: Long Fei needs the calibration applied to
+# the opponent, the trio needs it not applied, and nothing about his account explains the
+# difference.  Worth noting that the lead was still worth chasing -- it was a real unmodelled term
+# and the only way to find out it was negligible was to ask and then measure it.
+#
+# WHAT THIS RULES OUT, which is the useful part.  The trio fight's ~3x miss is NOT his skill levels
+# (verified on all nine), NOT his expedition stats (they are in the reported panel), NOT his gear
+# (likewise), and NOT his widgets (he has essentially none).  His side is now fully specified from
+# the report, so whatever is wrong is in the MODEL, not in the inputs.
+#
+# PRE-REGISTRATION STANDS AT THE WIDGETS-OFF NUMBERS.  Me heroless 500 (250/100/150) vs Narses
+# 83,600 with all three heroes, skills 4/5/4, his widgets as above:
+#     CALIBRATION ON BOTH     he loses 766 +/- 163  (90% band 515-1,047),  25 rounds
+#     CALIBRATION MINE ONLY   he loses 259 +/- 120  (90% band 84-475),     14 rounds

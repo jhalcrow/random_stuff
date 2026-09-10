@@ -170,6 +170,15 @@ FIGHTS = [
 # Round-trip check: Long Fei at L4 comes out 40 / 20 / 80, exactly his in-game tooltips.
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
+# HIS WIDGETS, confirmed by the player from the Hero Comparison panel: the padlock means the
+# widget is NOT OWNED, not merely un-levelled.  Long Fei and Rosa have none at all; Jabel's is at
+# level 1.  So widget_default=0.0 on his side -- which every fight in this file already used -- is
+# very nearly exact rather than the under-credit it briefly looked like, and Jabel's sliver is
+# below the noise (trio fight k 2.91 at 0.0 against 2.87 at 0.10).
+# RECORDED SO NOBODY "FIXES" IT LATER by switching his widgets on: that would be wrong, and it
+# would have masked the trio fight's real failure.
+NARSES_WIDGETS = {'Long Fei': 0.0, 'Rosa': 0.0, 'Jabel': 0.1}
+
 
 ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses 500 CHARLES+SOPHIA', 'Narses 500 + LONG FEI', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
