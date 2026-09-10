@@ -23,6 +23,12 @@ TE20 = {'inf': 94_555, 'cav': 37_822, 'arch': 56_733}
 # Mail 223407017262625: both sides heroless, no special bonuses, panels far below the with-hero
 # ones (my infantry attack 1102.3 against 2379.0), which is itself a measure of how much of the
 # panel is hero expedition stats.
+# A SECOND heroless report, 2026-09-10, after the player made small research upgrades: lethality
+# and health up 2-4 points on every type, everything else identical.  Narses' panel is byte-for-
+# byte the same as the first heroless report, which re-confirms he is unbuffed and unchanged.
+NOHERO_PANEL_V2 = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1045.2, health=1042.4),
+                   'cav': dict(attack=1080.3, defense=1069.3, lethality=993.9,  health=996.1),
+                   'arch':dict(attack=1083.1, defense=1069.0, lethality=1012.0, health=1006.6)}
 NOHERO_PANEL = {'inf': dict(attack=1102.3, defense=1090.7, lethality=1042.4, health=1040.6),
                 'cav': dict(attack=1080.3, defense=1069.3, lethality=990.8, health=992.6),
                 'arch': dict(attack=1083.1, defense=1069.0, lethality=1009.2, health=1004.1)}
@@ -78,6 +84,13 @@ FIGHTS = [
     # losses measure HIS output.
     ('Narses 1000 NO HEROES', NOHERO_PANEL, {'inf': 500, 'cav': 200, 'arch': 300}, 'solo',
      NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'me', 687),
+    # A DEFEAT, which is why it is scored on HIS losses: I am wiped, so my 500 is censored at the
+    # squad size and measures nothing, while his 16,059 is uncensored and measures MY output --
+    # the exact quantity the round-count work says is over-modelled.  Sized for power: 500 troops
+    # runs ~90 rounds, so both observables average over many rounds (his losses carry 7% noise
+    # against 22% for the 10,000-troop marches).
+    ('Narses 500 NO HEROES', NOHERO_PANEL_V2, {'inf': 250, 'cav': 100, 'arch': 150}, 'solo',
+     NOHERO_ENEMY, {'inf': 27_866, 'cav': 27_867, 'arch': 27_867}, 10, 2, [], 'him', 16_059),
 ]
 
 
@@ -99,18 +112,20 @@ FIGHTS = [
 NARSES_LEVELS = {'Long Fei': 4, 'Jabel': 5, 'Rosa': 4}
 
 
-ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
+ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
                     'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
-MY_HEROES = {'Narses 1000 NO HEROES': []}
+MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': []}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {
     # The heroless report shows his TG2 rows DIRECTLY: one cavalry ability (Ambusher, 25 triggers)
     # and one archer (7), with the infantry section blank on his side.  No longer a guess.
     'Narses 1000 NO HEROES': {'inf': 0, 'cav': 0, 'arch': 1},
+    # Same two rows on his side of the 500 report: cavalry Ambusher 17, one archer ability 9.
+    'Narses 500 NO HEROES':  {'inf': 0, 'cav': 0, 'arch': 1},
     'Narses pure-arch 5k':   {'inf': 0},
     'Narses mixed atk 10k':  {'inf': 0},
     'Narses mixed def 5k':   {'inf': 0},

@@ -2304,25 +2304,78 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # RULE FOR EVERY FUTURE CALIBRATION MARCH: size it so the fight runs 30+ rounds and I still win.
 # Against this Narses that is 400-600 troops, not 10,000.
 
-# --------------------------------- next test, pre-registered: 500 PURE ARCHERS, YANG ONLY
-# Revised DOWN from 1,000 on the power analysis above.  Removes every confound at once:
-#   - Avalanche fires about 9 times (archers present), so the fight is dated by a periodic skill.
-#   - ONE troop type, so any "rolls once per attacking troop type" multiplicity is 1 by
-#     construction -- Ice Zone and Ambush then measure rolls-per-round directly against Avalanche.
-#   - NO infantry, so Unyielding Shield must read ZERO.  A non-zero count refutes the lifetime
-#     gate outright, which the model relies on everywhere.
-#   - 34 rounds and 203 losses, so both observables sit at 8-9% noise rather than 22%.
-# PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11 -- a number that cannot
-# be regenerated is not a pre-registration):
-#     panel must read  archer attack 1823.5, defense 1809.4, lethality 1742.7, health 1737.6
-#                      infantry and cavalry at heroless values (1102.3 / 1090.7 / 1042.4 / 1040.6
-#                      and 1080.3 / 1069.3 / 990.8 / 992.6)
-#     I win 100% of runs, losing 203 +/- 18 of 500 (90% band 174-234) in 34.4 +/- 2.6 rounds
-#     rows:  Avalanche 8.6   Ice Zone 13.8   Ambush 13.8   Unyielding Shield 0
-# WHAT EACH OUTCOME MEANS.  Avalanche at 12 or more is a >3-sigma refutation of the simulator's
-# clock with a SINGLE troop type and a SINGLE hero -- which puts the fault in the core loop, not
-# anywhere in the hero layer.  Avalanche near 9 says the clock is right here, and the 23-sigma
-# Charles+Yang discrepancy is then specific to MIXED marches, which points straight at targeting,
-# the one part of the loop that only does anything when several types are alive.  Ice Zone or
-# Ambush near 41 instead of 14 would mean three rolls per round and settle the per-attack question
-# the other way.  Read off one row each, no fitting, no reliance on the loss total.
+# --------------------------------- SECOND HEROLESS FIGHT (mail 223407017271858, 2026-09-10)
+# Requested at the power-optimal size after the audit above, and it is the first calibration march
+# in this file that was DESIGNED rather than just fought.  500 at 250/100/150, both sides Vacant
+# in all three slots, same 83,600 Narses.
+#     DEFEAT: I am wiped, 176 + 324 = 500.  He loses 5,621 + 10,438 = 16,059 of 83,600
+#     (residents 67,541; 83,600 - 16,059 = 67,541, checks).
+# SCORED ON HIS LOSSES, NOT MINE.  I lost, so my 500 is censored at the squad size and measures
+# nothing at all.  His 16,059 is the uncensored quantity and it measures MY output -- the exact
+# thing the round-count work says is over-modelled.  A defeat is not a wasted report; it just
+# swaps which side's number carries the information.
+#     SIMULATED 16,738 +/- 1,165 AGAINST 16,059 OBSERVED.  k = 1.04, z = -0.6, and the observed
+#     value sits mid-band (90% band 14,872-18,721).  The simulator also calls the defeat, at a 0%
+#     win rate over 4,000 runs.
+# AND THE DESIGN WORKED: relative noise 7%, against 22% for the 10,000-troop marches.  This is the
+# first heroless result strong enough to carry weight on its own.
+# My panel moved slightly (small research upgrades): lethality and health up 2-4 points on every
+# type.  NARSES' PANEL IS BYTE-FOR-BYTE IDENTICAL to the first heroless report, which re-confirms
+# he is unbuffed and unchanged, and makes the two reports a matched pair.
+
+# --------------------------------- THE CLOCK IS RIGHT WITHOUT HEROES
+# The reason to want this fight was the round count, and it delivers one with no lifetime confound
+# at all.  HE KEEPS 67,541 OF 83,600 TROOPS, so his squads never die and his rows run the whole
+# battle.  Reading every row at one roll per round:
+#     row                          triggers      p    implied rounds
+#     HIS Ambusher (cav)                 17   0.20        85    <- no lifetime confound
+#     HIS archer row 1                    9   0.10        90    <- no lifetime confound
+#     mine Ambusher (cav)                18   0.20        90
+#     mine Volley (arch)                  9   0.10        90
+#     mine Assault Lance (cav)           11   0.15        73
+#     mine Howling Wind (arch)           17   0.30        57
+#     mine Unyielding Shield (inf)       66   0.375      176    <- IMPOSSIBLE at one roll/round
+# SIMULATED 90.6 +/- 3.4 ROUNDS.  His two unconfounded rows say 85 and 90.  Four rows agree at
+# 85-90 and the simulator lands on 90.6.
+# THIS IS THE ANSWER THE PURE-ARCHER TEST WAS PRE-REGISTERED TO GET, arriving for free: THE CORE
+# LOOP'S CLOCK IS CORRECT.  So the 23-sigma round-count error on Charles+Yang is NOT in the core
+# loop -- it is in the HERO LAYER, which is where the loss-total ladder pointed before the power
+# audit showed the ladder could not support the claim.  Two independent routes, one conclusion.
+# It also partly rehabilitates "the damage core is correct": that claim now rests on a
+# well-powered loss total (7% noise, z = -0.6) AND an independent clock check, rather than on a
+# single degenerate rate-times-rounds number.  Still narrower than the original claim -- targeting
+# and per-type attrition are only checked in aggregate here.
+#
+# AND IT SETTLES HALF THE PER-ROUND / PER-ATTACK QUESTION, BY INEQUALITY.  Unyielding Shield fired
+# 66 times at chance .375, which needs 176 rounds at one roll per round -- in a fight that lasted
+# about 90.  A trigger count cannot exceed its battle length, and troop lifetime only pushes the
+# implied count DOWN, so this cannot be explained away: proc_taken IS rolled more than once per
+# round, about twice here.  The offensive procs in the same report do not need more than one roll
+# (Assault Lance 73 and Howling Wind 57 both fit inside 90 with normal lifetime attrition), so
+# defensive and offensive procs are NOT rolled the same number of times.  That asymmetry is new,
+# and it is measured rather than assumed.
+
+# --------------------------------- next test, pre-registered: YANG ONLY at 500
+# The pure-archer test is SUPERSEDED -- its main question (is the clock wrong in the core loop?)
+# is answered above.  The live question is now which hero breaks it, and the bisection has to be
+# re-run at the power-optimal size, because the original Charles/Yang rungs were fought at 10,000
+# where the fight ends in four rounds and Avalanche fires once.
+# YANG ONLY, 500 at 250/100/150, same heroless Narses, Infantry and Cavalry slots Vacant.  Yang
+# rather than Charles because the simulator's error is that fights end TOO FAST, and Yang is the
+# hero that shortens them: the sim puts this fight at 46 rounds against 91 with no heroes at all.
+# A HIGH observed trigger count is then an unambiguous refutation, where a low one could always be
+# blamed on troop lifetime.  Charles is the opposite case (the sim stretches his fight to 201
+# rounds) and is the follow-up, not the first test.
+# PRE-REGISTERED, generated from the current engine (4,000 runs, seed 11):
+#     panel must read  archer 1823.5 / 1809.4 / 1745.5 / 1740.1
+#                      infantry 1102.3 / 1090.7 / 1045.2 / 1042.4  (unchanged from this report)
+#                      cavalry  1080.3 / 1069.3 /  993.9 /  996.1  (unchanged)
+#     I win 100% of runs, losing 141 +/- 11 of 500 (90% band 123-160); Narses is wiped, so HIS
+#     losses are censored at 83,600 and carry no information -- mine are the observable this time.
+#     45.6 rounds -> my rows Avalanche 11.4, Ice Zone 18.2, Ambush 18.2
+#                 -> his rows Ambusher 9.1, archer row 4.6
+# WHAT DECIDES IT.  His Ambusher at 20 or more means 100+ rounds against the simulator's 46, and
+# lifetime cannot explain a count that HIGH -- one hero, three procs, and the clock is broken, so
+# the fault is in the proc channel.  Avalanche near 11 with Ambusher near 9 means Yang alone does
+# not break the clock, and the next suspect is Charles' aura channel or the two-hero combination
+# itself.  Either way it is read off one row, and both observables now sit at 8% noise.
