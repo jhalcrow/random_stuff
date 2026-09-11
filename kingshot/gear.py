@@ -23,9 +23,22 @@ ORDER = [('Red T3', 0), ('Red T3', 1), ('Red T3', 2), ('Red T3', 3), ('Red T4', 
          ('Red T4', 2), ('Red T4', 3), ('Red T5', 0), ('Red T5', 1)]
 TIER_RANK = {'Red T3': 3, 'Red T4': 4, 'Red T5': 5}
 
-# your pieces: (troop type, current level)
-PIECES = [('inf', ('Red T4', 0)), ('inf', ('Red T4', 0)), ('cav', ('Red T3', 0)), ('cav', ('Red T3', 0)),
-          ('arch', ('Red T3', 0)), ('arch', ('Red T3', 1))]
+# your pieces: (troop type, current level) -- Governor Profile screenshot, 2026-09-11.
+# Mapping confirmed by the player: crown + necklace = cavalry, helm + pants = infantry,
+# ring + mace = archer.
+PIECES = [('inf', ('Red T4', 1)), ('inf', ('Red T4', 0)), ('cav', ('Red T3', 1)), ('cav', ('Red T3', 1)),
+          ('arch', ('Red T4', 0)), ('arch', ('Red T4', 0))]
+
+# GOVERNOR CHARMS.  Each gear piece holds 3, so 6 per troop type; each charm gives BOTH lethality
+# and health to its type (confirmed by the player), +4% each per level.  Per-level cost from
+# kingshot.net/database/governor-charm, cross-checked against kingshotoptimizer.com/charms.
+# level: (charm guides, charm designs, cumulative stat % per charm)
+CHARM_TABLE = {12: (580, 600, 59.0), 13: (610, 780, 63.0), 14: (645, 960, 67.0),
+               15: (685, 1140, 71.0), 16: (730, 1320, 75.0), 17: (780, 1500, 79.0),
+               18: (835, 1680, 83.0)}
+CHARM_STEP = 4.0
+# your charms, 2026-09-11: infantry all 16, cavalry all 14, archer a mix of 14 and 15
+CHARMS = {'inf': [16]*6, 'cav': [14]*6, 'arch': [14]*3 + [15]*3}
 BUDGET = dict(satin=3_600_000, threads=41_190, av=6_460)
 MAX_STEPS = 4
 RALLY = 1_900_000
