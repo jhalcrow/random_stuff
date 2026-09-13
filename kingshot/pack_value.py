@@ -37,8 +37,11 @@ print()
 opts = [
     ('Truegold x54 -> Stable TG9 (raw Truegold binding)', 54 / TG_RAW * tg9),
     ('Truegold x54 -> TG9, TC TG9 amortised over 3 buildings', 54 / (TC_RAW + 3 * TG_RAW) * 3 * tg9),
-    ('Truegold x54 -> 70 Dust -> tier-I research (46-104/level)', 54 * dust_per_tg / 104 * research_lvl),
-    ('Truegold x54 -> 70 Dust -> tier-VI research (426-1032/level)', 54 * dust_per_tg / 1032 * research_lvl),
+    # player's frontier 2026-09-13: tier I 9/10 (104 Dust/level), tier II 6/10 (125), tier III 0/10
+    # (86 Dust + 2 Tempered).  TG9 buildings are not available until February 2027.
+    ('Truegold x54 -> 70 Dust -> tier-III research (86 + 2 Tempered/level)', 54 * dust_per_tg / 86 * research_lvl),
+    ('Truegold x54 -> 70 Dust -> tier-I level 10 (104/level)', 54 * dust_per_tg / 104 * research_lvl),
+    ('Truegold x54 -> 70 Dust -> tier-II level 7 (125/level)', 54 * dust_per_tg / 125 * research_lvl),
     ('Charm Guide x48', 48 / g_charm * charm),
     ('Charm Design x48', 48 / d_charm * charm),
     ("Artisan's Vision x48", 48 / av * star),
@@ -46,4 +49,4 @@ opts = [
     ('Gilded Threads x240', 240 / threads * star),
 ]
 for name, v in opts:
-    print(f'  {name:62s} {v:6.2f}   ({v/charm:5.2f} charm levels)')
+    print(f'  {name:70s} {v:6.2f}   ({v/charm:5.2f} charm levels)')
