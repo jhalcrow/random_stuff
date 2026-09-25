@@ -1,0 +1,144 @@
+# What to watch and what counts as a hit.
+#
+# Source kinds:
+#   feed             RSS/Atom feed; every post is an item.
+#   page             A web page; every visible line of text is an item, or every
+#                    element matching `selector`. `render`: auto (plain HTTP,
+#                    browser if blocked; the default), http, or browser.
+#   cityhive_search  A City Hive store (the "Powered by City Hive" shops). Runs a
+#                    site search for each of `search_terms` and reads product
+#                    names. Needs the browser (they sit behind Cloudflare).
+#   lightspeed       A Lightspeed eCom category URL ending in ?format=json.
+#
+# `match` limits which keyword groups apply to a source (default: all of them).
+# Search results and product listings (`inventory`) match `bottles` only.
+# Inventory items alert again when they come back after being gone for
+# `realert_after_hours`. Announcements alert once.
+
+realert_after_hours: 24
+failure_alert_after: 4      # consecutive failed runs before a "source broken" alert
+
+keywords:
+  announcements:
+    - '\ballocat(ed|ion|ions)\b'
+    - '\braffles?\b'
+    - '\blotter(y|ies)\b'
+    - '\bbourbon (club|society|chasers?)\b'
+    - '\bwhiske?y (club|society)\b'
+    - '\bBTAC\b'
+    - '\bantique collection\b'
+    - '\b(limited|annual|fall|holiday) release\b'
+  bottles:
+    - '\b(pappy|van winkle)\b'
+    - '\bWeller\b'                              # W.L. Weller, William Larue Weller
+    - '\bBlanton'
+    - '\bE\.?\s?H\.?\s+Taylor\b'
+    - '\bStagg\b'
+    - '\bThomas H\.? Handy\b'
+    - '\bSazerac 18\b'
+    - '\bEagle Rare 1[07]\b|\bEagle Rare\b.{0,20}\b17\b'
+    - '\bBirthday Bourbon\b'
+    - '\bKing of Kentucky\b'
+    - '\bMichter.{0,15}\b(10|20|25)\b|\bMichter.{0,25}(toasted|celebration)\b'
+    - '\bFour Roses\b.{0,30}\bLimited\b'
+    - '\bParker.?s Heritage\b'
+    - '\bElijah Craig\b.{0,20}\b(18|23)\b'
+    - '\bHeaven Hill Heritage\b'
+    - '\bOld Fitzgerald\b'
+    - '\bRock Hill Farms\b'
+    - '\bWillett Family Estate\b'
+    - '\bMaster.?s Keep\b'
+    - '\bRussell.?s Reserve\b.{0,20}\b(13|15)\b'
+    - '\bOrphan Barrel\b'
+  # Uncomment to hear about every store barrel pick too (noisy):
+  # store_picks:
+  #   - '\b(store|barrel|private) (pick|select|selection)\b'
+
+# Product listings matching any of these are ignored (merch, cigars, glassware).
+exclude:
+  - '\bcigars?\b|\b(churchill|robusto|torpedo|toro|corona)\b'
+  - '\b(glass(es)?|glencairn|decanter set|t-?shirt|hat|hoodie|book|gift card)\b'
+
+# Site searches run on each City Hive store. One search can catch several
+# bottles ("weller" finds W.L. Weller and William Larue Weller).
+search_terms:
+  - van winkle
+  - weller
+  - blanton
+  - taylor
+  - stagg
+  - eagle rare
+  - birthday bourbon
+  - king of kentucky
+  - michter
+  - handy
+
+stores:
+  - name: Tower Beer, Wine & Spirits
+    area: Buckhead / Doraville
+    sources:
+      - kind: cityhive_search
+        base: https://www.towerwinespirits.com
+      - kind: page
+        url: https://www.towerwinespirits.com/events
+        render: browser
+
+  - name: Green's Beverages
+    area: Ponce / Buford Hwy
+    sources:
+      - kind: cityhive_search
+        base: https://greensbeverages.com
+
+  - name: Mac's Beer & Wine
+    area: Midtown
+    sources:
+      - kind: cityhive_search
+        base: https://macsbeerandwine.com
+
+  - name: Brookhaven Bottle Shop
+    area: Brookhaven
+    sources:
+      - kind: cityhive_search
+        base: https://brookhavenbottleshop.com
+
+  - name: MetroBottle
+    area: Atlanta
+    sources:
+      - kind: cityhive_search
+        base: https://metrobottle.com
+      - kind: page
+        url: https://metrobottle.com/pages/bourbonclub
+        render: browser
+        match: [announcements]
+
+  - name: Corners Fine Wine & Spirits
+    area: Peachtree Corners
+    sources:
+      - kind: feed
+        url: https://www.cornersatl.com/feed/
+
+  - name: Ansley Wine Merchants
+    area: Ansley Park
+    sources:
+      - kind: lightspeed
+        url: https://ansley-wine-merchants.shoplightspeed.com/spirits/whiskies/bourbon/?format=json&sort=newest&limit=100
+      - kind: lightspeed
+        url: https://ansley-wine-merchants.shoplightspeed.com/spirits/whiskies/rye/?format=json&sort=newest&limit=100
+
+  - name: Holeman & Finch Bottle Shop
+    area: Buckhead
+    sources:
+      - kind: page
+        url: https://www.hfbottleshop.com/
+
+  - name: Corks & Caps
+    area: Chastain Park
+    sources:
+      - kind: page
+        url: https://corkscaps.com/
+
+  - name: Sherlock's
+    area: Marietta / Decatur / Buckhead
+    sources:
+      - kind: page
+        url: https://sherlocks.com/events/

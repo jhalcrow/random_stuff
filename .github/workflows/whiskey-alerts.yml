@@ -1,0 +1,80 @@
+name: whiskey-alerts
+
+# Checks Atlanta liquor stores for allocated-whiskey news (see whiskey_alerts/).
+# Scheduled workflows only run from the default branch.
+on:
+  schedule:
+    - cron: '23 11-23/2 * * *'   # every 2h, 7am-7pm Eastern (EDT)
+    - cron: '23 1 * * *'         # and 9pm Eastern
+  workflow_dispatch:
+    inputs:
+      test_notify:
+        description: 'Only send a test notification'
+        type: boolean
+        default: false
+
+concurrency:
+  group: whiskey-alerts
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: whiskey_alerts
+    env:
+      WHISKEY_STATE: ${{ github.workspace }}/whiskey_alerts/state.json
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      NTFY_SERVER: ${{ secrets.NTFY_SERVER }}
+      NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
+      PUSHOVER_TOKEN: ${{ secrets.PUSHOVER_TOKEN }}
+      PUSHOVER_USER: ${{ secrets.PUSHOVER_USER }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: whiskey_alerts/requirements.txt
+
+      - run: pip install -r requirements.txt
+
+      - name: Test notification
+        if: inputs.test_notify
+        run: python watch.py --test-notify
+
+      - run: python -m unittest test_watch
+        if: ${{ !inputs.test_notify }}
+
+      - run: python -m playwright install --with-deps chromium
+        if: ${{ !inputs.test_notify }}
+
+      # What earlier runs saw lives in the Actions cache. Each run saves a new
+      # entry; restore picks the newest. Losing it only costs one
+      # "Now watching" baseline message.
+      - uses: actions/cache/restore@v4
+        if: ${{ !inputs.test_notify }}
+        with:
+          path: whiskey_alerts/state.json
+          key: whiskey-state-${{ github.run_id }}
+          restore-keys: whiskey-state-
+
+      - run: python watch.py -v
+        if: ${{ !inputs.test_notify }}
+
+      - uses: actions/cache/save@v4
+        if: ${{ always() && !inputs.test_notify && hashFiles('whiskey_alerts/state.json') != '' }}
+        with:
+          path: whiskey_alerts/state.json
+          key: whiskey-state-${{ github.run_id }}
