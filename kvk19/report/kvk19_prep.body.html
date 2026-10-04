@@ -129,6 +129,22 @@ a { color: var(--us); }
 .rg-mid { position: absolute; top: -2px; bottom: -2px; width: 3px; margin-left: -1.5px; border-radius: 1px; }
 .rg-mid.us { background: var(--us); } .rg-mid.them { background: var(--them); }
 ol.steps { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; font-size: .95rem; }
+.act .tagc { font: 700 1rem var(--f-display); letter-spacing: .03em; }
+.act .tagc.us { color: var(--us); } .act .tagc.them { color: var(--them); }
+.act tr.tot > * { border-top: 2px solid var(--line); font-weight: 700; }
+.barcell { display: flex; align-items: center; gap: .5rem; min-width: 7rem; }
+.mini { flex: 1; height: .55rem; background: var(--line); border-radius: 3px; overflow: hidden; min-width: 3rem; }
+.mini-bar { display: block; height: 100%; }
+.mini-bar.us { background: var(--us); } .mini-bar.them { background: var(--them); }
+@media (max-width: 30rem) {
+  .cmp td .note { display: block; }
+  .barcell { min-width: 4.5rem; gap: .35rem; }
+  .mini { min-width: 1.6rem; }
+  .act th, .act td { padding-inline: .45rem; }
+  #actives .cmp tbody th { min-width: 0; }
+  #actives .cmp td.num { white-space: normal; }
+  .act td .note { display: none; }
+}
 .days td { min-width: 8rem; }
 </style>
 <main class="wrap">
@@ -170,6 +186,31 @@ ol.steps { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; font-siz
         <tr><th scope="row">Speedups in reserve, hours</th><td class="num">32k–122k</td><td class="num">51k–185k</td></tr>
         <tr class="key"><th scope="row">Reserve in prep points (central)</th><td class="num">127M</td><td class="num">196M</td></tr>
       </tbody></table></div>
+  </section>
+
+  <section id="actives">
+    <h2>Who is active</h2>
+    <p class="lede">Our top alliances are as active as K365's. The gap is everywhere else: K365's extra active players sit outside its top 6 alliances.</p>
+    <div class="tbl-wrap"><table class="cmp">
+      <thead><tr><th scope="col">Kingdom-wide</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th></tr></thead>
+      <tbody><tr><th scope="row">Governors, all accounts</th><td class="num">3,641–3,659</td><td class="num">2,291–2,357</td></tr><tr><th scope="row">Cities on the map</th><td class="num">1,191</td><td class="num">1,371</td></tr><tr class="key"><th scope="row">Active in the last 30 days</th><td class="num">1,046–1,060 <span class="note">(29%)</span></td><td class="num">1,383–1,418 <span class="note">(60%)</span></td></tr><tr><th scope="row">Active in the last 7 days <span class="tag-unc">Narrow count</span></th><td class="num">172–177</td><td class="num">344–405</td></tr><tr><th scope="row">Active in 30 days, outside the top 6 alliances (approx.)</th><td class="num">~490</td><td class="num">~850</td></tr></tbody></table></div>
+    <ul>
+      <li>We have a large dormant tail: about 2,600 K203 accounts have not been active in the last month. K365 has fewer accounts, but more of them are live.</li>
+      <li>Outside the top 6 alliances, K365 has roughly 850 active players to our 490. That is where the gap in active players comes from.</li>
+      <li>Our 7-day count rose from 114 to 172 over the last week as players returned ahead of KvK. K365's jumped from 242 to 344 on 1 Oct, the day about 100 new accounts arrived.</li>
+    </ul>
+    <h3>Top 6 alliances, members active (15 Sep snapshot)</h3>
+    <p class="note">Size is the alliance's member count; the other columns count members active within 24 hours, 72 hours and 7 days.</p>
+    <h4 class="us-t">K203</h4>
+    <div class="tbl-wrap"><table class="act"><thead><tr><th scope="col">Alliance</th><th scope="col" class="num">Size</th><th scope="col">24h</th><th scope="col" class="num">72h</th><th scope="col" class="num">7d</th></tr></thead><tbody><tr><th scope="row" class="tagc us">ORM</th><td class="num">99</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:98%"></span></span><span class="num">97</span></div></td><td class="num">99</td><td class="num">99</td></tr><tr><th scope="row" class="tagc us">PRO</th><td class="num">98</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:84%"></span></span><span class="num">82</span></div></td><td class="num">91</td><td class="num">96</td></tr><tr><th scope="row" class="tagc us">BR4</th><td class="num">97</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:90%"></span></span><span class="num">87</span></div></td><td class="num">92</td><td class="num">92</td></tr><tr><th scope="row" class="tagc us">SRT</th><td class="num">89</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:82%"></span></span><span class="num">73</span></div></td><td class="num">84</td><td class="num">85</td></tr><tr><th scope="row" class="tagc us">HnG</th><td class="num">88</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:69%"></span></span><span class="num">61</span></div></td><td class="num">78</td><td class="num">87</td></tr><tr><th scope="row" class="tagc us">BR1</th><td class="num">97</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:68%"></span></span><span class="num">66</span></div></td><td class="num">81</td><td class="num">91</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">568</td><td><div class="barcell"><span class="mini"><span class="mini-bar us" style="width:82%"></span></span><span class="num">466</span></div></td><td class="num">525</td><td class="num">550 <span class="note">(97%)</span></td></tr></tbody></table></div>
+    <h4 class="them-t">K365</h4>
+    <div class="tbl-wrap"><table class="act"><thead><tr><th scope="col">Alliance</th><th scope="col" class="num">Size</th><th scope="col">24h</th><th scope="col" class="num">72h</th><th scope="col" class="num">7d</th></tr></thead><tbody><tr><th scope="row" class="tagc them">LTR</th><td class="num">98</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:96%"></span></span><span class="num">94</span></div></td><td class="num">96</td><td class="num">96</td></tr><tr><th scope="row" class="tagc them">AOS</th><td class="num">99</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:99%"></span></span><span class="num">98</span></div></td><td class="num">99</td><td class="num">99</td></tr><tr><th scope="row" class="tagc them">ORG</th><td class="num">99</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:95%"></span></span><span class="num">94</span></div></td><td class="num">97</td><td class="num">98</td></tr><tr><th scope="row" class="tagc them">SCC</th><td class="num">95</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:87%"></span></span><span class="num">83</span></div></td><td class="num">91</td><td class="num">94</td></tr><tr><th scope="row" class="tagc them">WYW</th><td class="num">92</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:59%"></span></span><span class="num">54</span></div></td><td class="num">67</td><td class="num">72</td></tr><tr><th scope="row" class="tagc them">SDH</th><td class="num">84</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:61%"></span></span><span class="num">51</span></div></td><td class="num">70</td><td class="num">80</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">567</td><td><div class="barcell"><span class="mini"><span class="mini-bar them" style="width:84%"></span></span><span class="num">474</span></div></td><td class="num">520</td><td class="num">539 <span class="note">(95%)</span></td></tr></tbody></table></div>
+    <ul>
+      <li>Our top 6 are slightly more active overall: 97% within 7 days against 95%.</li>
+      <li>K365's top four log in more often day to day: PRO, BR4 and SRT trail LTR, AOS and ORG on 24-hour activity.</li>
+      <li>Further down, HnG and BR1 are more active than WYW and SDH.</li>
+    </ul>
+    <p class="note">The 7-day counts cannot be ordinary logins: our top 6 alone had about 550 members active within 7 days in the 15 Sep snapshot. Read them as a trend only. Alliance activity is the newest per-member data available, from 15 Sep.</p>
   </section>
 
   <section id="growth">

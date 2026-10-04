@@ -68,6 +68,57 @@ growth_svg = (f'<svg class="svgchart" viewBox="0 0 {W} {H}" role="img" aria-labe
               f'<text class="lbl-them" x="{pt[-1][0] + 6:.1f}" y="{pt[-1][1] - 4:.1f}">K365</text></svg>')
 
 # ---------- prep rating rank history ----------
+# ---------- who is active ----------
+from report_common import load
+kg = {k: load(f"external/kingshotguide_{k}.json")["series"] for k in ("203", "365")}
+
+
+def span_fmt(a, z):
+    return f"{a:,}" if a == z else f"{min(a, z):,}–{max(a, z):,}"
+
+
+def act_kingdom_rows():
+    rows = []
+    gu, gt = kg["203"][-1], kg["365"][-1]
+    for lbl, fu, ft, note in (
+        ("Governors, all accounts", (gu["playerCount"], ku["player_count"]), (gt["playerCount"], kt["player_count"]), ""),
+        ("Cities on the map", (ku["located"],) * 2, (kt["located"],) * 2, ""),
+    ):
+        rows.append(f'<tr><th scope="row">{lbl}{note}</th><td class="num">{span_fmt(*fu)}</td><td class="num">{span_fmt(*ft)}</td></tr>')
+    pu = 100 * ku["active_30d"] / ku["player_count"]
+    pt_ = 100 * kt["active_30d"] / kt["player_count"]
+    rows.append(f'<tr class="key"><th scope="row">Active in the last 30 days</th><td class="num">{span_fmt(gu["active30d"], ku["active_30d"])} <span class="note">({pu:.0f}%)</span></td>'
+                f'<td class="num">{span_fmt(gt["active30d"], kt["active_30d"])} <span class="note">({pt_:.0f}%)</span></td></tr>')
+    rows.append(f'<tr><th scope="row">Active in the last 7 days {unconf("Narrow count")}</th><td class="num">{span_fmt(gu["active7d"], ku["active_7d"])}</td><td class="num">{span_fmt(gt["active7d"], kt["active_7d"])}</td></tr>')
+    ou = ku["active_30d"] - MU["top6_totals"]["members"]
+    ot = kt["active_30d"] - MT["top6_totals"]["members"]
+    rows.append(f'<tr><th scope="row">Active in 30 days, outside the top 6 alliances (approx.)</th><td class="num">~{round(ou, -1):,}</td><td class="num">~{round(ot, -1):,}</td></tr>')
+    return "".join(rows), ou, ot
+
+
+act_rows_html, out_u, out_t = act_kingdom_rows()
+dormant_u = ku["player_count"] - ku["active_30d"]
+
+
+def top6_table(mk, side):
+    body = ""
+    for a in mk["top_alliances"]:
+        s, n = a["vs_snapshot"], a["members"]
+        body += (f'<tr><th scope="row" class="tagc {side}">{a["tag"]}</th><td class="num">{n}</td>'
+                 f'<td><div class="barcell"><span class="mini"><span class="mini-bar {side}" style="width:{100 * s["active_24h"] / n:.0f}%"></span></span><span class="num">{s["active_24h"]}</span></div></td>'
+                 f'<td class="num">{s["active_72h"]}</td><td class="num">{s["active_7d"]}</td></tr>')
+    t = mk["top6_totals"]
+    s, n = t["vs_snapshot"], t["members"]
+    body += (f'<tr class="tot"><th scope="row">Top 6</th><td class="num">{n}</td>'
+             f'<td><div class="barcell"><span class="mini"><span class="mini-bar {side}" style="width:{100 * s["active_24h"] / n:.0f}%"></span></span><span class="num">{s["active_24h"]}</span></div></td>'
+             f'<td class="num">{s["active_72h"]}</td><td class="num">{s["active_7d"]} <span class="note">({s["active_7d_pct"]:.0f}%)</span></td></tr>')
+    return (f'<div class="tbl-wrap"><table class="act"><thead><tr><th scope="col">Alliance</th><th scope="col" class="num">Size</th>'
+            f'<th scope="col">24h</th><th scope="col" class="num">72h</th><th scope="col" class="num">7d</th></tr></thead><tbody>{body}</tbody></table></div>')
+
+
+a7u = [r["active7d"] for r in kg["203"]]
+a7t = [r["active7d"] for r in kg["365"]]
+
 rh = {k: {r["kvk"]: r["rank_prep"] for r in opt[k]["rating_history"]} for k in ("203", "365")}
 kvks = [k for k in range(11, 19) if k in rh["203"] and k in rh["365"]]
 better = sum(rh["203"][k] < rh["365"][k] for k in kvks)
@@ -186,6 +237,31 @@ BODY = f'''<main class="wrap">
       </tbody></table></div>
   </section>
 
+  <section id="actives">
+    <h2>Who is active</h2>
+    <p class="lede">Our top alliances are as active as K365's. The gap is everywhere else: K365's extra active players sit outside its top 6 alliances.</p>
+    <div class="tbl-wrap"><table class="cmp">
+      <thead><tr><th scope="col">Kingdom-wide</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th></tr></thead>
+      <tbody>{act_rows_html}</tbody></table></div>
+    <ul>
+      <li>We have a large dormant tail: about {round(dormant_u, -2):,} K203 accounts have not been active in the last month. K365 has fewer accounts, but more of them are live.</li>
+      <li>Outside the top 6 alliances, K365 has roughly {round(out_t, -1):,} active players to our {round(out_u, -1):,}. That is where the gap in active players comes from.</li>
+      <li>Our 7-day count rose from {a7u[0]} to {a7u[-1]} over the last week as players returned ahead of KvK. K365's jumped from {a7t[2]} to {a7t[3]} on 1 Oct, the day about 100 new accounts arrived.</li>
+    </ul>
+    <h3>Top 6 alliances, members active ({SNAP} snapshot)</h3>
+    <p class="note">Size is the alliance's member count; the other columns count members active within 24 hours, 72 hours and 7 days.</p>
+    <h4 class="us-t">K203</h4>
+    {top6_table(MU, "us")}
+    <h4 class="them-t">K365</h4>
+    {top6_table(MT, "them")}
+    <ul>
+      <li>Our top 6 are slightly more active overall: {MU["top6_totals"]["vs_snapshot"]["active_7d_pct"]:.0f}% within 7 days against {MT["top6_totals"]["vs_snapshot"]["active_7d_pct"]:.0f}%.</li>
+      <li>K365's top four log in more often day to day: PRO, BR4 and SRT trail LTR, AOS and ORG on 24-hour activity.</li>
+      <li>Further down, HnG and BR1 are more active than WYW and SDH.</li>
+    </ul>
+    <p class="note">The 7-day counts cannot be ordinary logins: our top 6 alone had about {MU["top6_totals"]["vs_snapshot"]["active_7d"]} members active within 7 days in the {SNAP} snapshot. Read them as a trend only. Alliance activity is the newest per-member data available, from {SNAP}.</p>
+  </section>
+
   <section id="growth">
     <h2>Growth since KvK 18</h2>
     <p class="lede">Power added since 15 Sep. A kingdom that is saving for prep grows slowly between KvKs.</p>
@@ -242,6 +318,22 @@ EXTRA = """
 .rg-mid { position: absolute; top: -2px; bottom: -2px; width: 3px; margin-left: -1.5px; border-radius: 1px; }
 .rg-mid.us { background: var(--us); } .rg-mid.them { background: var(--them); }
 ol.steps { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; font-size: .95rem; }
+.act .tagc { font: 700 1rem var(--f-display); letter-spacing: .03em; }
+.act .tagc.us { color: var(--us); } .act .tagc.them { color: var(--them); }
+.act tr.tot > * { border-top: 2px solid var(--line); font-weight: 700; }
+.barcell { display: flex; align-items: center; gap: .5rem; min-width: 7rem; }
+.mini { flex: 1; height: .55rem; background: var(--line); border-radius: 3px; overflow: hidden; min-width: 3rem; }
+.mini-bar { display: block; height: 100%; }
+.mini-bar.us { background: var(--us); } .mini-bar.them { background: var(--them); }
+@media (max-width: 30rem) {
+  .cmp td .note { display: block; }
+  .barcell { min-width: 4.5rem; gap: .35rem; }
+  .mini { min-width: 1.6rem; }
+  .act th, .act td { padding-inline: .45rem; }
+  #actives .cmp tbody th { min-width: 0; }
+  #actives .cmp td.num { white-space: normal; }
+  .act td .note { display: none; }
+}
 .days td { min-width: 8rem; }
 """
 
