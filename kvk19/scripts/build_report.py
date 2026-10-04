@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 known = json.loads((ROOT / "data/known_data.json").read_text())
 mp = json.loads((ROOT / "data/mightpulse_summary.json").read_text())
+simlev = json.loads((ROOT / "data/sim_levers.json").read_text())
 K = known["kingdoms"]
 US, THEM = K["203"], K["365"]
 MU, MT = mp["kingdoms"]["203"], mp["kingdoms"]["365"]
@@ -24,7 +25,7 @@ PULLED = f"{pulled.day} {pulled:%b %Y}"
 # Projections (judgement estimates, % chance K203 wins the phase)
 PROJ = {
     "prep": {"before": (50, 55), "after": (42, 52)},
-    "castle": {"before": (45, 55), "after": (45, 55)},
+    "castle": {"before": (45, 55), "after": (47, 57)},
 }
 
 
@@ -145,6 +146,21 @@ mt_cap = datetime.fromisoformat(mtu["captured_at"])
 MT_CAP = f"{mt_cap.day} {mt_cap:%b}"
 
 
+# ---------- battle-model levers ----------
+lev_max = 4.0
+lev_rows = "".join(
+    f'<div class="lev-row{" lev-q" if "attack" in c["change"] or "Truegold" in c["change"] else ""}">'
+    f'<span class="lev-lbl">{escape(c["change"])}</span>'
+    f'<span class="pb-track"><span class="pb-bar lev" style="width:{100 * c["kill_ratio"] / lev_max:.1f}%"></span></span>'
+    f'<span class="pb-val">{c["kill_ratio"]:.1f} : 1</span></div>'
+    for c in simlev["cases"])
+lev_axis = "".join(f'<span style="left:{100 * t / lev_max:.1f}%">{t:g}</span>' for t in (0, 1, 2, 3, 4))
+lev_chart = f'<div class="lev">{lev_rows}<div class="lev-axis"><div class="pb-axis-in">{lev_axis}</div></div></div>'
+HL = simlev["hero"]
+c2x = next(c for c in simlev["cases"] if c["change"] == "2x troops")["kill_ratio"]
+c20 = next(c for c in simlev["cases"] if c["change"] == "+20% attack and lethality")["kill_ratio"]
+
+
 # ---------- KvK records ----------
 def record_strip(k):
     cells = []
@@ -253,10 +269,12 @@ prep_why = f'''<h4>Against us</h4>
 <p class="note">Net: K365's growth and wider player base outweigh our hero depth, but only just. The growth figures could not be confirmed as current {unconf()}; if they are stale, prep is closer to even.</p>'''
 
 castle_why = f'''<ul>
-<li>For us: our top 5 players carry {100 * (us_top5 / th_top5 - 1):.0f}% more real power, and ORM, PRO and BR4 all sit at Town Centre 70.</li>
+<li>For us: we lead Mystic Trial, the best fresh measure of combat quality, at every depth of the top 100. In the battle model, quality outweighs troop count.</li>
+<li>Also for us: our top 5 players carry {100 * (us_top5 / th_top5 - 1):.0f}% more real power, and ORM, PRO and BR4 all sit at Town Centre 70.</li>
 <li>Against us: K365 leads real power at each of the top 5 alliance ranks ({th_ally5:.1f}B vs {us_ally5:.1f}B), and SCC out-sizes SRT by {(MT["top_alliances"][3]["total_power"] - MU["top_alliances"][3]["total_power"]) / 1e9:.1f}B.</li>
 <li>Prep and castle results line up only about 31% of the time, so a prep loss would not decide castle day.</li>
-</ul>'''
+</ul>
+<p class="note">Moved up from 45–55% on the Mystic Trial lead. Kept close to even because K365's alliance real power, also a quality measure, is higher.</p>'''
 
 recs = [
     ("Bank speedups and resources for prep",
@@ -289,6 +307,7 @@ caveats = [
     "K203's city and alliance counts come from a snapshot 17 days old.",
     "The castle date is an estimate from the four-week cycle (23 May, 20 Jun, 18 Jul, 15 Aug, 12 Sep).",
     f"Mystic Trial, research, hero, pet and troop figures are sums over each kingdom's top 100 leaderboard, captured {MT_CAP}.",
+    "Battle-model figures come from our alliance's simulator in heroless, otherwise identical fights. It does not simulate Mystic Trial itself; it shows which stats decide combat.",
     "Projections are judgement estimates, not model output.",
 ]
 caveats_html = "\n".join(f"<li>{escape(c)}</li>" for c in caveats)
@@ -439,6 +458,19 @@ ol.recs p {{ color: var(--fg); }}
 .tbl-wrap.flat {{ border: 0; }}
 .verdict .v-main {{ border-color: var(--us); }}
 .projs {{ grid-template-columns: 1fr; }}
+.why {{ margin-top: 1.25rem; }}
+.why > p {{ max-width: 70ch; }}
+.lev {{ display: grid; gap: .45rem; }}
+.lev-row, .lev-axis {{ display: grid; grid-template-columns: 13rem 1fr 3.6rem; gap: .2rem .6rem; align-items: center; }}
+@media (max-width: 36rem) {{
+  .lev-row, .lev-axis {{ grid-template-columns: 1fr 3.6rem; }}
+  .lev-lbl {{ grid-column: 1 / -1; }}
+  .lev-axis .pb-axis-in {{ grid-column: 1; }}
+}}
+.lev-lbl {{ font-size: .88rem; }}
+.pb-bar.lev {{ background: var(--muted); }}
+.lev-q .pb-bar.lev {{ background: var(--us); }}
+.lev-q .lev-lbl {{ font-weight: 600; }}
 .caveats {{ font-size: .92rem; color: var(--muted); }}
 .caveats ul {{ max-width: 75ch; }}
 footer {{ font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }}
@@ -475,12 +507,19 @@ footer {{ font-size: .82rem; color: var(--muted); border-top: 1px solid var(--li
 
   <section id="mystic">
     <h2>Mystic Trial</h2>
-    <p class="lede">Mystic Trial scores reflect hero strength rather than troop count. We lead at every depth of the top 100, and the lead grows further down the rankings.</p>
+    <p class="lede">Mystic Trial is a combat score, so it rewards the things that decide fights: heroes, hero gear, research and troop quality, more than troop count. We lead at every depth of the top 100, and the lead grows further down the rankings.</p>
     <div class="charts">
       <div class="chart"><h3>Average score by rank band</h3>{mystic_chart}</div>
       <div class="chart"><h3>Score at rank</h3><div class="tbl-wrap flat"><table class="matchup">
         <thead><tr><th scope="col">Rank</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
         <tbody>{mystic_ranks}</tbody></table></div></div>
+    </div>
+    <div class="chart why">
+      <h3>Why quality beats quantity in a fight</h3>
+      <p>Our alliance's battle simulator, calibrated on real battle reports, shows that troop count only counts under a square root, while attack and lethality multiply each other. In an even fight, <strong>+20% attack and lethality wins as decisively as twice the troops</strong> ({c20:.1f} vs {c2x:.1f} enemy losses per own loss).</p>
+      {lev_chart}
+      <p class="note">Enemy losses per own loss when one side of an otherwise identical fight gets the change shown. Troop-count changes in grey, quality changes in colour. No heroes on either side.</p>
+      <p>Heroes are the biggest single multiplier. A maxed Gen 7 hero with full gear adds about <strong>+{HL["hero_attack_defense_pct"]}%</strong> attack and defence and <strong>+{HL["hero_lethality_health_pct"]}%</strong> lethality and health to its troop type, on top of an account total near +{HL["account_attack_pct"]:,}% attack. That roughly doubles the stats of the troops it leads, which is why troop power alone says little about who wins.</p>
     </div>
     <p class="note">K365's #10 scores slightly higher than ours (2,994 vs 2,955), but our top 10 average is higher. Leaderboard captured {MT_CAP}.</p>
   </section>

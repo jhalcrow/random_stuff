@@ -1,0 +1,41 @@
+{
+  "model": "kingshot/sim.py heroless mirror, 144,200 troops at 50/20/30",
+  "cases": [
+    {
+      "change": "+20% troops",
+      "kill_ratio": 1.88,
+      "winner_lost_pct": 53.2
+    },
+    {
+      "change": "+50% troops",
+      "kill_ratio": 2.14,
+      "winner_lost_pct": 46.7
+    },
+    {
+      "change": "2x troops",
+      "kill_ratio": 2.44,
+      "winner_lost_pct": 41.0
+    },
+    {
+      "change": "+20% attack and lethality",
+      "kill_ratio": 2.43,
+      "winner_lost_pct": 41.1
+    },
+    {
+      "change": "+50% attack and lethality",
+      "kill_ratio": 3.77,
+      "winner_lost_pct": 26.5
+    },
+    {
+      "change": "Truegold 8 vs Truegold 5 troops",
+      "kill_ratio": 2.3,
+      "winner_lost_pct": 43.5
+    }
+  ],
+  "hero": {
+    "hero_attack_defense_pct": 851,
+    "hero_lethality_health_pct": 760,
+    "account_attack_pct": 1020,
+    "account_lethality_pct": 952
+  }
+}

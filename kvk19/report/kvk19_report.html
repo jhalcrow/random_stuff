@@ -147,6 +147,19 @@ ol.recs p { color: var(--fg); }
 .tbl-wrap.flat { border: 0; }
 .verdict .v-main { border-color: var(--us); }
 .projs { grid-template-columns: 1fr; }
+.why { margin-top: 1.25rem; }
+.why > p { max-width: 70ch; }
+.lev { display: grid; gap: .45rem; }
+.lev-row, .lev-axis { display: grid; grid-template-columns: 13rem 1fr 3.6rem; gap: .2rem .6rem; align-items: center; }
+@media (max-width: 36rem) {
+  .lev-row, .lev-axis { grid-template-columns: 1fr 3.6rem; }
+  .lev-lbl { grid-column: 1 / -1; }
+  .lev-axis .pb-axis-in { grid-column: 1; }
+}
+.lev-lbl { font-size: .88rem; }
+.pb-bar.lev { background: var(--muted); }
+.lev-q .pb-bar.lev { background: var(--us); }
+.lev-q .lev-lbl { font-weight: 600; }
 .caveats { font-size: .92rem; color: var(--muted); }
 .caveats ul { max-width: 75ch; }
 footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
@@ -170,7 +183,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
     <div class="verdict">
       <div class="v-main"><span class="lbl">Prep phase</span><span class="big num">42–52%</span><span class="lbl">chance K203 wins. Near even, slight lean K365.</span></div>
       <div><span class="lbl">Mystic Trial, top 100</span><span class="big num">+3.3%</span><span class="lbl">K203 ahead, 247,451 to 239,648.</span></div>
-      <div><span class="lbl">Castle day</span><span class="big num">45–55%</span><span class="lbl">chance K203 wins. Even.</span></div>
+      <div><span class="lbl">Castle day</span><span class="big num">47–57%</span><span class="lbl">chance K203 wins. Even.</span></div>
     </div>
   </header>
 
@@ -194,7 +207,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
 
   <section id="mystic">
     <h2>Mystic Trial</h2>
-    <p class="lede">Mystic Trial scores reflect hero strength rather than troop count. We lead at every depth of the top 100, and the lead grows further down the rankings.</p>
+    <p class="lede">Mystic Trial is a combat score, so it rewards the things that decide fights: heroes, hero gear, research and troop quality, more than troop count. We lead at every depth of the top 100, and the lead grows further down the rankings.</p>
     <div class="charts">
       <div class="chart"><h3>Average score by rank band</h3><div class="pb"><div class="pb-row">
   <div class="pb-lbl">1–10</div>
@@ -218,6 +231,13 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
       <div class="chart"><h3>Score at rank</h3><div class="tbl-wrap flat"><table class="matchup">
         <thead><tr><th scope="col">Rank</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
         <tbody><tr><th scope="row">#1</th><td class="num">3,513</td><td class="num">3,533</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">#5</th><td class="num">3,235</td><td class="num">3,126</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#10</th><td class="num">2,955</td><td class="num">2,994</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">#25</th><td class="num">2,683</td><td class="num">2,592</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#50</th><td class="num">2,432</td><td class="num">2,312</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#75</th><td class="num">2,193</td><td class="num">2,123</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#100</th><td class="num">2,076</td><td class="num">2,013</td><td><span class="edge us">K203</span></td></tr></tbody></table></div></div>
+    </div>
+    <div class="chart why">
+      <h3>Why quality beats quantity in a fight</h3>
+      <p>Our alliance's battle simulator, calibrated on real battle reports, shows that troop count only counts under a square root, while attack and lethality multiply each other. In an even fight, <strong>+20% attack and lethality wins as decisively as twice the troops</strong> (2.4 vs 2.4 enemy losses per own loss).</p>
+      <div class="lev"><div class="lev-row"><span class="lev-lbl">+20% troops</span><span class="pb-track"><span class="pb-bar lev" style="width:47.0%"></span></span><span class="pb-val">1.9 : 1</span></div><div class="lev-row"><span class="lev-lbl">+50% troops</span><span class="pb-track"><span class="pb-bar lev" style="width:53.5%"></span></span><span class="pb-val">2.1 : 1</span></div><div class="lev-row"><span class="lev-lbl">2x troops</span><span class="pb-track"><span class="pb-bar lev" style="width:61.0%"></span></span><span class="pb-val">2.4 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">+20% attack and lethality</span><span class="pb-track"><span class="pb-bar lev" style="width:60.8%"></span></span><span class="pb-val">2.4 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">+50% attack and lethality</span><span class="pb-track"><span class="pb-bar lev" style="width:94.2%"></span></span><span class="pb-val">3.8 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">Truegold 8 vs Truegold 5 troops</span><span class="pb-track"><span class="pb-bar lev" style="width:57.5%"></span></span><span class="pb-val">2.3 : 1</span></div><div class="lev-axis"><div class="pb-axis-in"><span style="left:0.0%">0</span><span style="left:25.0%">1</span><span style="left:50.0%">2</span><span style="left:75.0%">3</span><span style="left:100.0%">4</span></div></div></div>
+      <p class="note">Enemy losses per own loss when one side of an otherwise identical fight gets the change shown. Troop-count changes in grey, quality changes in colour. No heroes on either side.</p>
+      <p>Heroes are the biggest single multiplier. A maxed Gen 7 hero with full gear adds about <strong>+851%</strong> attack and defence and <strong>+760%</strong> lethality and health to its troop type, on top of an account total near +1,020% attack. That roughly doubles the stats of the troops it leads, which is why troop power alone says little about who wins.</p>
     </div>
     <p class="note">K365's #10 scores slightly higher than ours (2,994 vs 2,955), but our top 10 average is higher. Leaderboard captured 4 Oct.</p>
   </section>
@@ -399,19 +419,21 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
 <p class="note">Net: K365's growth and wider player base outweigh our hero depth, but only just. The growth figures could not be confirmed as current <span class="tag-unc">Unconfirmed</span>; if they are stale, prep is closer to even.</p>
 </article>
       <article class="proj">
-  <header><h3>Castle day, for reference</h3><p class="proj-range"><span class="num">45–55%</span> <span class="proj-sub">chance K203 wins</span></p></header>
-  <div class="gauge" role="img" aria-label="Previous estimate 45 to 55 percent, revised 45 to 55 percent">
+  <header><h3>Castle day, for reference</h3><p class="proj-range"><span class="num">47–57%</span> <span class="proj-sub">chance K203 wins</span></p></header>
+  <div class="gauge" role="img" aria-label="Previous estimate 45 to 55 percent, revised 47 to 57 percent">
     <span class="g-mid"></span>
     <span class="g-old" style="left:45%;width:10%"></span>
-    <span class="g-new" style="left:45%;width:10%"></span>
+    <span class="g-new" style="left:47%;width:10%"></span>
   </div>
   <div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
   <p class="proj-was">Previous estimate: 45–55%.</p>
   <ul>
-<li>For us: our top 5 players carry 14% more real power, and ORM, PRO and BR4 all sit at Town Centre 70.</li>
+<li>For us: we lead Mystic Trial, the best fresh measure of combat quality, at every depth of the top 100. In the battle model, quality outweighs troop count.</li>
+<li>Also for us: our top 5 players carry 14% more real power, and ORM, PRO and BR4 all sit at Town Centre 70.</li>
 <li>Against us: K365 leads real power at each of the top 5 alliance ranks (61.3B vs 56.1B), and SCC out-sizes SRT by 5.2B.</li>
 <li>Prep and castle results line up only about 31% of the time, so a prep loss would not decide castle day.</li>
 </ul>
+<p class="note">Moved up from 45–55% on the Mystic Trial lead. Kept close to even because K365's alliance real power, also a quality measure, is higher.</p>
 </article>
     </div>
   </section>
@@ -435,6 +457,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
 <li>K203&#x27;s city and alliance counts come from a snapshot 17 days old.</li>
 <li>The castle date is an estimate from the four-week cycle (23 May, 20 Jun, 18 Jul, 15 Aug, 12 Sep).</li>
 <li>Mystic Trial, research, hero, pet and troop figures are sums over each kingdom&#x27;s top 100 leaderboard, captured 4 Oct.</li>
+<li>Battle-model figures come from our alliance&#x27;s simulator in heroless, otherwise identical fights. It does not simulate Mystic Trial itself; it shows which stats decide combat.</li>
 <li>Projections are judgement estimates, not model output.</li></ul>
   </section>
 
