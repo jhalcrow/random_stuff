@@ -1,0 +1,318 @@
+{
+  "source": "StratForge + Kingshot.net, early Oct 2026 (user-verified)",
+  "real_power_definition": "heroes + gear + gems + pets, no troops",
+  "event": {
+    "kvk": 19,
+    "castle_day_estimate": "2026-10-10",
+    "castle_day_confirmed": false,
+    "recent_castle_days": [
+      "2026-05-23",
+      "2026-06-20",
+      "2026-07-18",
+      "2026-08-15",
+      "2026-09-12"
+    ],
+    "next_transfer_window": "2026-11-08",
+    "gen8_reaches_k365_bracket": "2026-11-09"
+  },
+  "kingdoms": {
+    "203": {
+      "role": "us",
+      "bracket": "K116-235",
+      "age_days_approx": 514,
+      "stage": "Advanced Truegold / Gen 7",
+      "real_power_b": 2.8,
+      "top10_total_b": 8.3,
+      "cities": 1204,
+      "alliances": 385,
+      "cities_snapshot_age_days": 17,
+      "top_alliances": [
+        {
+          "tag": "ORM",
+          "real_power_b": 12.7,
+          "members": 93
+        },
+        {
+          "tag": "PRO",
+          "real_power_b": 12.6,
+          "members": 92
+        },
+        {
+          "tag": "BR4",
+          "real_power_b": 12.4,
+          "members": 98
+        },
+        {
+          "tag": "SRT",
+          "real_power_b": 10.1,
+          "members": 89
+        },
+        {
+          "tag": "BR1",
+          "real_power_b": 8.3,
+          "members": 98
+        }
+      ],
+      "top5_player_power_m": [
+        381,
+        372,
+        358,
+        341,
+        340
+      ],
+      "kvk_history": [
+        {
+          "seq": 1,
+          "opponent": 195,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 2,
+          "opponent": 176,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 3,
+          "opponent": 177,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 4,
+          "opponent": 224,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 5,
+          "opponent": 190,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 6,
+          "opponent": 263,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 7,
+          "opponent": 195,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 8,
+          "opponent": 249,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 9,
+          "opponent": 184,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 10,
+          "opponent": 187,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 11,
+          "opponent": 222,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 12,
+          "opponent": 270,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 13,
+          "opponent": 156,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 14,
+          "opponent": 194,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 15,
+          "opponent": 151,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 16,
+          "opponent": 100,
+          "prep": "W",
+          "castle": "W"
+        }
+      ],
+      "prep_record": "16-0",
+      "castle_record": "11-5"
+    },
+    "365": {
+      "role": "opponent",
+      "bracket": "K236-417",
+      "age_days_approx": 488,
+      "stage": "Advanced Truegold / Gen 7",
+      "real_power_b": 2.7,
+      "top10_total_b": 8.4,
+      "cities": 1375,
+      "alliances": 486,
+      "top_alliances": [
+        {
+          "tag": "LTR",
+          "real_power_b": 14.4,
+          "members": 100
+        },
+        {
+          "tag": "AOS",
+          "real_power_b": 14.2,
+          "members": 100
+        },
+        {
+          "tag": "ORG",
+          "real_power_b": 12.8,
+          "members": 96
+        },
+        {
+          "tag": "SCC",
+          "real_power_b": 11.3,
+          "members": 95
+        },
+        {
+          "tag": "SDH",
+          "real_power_b": 8.6,
+          "members": 84
+        }
+      ],
+      "top5_player_power_m": [
+        351,
+        325,
+        308,
+        308,
+        281
+      ],
+      "kvk_history": [
+        {
+          "seq": 1,
+          "opponent": 347,
+          "prep": "L",
+          "castle": "L"
+        },
+        {
+          "seq": 2,
+          "opponent": 340,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 3,
+          "opponent": 363,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 4,
+          "opponent": 336,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 5,
+          "opponent": 402,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 6,
+          "opponent": 385,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 7,
+          "opponent": 347,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 8,
+          "opponent": 331,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 9,
+          "opponent": 337,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 10,
+          "opponent": 384,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 11,
+          "opponent": 358,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 12,
+          "opponent": 144,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 13,
+          "opponent": 233,
+          "prep": "W",
+          "castle": "W"
+        },
+        {
+          "seq": 14,
+          "opponent": 393,
+          "prep": "W",
+          "castle": "L"
+        },
+        {
+          "seq": 15,
+          "opponent": 414,
+          "prep": "W",
+          "castle": "W"
+        }
+      ],
+      "prep_record": "14-1",
+      "castle_record": "10-5"
+    }
+  },
+  "notes": {
+    "prep_battle_correlation_across_kingdoms": 0.31,
+    "current_read": {
+      "prep_k203_win_pct": [
+        50,
+        55
+      ],
+      "castle": "close to even",
+      "summary": "K203 stronger at the very top; K365 deeper in its lead alliances"
+    },
+    "unconfirmed": [
+      "castle day date is an estimate from the 4-week cadence",
+      "kingdom real_power_b and top10_total_b definitions unclear: both are smaller than single top-alliance real power"
+    ]
+  }
+}
