@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T20:49:04+00:00",
+  "generated_at": "2026-10-04T21:15:51+00:00",
   "source": "MightPulse API",
   "activity_basis": "vs_now: online or last_active_at within window of generated_at; vs_snapshot: last_active_at within window of activity_snapshot_at",
   "activity_snapshot_at": "2026-09-15T10:48:20+00:00",
@@ -59,9 +59,17 @@
           "member_count_reported": 99,
           "total_power": 42970769947,
           "median_tc_level": 70,
+          "tc_bands": {
+            "tc70+": 50,
+            "tc65_69": 33,
+            "tc56_64": 12,
+            "tc_le55": 4
+          },
+          "total_kills": 2388535407,
+          "power_top10_share_pct": 15.2,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 1115,
+          "data_age_seconds": 34,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -84,9 +92,17 @@
           "member_count_reported": 98,
           "total_power": 40793851396,
           "median_tc_level": 70,
+          "tc_bands": {
+            "tc70+": 50,
+            "tc65_69": 19,
+            "tc56_64": 17,
+            "tc_le55": 12
+          },
+          "total_kills": 8963246152,
+          "power_top10_share_pct": 19.3,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 1095,
+          "data_age_seconds": 2701,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -109,9 +125,17 @@
           "member_count_reported": 97,
           "total_power": 37965862579,
           "median_tc_level": 70,
+          "tc_bands": {
+            "tc70+": 51,
+            "tc65_69": 18,
+            "tc56_64": 24,
+            "tc_le55": 4
+          },
+          "total_kills": 4848889592,
+          "power_top10_share_pct": 15.2,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 1090,
+          "data_age_seconds": 2696,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -134,9 +158,17 @@
           "member_count_reported": 89,
           "total_power": 27182157278,
           "median_tc_level": 64,
+          "tc_bands": {
+            "tc70+": 25,
+            "tc65_69": 19,
+            "tc56_64": 18,
+            "tc_le55": 27
+          },
+          "total_kills": 8569204731,
+          "power_top10_share_pct": 21.4,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 693,
+          "data_age_seconds": 2298,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -159,9 +191,17 @@
           "member_count_reported": 88,
           "total_power": 17809955139,
           "median_tc_level": 55,
+          "tc_bands": {
+            "tc70+": 4,
+            "tc65_69": 8,
+            "tc56_64": 31,
+            "tc_le55": 45
+          },
+          "total_kills": 7367851739,
+          "power_top10_share_pct": 21.8,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 1087,
+          "data_age_seconds": 2692,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -184,9 +224,17 @@
           "member_count_reported": 97,
           "total_power": 15067800647,
           "median_tc_level": 50,
+          "tc_bands": {
+            "tc70+": 3,
+            "tc65_69": 7,
+            "tc56_64": 19,
+            "tc_le55": 68
+          },
+          "total_kills": 10790015674,
+          "power_top10_share_pct": 26.2,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 1082,
+          "data_age_seconds": 2687,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -276,9 +324,17 @@
           "member_count_reported": 98,
           "total_power": 41259590526,
           "median_tc_level": 70,
+          "tc_bands": {
+            "tc70+": 56,
+            "tc65_69": 20,
+            "tc56_64": 15,
+            "tc_le55": 7
+          },
+          "total_kills": 4662025700,
+          "power_top10_share_pct": 15.8,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 1077,
+          "data_age_seconds": 2682,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -301,9 +357,17 @@
           "member_count_reported": 99,
           "total_power": 40028790667,
           "median_tc_level": 67,
+          "tc_bands": {
+            "tc70+": 45,
+            "tc65_69": 23,
+            "tc56_64": 26,
+            "tc_le55": 5
+          },
+          "total_kills": 1972531637,
+          "power_top10_share_pct": 17.3,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 1075,
+          "data_age_seconds": 2680,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -326,9 +390,17 @@
           "member_count_reported": 99,
           "total_power": 38735630982,
           "median_tc_level": 66,
+          "tc_bands": {
+            "tc70+": 39,
+            "tc65_69": 33,
+            "tc56_64": 21,
+            "tc_le55": 6
+          },
+          "total_kills": 2783845214,
+          "power_top10_share_pct": 16.6,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 1070,
+          "data_age_seconds": 2675,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -351,9 +423,17 @@
           "member_count_reported": 95,
           "total_power": 32368776096,
           "median_tc_level": 65,
+          "tc_bands": {
+            "tc70+": 26,
+            "tc65_69": 28,
+            "tc56_64": 21,
+            "tc_le55": 20
+          },
+          "total_kills": 1228135616,
+          "power_top10_share_pct": 18.5,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 1063,
+          "data_age_seconds": 2669,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -376,9 +456,17 @@
           "member_count_reported": 92,
           "total_power": 15276191781,
           "median_tc_level": 50,
+          "tc_bands": {
+            "tc70+": 3,
+            "tc65_69": 8,
+            "tc56_64": 16,
+            "tc_le55": 65
+          },
+          "total_kills": 62180533,
+          "power_top10_share_pct": 22.6,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 1057,
+          "data_age_seconds": 2663,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -401,9 +489,17 @@
           "member_count_reported": 84,
           "total_power": 14527694814,
           "median_tc_level": 50,
+          "tc_bands": {
+            "tc70+": 2,
+            "tc65_69": 6,
+            "tc56_64": 18,
+            "tc_le55": 58
+          },
+          "total_kills": 72383358,
+          "power_top10_share_pct": 25.2,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 1054,
+          "data_age_seconds": 2659,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,

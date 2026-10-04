@@ -184,6 +184,11 @@ def alliance_summary(tag, resp, members, now, anchor):
         "member_count_reported": resp.get("member_count"),
         "total_power": sum(m.get("power") or 0 for m in members),
         "median_tc_level": tcs[len(tcs) // 2] if tcs else None,
+        "tc_bands": {lbl: sum(lo <= t <= hi for t in tcs) for lbl, lo, hi in
+                     (("tc70+", 70, 99), ("tc65_69", 65, 69), ("tc56_64", 56, 64), ("tc_le55", 0, 55))},
+        "total_kills": sum(m.get("kills") or 0 for m in members),
+        "power_top10_share_pct": round(100 * sum(sorted((m.get("power") or 0 for m in members), reverse=True)[:10])
+                                       / max(1, sum(m.get("power") or 0 for m in members)), 1),
         "members_missing_last_active": sum(parse_ts(m.get("last_active_at")) is None for m in members),
         "online_now": sum(bool(m.get("online")) for m in members),
         "data_age_seconds": resp.get("age_seconds"),
