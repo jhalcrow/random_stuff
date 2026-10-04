@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>K203 vs K365 Scouting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column; matchup and projections lead, detail tables scroll inside their own frames. */
+:root {
+  --bg: #F3F5F8; --surface: #FFFFFF; --line: #D9DEE6; --fg: #17202C; --muted: #5A6577;
+  --us: #2453C9; --us-soft: #DCE5FA; --them: #B5481A; --them-soft: #F6E2D7;
+  --win: #1E7A4C; --loss: #B42335; --unc-bg: #FFF2C9; --unc-fg: #6B4E00;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 400 1rem/1.55 var(--f-body); margin: 0; }
+.wrap { max-width: 60rem; margin: 0 auto; padding-inline: 16px; padding-block: 2rem 4rem; display: grid; gap: 3rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: .01em; }
+h2 { font-size: 1.9rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 600; }
+h4 { font: 700 .78rem/1.3 var(--f-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1rem 0 .35rem; }
+p { margin: 0; max-width: 65ch; }
+ul { margin: 0; padding-left: 1.15rem; display: grid; gap: .4rem; max-width: 65ch; }
+.num { font-variant-numeric: tabular-nums; }
+.eyebrow { font: 600 .8rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+.lede { color: var(--muted); }
+.us-t { color: var(--us); } .them-t { color: var(--them); }
+
+/* hero */
+.hero { display: grid; gap: 1rem; }
+.vs { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2em .5em; }
+.vs .k { font-family: var(--f-display); font-weight: 700; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .92rem; }
+.meta strong { color: var(--fg); font-weight: 600; }
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.verdict div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: grid; gap: .2rem; min-width: 0; }
+.verdict .big { font: 700 2.2rem/1 var(--f-display); }
+.verdict .lbl { font-size: .9rem; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { padding: .6rem .75rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:last-child > * { border-bottom: 0; }
+thead th { font: 600 .75rem/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); white-space: nowrap; }
+tbody th { font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.matchup tbody th { font-weight: 400; min-width: 12rem; }
+.colh.us { color: var(--us); } .colh.them { color: var(--them); }
+.edge { display: inline-block; font: 600 .75rem/1 var(--f-body); padding: .3rem .5rem; border-radius: 999px; white-space: nowrap; }
+.edge.us { background: var(--us-soft); color: var(--us); }
+.edge.them { background: var(--them-soft); color: var(--them); }
+.edge.even, .edge.neutral { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.tag-unc { display: inline-block; font: 600 .68rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .06em; padding: .25rem .4rem; border-radius: 4px; background: var(--unc-bg); color: var(--unc-fg); vertical-align: .1em; white-space: nowrap; }
+
+/* paired bars */
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.25rem; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
+.chart h3 { font-size: 1.15rem; }
+.pb { display: grid; gap: .6rem; }
+.pb-row { display: grid; grid-template-columns: 1.8rem 1fr; gap: .5rem; align-items: center; }
+.pb-lbl { font: 500 .78rem var(--f-data); color: var(--muted); }
+.pb-bars { display: grid; gap: 3px; min-width: 0; }
+.pb-line, .pb-axis { display: grid; grid-template-columns: 2.6rem 1fr 3.4rem; gap: .5rem; align-items: center; }
+.pb-axis { margin-left: 2.3rem; }
+.pb-name { font: 500 .74rem var(--f-data); }
+.pb-name.us { color: var(--us); } .pb-name.them { color: var(--them); }
+.pb-track { height: .7rem; background: linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0 / 25% 100%; position: relative; }
+.pb-bar { display: block; height: 100%; border-radius: 0 3px 3px 0; }
+.pb-bar.us { background: var(--us); } .pb-bar.them { background: var(--them); }
+.pb-val { font: 500 .74rem var(--f-data); text-align: right; font-variant-numeric: tabular-nums; }
+.pb-axis-in { grid-column: 2; position: relative; height: 1rem; font: 500 .65rem var(--f-data); color: var(--muted); }
+.pb-axis-in span { position: absolute; transform: translateX(-50%); }
+.pb-axis-in span:first-child { transform: none; }
+.pb-axis-in span:last-child { transform: translateX(-100%); }
+
+/* records */
+.records { display: grid; gap: 1.25rem; }
+.rec-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
+.rec-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; align-items: baseline; }
+.rec-head h3 { font-size: 1.4rem; }
+.rec-stats { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .9rem; color: var(--muted); }
+.rec-stats strong { color: var(--fg); font-variant-numeric: tabular-nums; }
+ol.rec { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr)); gap: .4rem; }
+ol.rec li { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: .3rem; }
+.opp { grid-column: 1 / -1; font: 500 .72rem var(--f-data); text-align: center; color: var(--muted); }
+.res { font: 700 .8rem/1.5 var(--f-data); text-align: center; border-radius: 3px; }
+.res.W { color: var(--win); background: color-mix(in srgb, var(--win) 14%, transparent); }
+.res.L { color: var(--surface); background: var(--loss); }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+.legend .res { display: inline-block; width: 1.6rem; }
+
+/* activity */
+.act .tagc { font: 700 1rem var(--f-display); letter-spacing: .03em; }
+.act .tagc.us { color: var(--us); } .act .tagc.them { color: var(--them); }
+.act tr.tot > * { border-top: 2px solid var(--line); font-weight: 700; }
+.barcell { display: flex; align-items: center; gap: .5rem; min-width: 8rem; }
+.mini { flex: 1; height: .55rem; background: var(--line); border-radius: 3px; overflow: hidden; min-width: 3.5rem; }
+.mini-bar { display: block; height: 100%; }
+.mini-bar.us { background: var(--us); } .mini-bar.them { background: var(--them); }
+.act-h { display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.act-h h3 { font-size: 1.35rem; }
+
+/* projections */
+.projs { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.25rem; }
+.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.1rem; display: grid; gap: .5rem; align-content: start; min-width: 0; }
+.proj header { display: grid; gap: .2rem; }
+.proj-range { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.proj-range .num { font: 700 2.4rem/1 var(--f-display); color: var(--us); }
+.proj-sub { color: var(--muted); font-size: .9rem; }
+.gauge { position: relative; height: 1.1rem; border-radius: 4px; background: linear-gradient(to right, var(--them-soft), var(--surface) 50%, var(--us-soft)); border: 1px solid var(--line); margin-top: .4rem; }
+.g-mid { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--muted); }
+.g-old { position: absolute; top: 2px; bottom: 2px; border: 2px dashed var(--muted); border-radius: 3px; }
+.g-new { position: absolute; top: 3px; bottom: 3px; background: var(--us); border-radius: 2px; opacity: .85; }
+.gauge-axis { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); }
+.proj-was { font-size: .88rem; color: var(--muted); }
+.note { font-size: .92rem; color: var(--muted); margin-top: .5rem; }
+
+/* recommendations */
+ol.recs { list-style: none; counter-reset: r; margin: 0; padding: 0; display: grid; gap: .9rem; }
+ol.recs li { counter-increment: r; display: grid; grid-template-columns: 2.2rem 1fr; gap: .1rem .75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+ol.recs li::before { content: counter(r); grid-row: span 2; font: 700 1.6rem/1 var(--f-display); color: var(--us); }
+ol.recs h3 { font-size: 1.2rem; }
+ol.recs p { color: var(--fg); }
+
+.caveats { font-size: .92rem; color: var(--muted); }
+.caveats ul { max-width: 75ch; }
+footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
+@media (max-width: 30rem) {
+  .matchup tbody th { min-width: 9rem; }
+  th, td { padding: .5rem .55rem; }
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <header class="hero">
+    <span class="eyebrow">KvK #19 · Scouting report</span>
+    <h1 class="vs"><span class="k us-t">K203</span><span>vs</span><span class="k them-t">K365</span></h1>
+    <p class="lede">Two Gen 7 kingdoms with near-identical records and power. We are stronger at the very top; K365 is deeper across its lead alliances and has been growing faster.</p>
+    <div class="meta">
+      <span>Castle day <strong>Sat 10 Oct 2026</strong> <span class="tag-unc">Estimated</span></span>
+      <span>Data as of <strong>4 Oct 2026</strong></span>
+    </div>
+    <div class="verdict">
+      <div><span class="lbl">Prep phase</span><span class="big num">40–50%</span><span class="lbl">chance K203 wins. Slight lean K365.</span></div>
+      <div><span class="lbl">Castle day</span><span class="big num">45–55%</span><span class="lbl">chance K203 wins. Even.</span></div>
+    </div>
+  </header>
+
+  <section id="matchup">
+    <h2>The matchup</h2>
+    <p class="lede">Real power counts heroes, gear, gems and pets, without troops.</p>
+    <div class="tbl-wrap"><table class="matchup">
+      <thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
+      <tbody><tr><th scope="row">Kingdom age</th><td class="num">~514 days</td><td class="num">~488 days</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Stage</th><td class="num">Adv. Truegold / Gen 7</td><td class="num">Adv. Truegold / Gen 7</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Real power (kingdom) <span class="tag-unc">Definition unclear</span></th><td class="num">2.8B</td><td class="num">2.7B</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Top-10 total <span class="tag-unc">Definition unclear</span></th><td class="num">8.3B</td><td class="num">8.4B</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Top 5 players, combined real power</th><td class="num">1,792M</td><td class="num">1,573M</td><td><span class="edge us">K203</span></td></tr>
+<tr><th scope="row">Top 5 alliances, combined real power</th><td class="num">56.1B</td><td class="num">61.3B</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Top 6 alliances, total power (incl. troops)</th><td class="num">181.8B</td><td class="num">182.2B</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Cities on the map <span class="tag-unc">K203 figure 17 days old</span></th><td class="num">1,204</td><td class="num">1,375</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Alliances <span class="tag-unc">K203 figure 17 days old</span></th><td class="num">385</td><td class="num">486</td><td><span class="edge neutral">n/a</span></td></tr>
+<tr><th scope="row">KvK prep record</th><td class="num">16-0</td><td class="num">14-1</td><td><span class="edge us">K203</span></td></tr>
+<tr><th scope="row">KvK castle record</th><td class="num">11-5</td><td class="num">10-5</td><td><span class="edge even">Even</span></td></tr></tbody>
+    </table></div>
+    <div class="charts">
+      <div class="chart"><h3>Top 5 players, real power</h3><div class="pb"><div class="pb-row">
+  <div class="pb-lbl">#1</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:95.2%"></span></span><span class="pb-val">381M</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:87.8%"></span></span><span class="pb-val">351M</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#2</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:93.0%"></span></span><span class="pb-val">372M</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:81.2%"></span></span><span class="pb-val">325M</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#3</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:89.5%"></span></span><span class="pb-val">358M</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:77.0%"></span></span><span class="pb-val">308M</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#4</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:85.2%"></span></span><span class="pb-val">341M</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:77.0%"></span></span><span class="pb-val">308M</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#5</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:85.0%"></span></span><span class="pb-val">340M</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:70.2%"></span></span><span class="pb-val">281M</span></div>
+  </div>
+</div><div class="pb-axis"><div class="pb-axis-in"><span style="left:0.0%">0M</span><span style="left:25.0%">100M</span><span style="left:50.0%">200M</span><span style="left:75.0%">300M</span><span style="left:100.0%">400M</span></div></div></div></div>
+      <div class="chart"><h3>Top 5 alliances, real power</h3><div class="pb"><div class="pb-row">
+  <div class="pb-lbl">#1</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">ORM</span><span class="pb-track"><span class="pb-bar us" style="width:79.4%"></span></span><span class="pb-val">12.7B</span></div>
+    <div class="pb-line"><span class="pb-name them">LTR</span><span class="pb-track"><span class="pb-bar them" style="width:90.0%"></span></span><span class="pb-val">14.4B</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#2</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">PRO</span><span class="pb-track"><span class="pb-bar us" style="width:78.8%"></span></span><span class="pb-val">12.6B</span></div>
+    <div class="pb-line"><span class="pb-name them">AOS</span><span class="pb-track"><span class="pb-bar them" style="width:88.8%"></span></span><span class="pb-val">14.2B</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#3</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">BR4</span><span class="pb-track"><span class="pb-bar us" style="width:77.5%"></span></span><span class="pb-val">12.4B</span></div>
+    <div class="pb-line"><span class="pb-name them">ORG</span><span class="pb-track"><span class="pb-bar them" style="width:80.0%"></span></span><span class="pb-val">12.8B</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#4</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">SRT</span><span class="pb-track"><span class="pb-bar us" style="width:63.1%"></span></span><span class="pb-val">10.1B</span></div>
+    <div class="pb-line"><span class="pb-name them">SCC</span><span class="pb-track"><span class="pb-bar them" style="width:70.6%"></span></span><span class="pb-val">11.3B</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">#5</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">BR1</span><span class="pb-track"><span class="pb-bar us" style="width:51.9%"></span></span><span class="pb-val">8.3B</span></div>
+    <div class="pb-line"><span class="pb-name them">SDH</span><span class="pb-track"><span class="pb-bar them" style="width:53.8%"></span></span><span class="pb-val">8.6B</span></div>
+  </div>
+</div><div class="pb-axis"><div class="pb-axis-in"><span style="left:0.0%">0B</span><span style="left:25.0%">4B</span><span style="left:50.0%">8B</span><span style="left:75.0%">12B</span><span style="left:100.0%">16B</span></div></div></div></div>
+    </div>
+  </section>
+
+  <section id="records">
+    <h2>KvK records</h2>
+    <p class="lede">Every KvK, oldest to newest. Each box shows the opponent, then the prep and castle results.</p>
+    <div class="legend"><span class="res W">W</span> win <span class="res L">L</span> loss</div>
+    <div class="records">
+      <div class="rec-card">
+        <div class="rec-head"><h3 class="us-t">K203</h3>
+          <div class="rec-stats"><span>Prep <strong>16-0</strong></span><span>Castle <strong>11-5</strong></span><span>Current castle streak <strong>W2</strong></span><span>Opponents K100–K270</span></div></div>
+        <ol class="rec"><li><span class="opp">K195</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K176</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K177</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K224</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K190</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K263</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K195</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K249</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K184</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K187</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K222</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K270</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K156</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K194</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K151</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K100</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li></ol>
+      </div>
+      <div class="rec-card">
+        <div class="rec-head"><h3 class="them-t">K365</h3>
+          <div class="rec-stats"><span>Prep <strong>14-1</strong></span><span>Castle <strong>10-5</strong></span><span>Current castle streak <strong>W1</strong></span><span>Opponents K144–K414</span></div></div>
+        <ol class="rec"><li><span class="opp">K347</span><span class="res L" title="Prep loss">L</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K340</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K363</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K336</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K402</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K385</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K347</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K331</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K337</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K384</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K358</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K144</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K233</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K393</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K414</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li></ol>
+      </div>
+    </div>
+    <p class="note">Both kingdoms lose castle day about one time in three, at a similar rate. Neither has lost a prep phase since its first KvK.</p>
+  </section>
+
+  <section id="activity">
+    <h2>Activity</h2>
+    <p class="lede">Top 6 alliances by power in each kingdom, with members active within 24 hours, 72 hours and 7 days. <span class="tag-unc">Snapshot of 15 Sep</span></p>
+    <div class="act-h"><h3 class="us-t">K203</h3></div>
+    <div class="tbl-wrap"><table class="act">
+<thead><tr><th scope="col">Alliance</th><th scope="col" class="num">Members</th><th scope="col" class="num">Power</th><th scope="col" class="num">Median TC</th><th scope="col">Active 24h</th><th scope="col" class="num">72h</th><th scope="col" class="num">7d</th><th scope="col" class="num">Power held by 7d actives</th></tr></thead>
+<tbody><tr><th scope="row" class="tagc us">ORM</th><td class="num">99</td><td class="num">43.0B</td><td class="num">TC70</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:98%"></span></span><span class="num">98%</span></td>
+<td class="num">100%</td><td class="num">100%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc us">PRO</th><td class="num">98</td><td class="num">40.8B</td><td class="num">TC70</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:84%"></span></span><span class="num">84%</span></td>
+<td class="num">93%</td><td class="num">98%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc us">BR4</th><td class="num">97</td><td class="num">38.0B</td><td class="num">TC70</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:90%"></span></span><span class="num">90%</span></td>
+<td class="num">95%</td><td class="num">95%</td><td class="num">97%</td></tr><tr><th scope="row" class="tagc us">SRT</th><td class="num">89</td><td class="num">27.2B</td><td class="num">TC64</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:82%"></span></span><span class="num">82%</span></td>
+<td class="num">94%</td><td class="num">96%</td><td class="num">99%</td></tr><tr><th scope="row" class="tagc us">HnG</th><td class="num">88</td><td class="num">17.8B</td><td class="num">TC55</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:69%"></span></span><span class="num">69%</span></td>
+<td class="num">89%</td><td class="num">99%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc us">BR1</th><td class="num">97</td><td class="num">15.1B</td><td class="num">TC50</td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:68%"></span></span><span class="num">68%</span></td>
+<td class="num">84%</td><td class="num">94%</td><td class="num">96%</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">568</td><td class="num">181.8B</td><td></td>
+<td class="barcell"><span class="mini"><span class="mini-bar us" style="width:82%"></span></span><span class="num">82%</span></td>
+<td class="num">92%</td><td class="num">97%</td><td class="num">99%</td></tr></tbody></table></div>
+    <div class="act-h"><h3 class="them-t">K365</h3></div>
+    <div class="tbl-wrap"><table class="act">
+<thead><tr><th scope="col">Alliance</th><th scope="col" class="num">Members</th><th scope="col" class="num">Power</th><th scope="col" class="num">Median TC</th><th scope="col">Active 24h</th><th scope="col" class="num">72h</th><th scope="col" class="num">7d</th><th scope="col" class="num">Power held by 7d actives</th></tr></thead>
+<tbody><tr><th scope="row" class="tagc them">LTR</th><td class="num">98</td><td class="num">41.3B</td><td class="num">TC70</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:96%"></span></span><span class="num">96%</span></td>
+<td class="num">98%</td><td class="num">98%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc them">AOS</th><td class="num">99</td><td class="num">40.0B</td><td class="num">TC67</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:99%"></span></span><span class="num">99%</span></td>
+<td class="num">100%</td><td class="num">100%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc them">ORG</th><td class="num">99</td><td class="num">38.7B</td><td class="num">TC66</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:95%"></span></span><span class="num">95%</span></td>
+<td class="num">98%</td><td class="num">99%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc them">SCC</th><td class="num">95</td><td class="num">32.4B</td><td class="num">TC65</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:87%"></span></span><span class="num">87%</span></td>
+<td class="num">96%</td><td class="num">99%</td><td class="num">100%</td></tr><tr><th scope="row" class="tagc them">WYW</th><td class="num">92</td><td class="num">15.3B</td><td class="num">TC50</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:59%"></span></span><span class="num">59%</span></td>
+<td class="num">73%</td><td class="num">78%</td><td class="num">84%</td></tr><tr><th scope="row" class="tagc them">SDH</th><td class="num">84</td><td class="num">14.5B</td><td class="num">TC50</td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:61%"></span></span><span class="num">61%</span></td>
+<td class="num">83%</td><td class="num">95%</td><td class="num">97%</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">567</td><td class="num">182.2B</td><td></td>
+<td class="barcell"><span class="mini"><span class="mini-bar them" style="width:84%"></span></span><span class="num">84%</span></td>
+<td class="num">92%</td><td class="num">95%</td><td class="num">98%</td></tr></tbody></table></div>
+    <ul>
+      <li>Both top-6 groups were almost fully active: 97% of our members within 7 days, 95% of theirs. Inactive members hold almost no power on either side.</li>
+      <li>K365's top 4 log in more often day to day: 94% active within 24 hours against 88% for ours. ORM is our most active alliance; PRO, BR4 and SRT trail their counterparts.</li>
+      <li>Further down, our HnG and BR1 were more active than K365's WYW and SDH.</li>
+    </ul>
+    <h3>Kingdom-wide <span class="tag-unc">Freshness unconfirmed</span></h3>
+    <div class="tbl-wrap"><table class="matchup">
+      <thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
+      <tbody><tr><th scope="row">Power gained, last 7 days</th><td class="num">2.9B</td><td class="num">4.4B</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Town Centre upgrades, last 7 days</th><td class="num">117</td><td class="num">179</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Governors active, last 7 days</th><td class="num">177</td><td class="num">405</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Governors active, last 30 days</th><td class="num">1,060</td><td class="num">1,418</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Governors on the map</th><td class="num">1,191</td><td class="num">1,371</td><td><span class="edge them">K365</span></td></tr>
+<tr><th scope="row">Troop power</th><td class="num">38.9B</td><td class="num">38.5B</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">Health grade</th><td class="num">D</td><td class="num">C</td><td><span class="edge them">K365</span></td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section id="projections">
+    <h2>Projections</h2>
+    <p class="lede">The dashed outline shows the previous estimate; the solid bar shows the revised range.</p>
+    <div class="projs">
+      <article class="proj">
+  <header><h3>Prep phase</h3><p class="proj-range"><span class="num">40–50%</span> <span class="proj-sub">chance K203 wins</span></p></header>
+  <div class="gauge" role="img" aria-label="Previous estimate 50 to 55 percent, revised 40 to 50 percent">
+    <span class="g-mid"></span>
+    <span class="g-old" style="left:50%;width:5%"></span>
+    <span class="g-new" style="left:40%;width:10%"></span>
+  </div>
+  <div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
+  <p class="proj-was">Previous estimate: 50–55%.</p>
+  <h4>What moved it down</h4>
+<ul>
+<li>K365 gained <strong>4.4B</strong> of power in the last 7 days against our <strong>2.9B</strong> (+53%). Prep points come from exactly this kind of growth: building, training and research.</li>
+<li>K365 had <strong>179</strong> Town Centre upgrades in 7 days to our <strong>117</strong>, and more governors active over 30 days (1,418 vs 1,060).</li>
+<li>Prep is a whole-kingdom effort. K365 has 1,371 governors on the map to our 1,191.</li>
+</ul>
+<h4>What holds it up</h4>
+<ul>
+<li>We have never lost a prep phase (16-0). K365's only loss (14-1) was its first KvK.</li>
+<li>Our top 6 alliances were at least as active as theirs in the 15 Sep snapshot (97% vs 95% active within 7 days).</li>
+<li>The kingdom-wide growth figures could not be confirmed as current. <span class="tag-unc">Unconfirmed</span></li>
+</ul>
+</article>
+      <article class="proj">
+  <header><h3>Castle day</h3><p class="proj-range"><span class="num">45–55%</span> <span class="proj-sub">chance K203 wins</span></p></header>
+  <div class="gauge" role="img" aria-label="Previous estimate 45 to 55 percent, revised 45 to 55 percent">
+    <span class="g-mid"></span>
+    <span class="g-old" style="left:45%;width:10%"></span>
+    <span class="g-new" style="left:45%;width:10%"></span>
+  </div>
+  <div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
+  <p class="proj-was">Previous estimate: 45–55%.</p>
+  <h4>In our favour</h4>
+<ul>
+<li>Our top 5 players carry 1,792M real power to K365's 1,573M (+14%). Our #5 player is stronger than their #2.</li>
+<li>ORM, PRO and BR4 all have a median Town Centre of 70. K365's matching alliances sit at 70, 67 and 66.</li>
+<li>By total power including troops, ORM (43.0B) and PRO (40.8B) out-size LTR and AOS.</li>
+</ul>
+<h4>Against us</h4>
+<ul>
+<li>K365 leads real power at every one of the top 5 alliance ranks: 61.3B against our 56.1B. Their hero and gear depth is spread wider.</li>
+<li>Our biggest gap is alliance #4: SCC has 32.4B to SRT's 27.2B.</li>
+<li>K365's top 4 alliances logged in more often day to day (94% active within 24h vs 88% for ours, 15 Sep snapshot).</li>
+</ul>
+<p class="note">Net: the centre stays at even. Our top-end edge and K365's depth roughly cancel. Prep and castle results line up only about 31% of the time across kingdoms, so the prep result says little about castle day.</p>
+</article>
+    </div>
+  </section>
+
+  <section id="plan">
+    <h2>Castle-day plan for K203</h2>
+    <ol class="recs"><li><h3>Fight where we are strongest</h3><p>Build the main rallies around ORM, PRO and BR4. This TC70 core holds our top-end advantage. Keep their strongest marches on the castle and avoid spending them on secondary targets.</p></li>
+<li><h3>Cover the SCC gap</h3><p>SCC is K365&#x27;s #4 alliance and out-sizes SRT by 5.2B. Do not leave SRT to face SCC alone: pair it with reinforcements from HnG and BR1, and plan which core rally answers SCC when it commits.</p></li>
+<li><h3>Lock in attendance before Friday</h3><p>In the 15 Sep snapshot, 24h activity in PRO, BR4 and SRT was 84%, 90% and 82%, against 94–99% for LTR, AOS and ORG. Get attendance confirmed in each top-6 alliance by Fri 9 Oct, with named backups for rally leaders.</p></li>
+<li><h3>Give lower-TC members support jobs</h3><p>HnG and BR1 have median Town Centre 55 and 50. Use them to reinforce garrisons and fill rallies rather than in open-field fights against K365&#x27;s TC65–70 alliances.</p></li>
+<li><h3>Expect a stronger tail than their activity suggests</h3><p>WYW and SDH (K365 #5 and #6) were their least active alliances, but they are close to HnG and BR1 in power. Treat them as equals, not easy points.</p></li>
+<li><h3>Don&#x27;t read the castle result from prep</h3><p>K365 is likely to push hard in prep. If we lose it, castle day is still open. Prep and castle results line up only about 31% of the time.</p></li>
+<li><h3>Confirm timing in-game</h3><p>The castle date (Sat 10 Oct) is estimated from the four-week cycle. Check the in-game KvK schedule and adjust the plan if it differs.</p></li></ol>
+  </section>
+
+  <section class="caveats" id="caveats">
+    <h2>About the data</h2>
+    <ul><li>Activity counts come from a MightPulse snapshot taken 15 Sep at 10:48 UTC, three days after the last castle day. That is the newest activity data available for these alliances. Post-KvK activity tends to run high, so treat these as relative, not current.</li>
+<li>MightPulse kingdom-wide figures (growth, Town Centre upgrades, active governors) were pulled 4 Oct 2026. Their freshness could not be confirmed.</li>
+<li>StratForge&#x27;s kingdom &quot;real power&quot; (2.8B / 2.7B) and &quot;top-10 total&quot; (8.3B / 8.4B) are smaller than single top alliances&#x27; real power, so the two metrics measure something narrower. They are compared like-for-like only.</li>
+<li>K203&#x27;s city and alliance counts come from a snapshot 17 days old.</li>
+<li>The castle date is an estimate from the four-week cycle (23 May, 20 Jun, 18 Jul, 15 Aug, 12 Sep).</li>
+<li>Projections are judgement estimates, not model output.</li></ul>
+  </section>
+
+  <footer>Sources: StratForge and Kingshot.net (early Oct 2026); MightPulse (4 Oct 2026). Aggregate figures only. Next transfer window opens 8 Nov 2026, and Gen 8 reaches K365's bracket on 9 Nov, both after this KvK.</footer>
+</main>
+</body>
+</html>

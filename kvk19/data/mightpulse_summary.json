@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T20:33:17+00:00",
+  "generated_at": "2026-10-04T20:37:24+00:00",
   "source": "MightPulse API",
   "activity_basis": "vs_now: online or last_active_at within window of generated_at; vs_snapshot: last_active_at within window of activity_snapshot_at",
   "activity_snapshot_at": "2026-09-15T10:48:20+00:00",
@@ -32,7 +32,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 166,
+          "data_age_seconds": 413,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -57,7 +57,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 146,
+          "data_age_seconds": 392,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -82,7 +82,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 141,
+          "data_age_seconds": 387,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -107,7 +107,7 @@
           "median_tc_level": 64,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 3344,
+          "data_age_seconds": 3590,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -132,7 +132,7 @@
           "median_tc_level": 55,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 137,
+          "data_age_seconds": 383,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -157,7 +157,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 133,
+          "data_age_seconds": 378,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -220,7 +220,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 126,
+          "data_age_seconds": 373,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -245,7 +245,7 @@
           "median_tc_level": 67,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 124,
+          "data_age_seconds": 370,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -270,7 +270,7 @@
           "median_tc_level": 66,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 119,
+          "data_age_seconds": 365,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -295,7 +295,7 @@
           "median_tc_level": 65,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 113,
+          "data_age_seconds": 360,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -320,7 +320,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 107,
+          "data_age_seconds": 354,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -345,7 +345,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 103,
+          "data_age_seconds": 350,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
