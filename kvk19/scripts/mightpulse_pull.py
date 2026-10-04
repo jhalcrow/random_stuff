@@ -26,7 +26,12 @@ MIN_INTERVAL = 1.1  # seconds between requests; keeps us under 60 req/min
 OUT = Path(__file__).resolve().parent.parent / "data" / "mightpulse_summary.json"
 KINGDOM_FIELDS = ("player_count", "located", "active_7d", "active_30d", "alliance_count",
                   "power", "avg_power", "power_rank", "activity_rank", "health",
-                  "power_gain_7d", "tc_pushers_7d", "hero_power", "troop_power")
+                  "power_gain_7d", "tc_pushers_7d", "hero_power", "troop_power",
+                  # Kingdom-level power fields are sums over each top-100 leaderboard.
+                  "mystic_trial", "hero_total", "hero_equip", "governor_gear_power",
+                  "governor_charm_power", "pet_power", "research_power", "building_power",
+                  "master_power", "gov_power")
+SCORE_BOARDS = ("mystic_trial",)  # player boards: only scores are kept, never names or IDs
 
 _last_call = 0.0
 
@@ -113,6 +118,23 @@ def top_alliances(kid):
     if rows is None:
         raise SystemExit(f"could not find rows in ranks response for K{kid}; run --probe")
     return [{"tag": r["abbr"], "name": r.get("name"), "score": r.get("score")} for r in rows[:TOP_N]]
+
+
+def board_scores(kid, board):
+    """Aggregate a player leaderboard by rank band. Names and IDs are discarded here."""
+    bd = get(f"/kingdoms/{kid}/ranks", {"board": board, "limit": 100})["board"]
+    sc = sorted((r["score"] for r in bd["rows"]), reverse=True)
+    band = lambda a, b: sc[a:b]
+    avg = lambda xs: round(sum(xs) / len(xs), 1) if xs else None
+    return {
+        "captured_at": datetime.fromtimestamp(bd["captured_at"], timezone.utc).isoformat(timespec="seconds"),
+        "n": len(sc),
+        "total": sum(sc),
+        "at_rank": {str(r): sc[r - 1] for r in (1, 5, 10, 25, 50, 75, 100) if r <= len(sc)},
+        "avg_1_10": avg(band(0, 10)),
+        "avg_11_50": avg(band(10, 50)),
+        "avg_51_100": avg(band(50, 100)),
+    }
 
 
 def fetch_roster(kid, tag):
@@ -214,6 +236,7 @@ def main():
     for kid in KINGDOMS:
         k = get(f"/kingdoms/{kid}")["kingdom"]  # shape confirmed by --probe
         kingdoms[kid] = {f: k.get(f) for f in KINGDOM_FIELDS}
+        kingdoms[kid]["boards"] = {bd: board_scores(kid, bd) for bd in SCORE_BOARDS}
         rosters[kid] = [(a, *fetch_roster(kid, a["tag"])) for a in top_alliances(kid)]
     # last_active_at may lag far behind "now" (seen: frozen at 15 Sep while responses say fresh).
     # Anchor a second set of windows on the newest timestamp seen across all rosters.

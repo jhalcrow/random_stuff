@@ -75,11 +75,11 @@ td.num, th.num { text-align: right; white-space: nowrap; }
 .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
 .chart h3 { font-size: 1.15rem; }
 .pb { display: grid; gap: .6rem; }
-.pb-row { display: grid; grid-template-columns: 1.8rem 1fr; gap: .5rem; align-items: center; }
+.pb-row { display: grid; grid-template-columns: 2.9rem 1fr; gap: .5rem; align-items: center; }
 .pb-lbl { font: 500 .78rem var(--f-data); color: var(--muted); }
 .pb-bars { display: grid; gap: 3px; min-width: 0; }
 .pb-line, .pb-axis { display: grid; grid-template-columns: 2.6rem 1fr 3.4rem; gap: .5rem; align-items: center; }
-.pb-axis { margin-left: 2.3rem; }
+.pb-axis { margin-left: 3.4rem; }
 .pb-name { font: 500 .74rem var(--f-data); }
 .pb-name.us { color: var(--us); } .pb-name.them { color: var(--them); }
 .pb-track { height: .7rem; background: linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0 / 25% 100%; position: relative; }
@@ -140,6 +140,13 @@ ol.recs li::before { content: counter(r); grid-row: span 2; font: 700 1.6rem/1 v
 ol.recs h3 { font-size: 1.2rem; }
 ol.recs p { color: var(--fg); }
 
+.score tr.key > * { background: var(--us-soft); font-weight: 700; }
+.score tr.key th { font-weight: 700; }
+.score tr.minor > * { color: var(--muted); }
+.tag-low { display: inline-block; font: 600 .68rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .06em; padding: .25rem .4rem; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); vertical-align: .1em; white-space: nowrap; }
+.tbl-wrap.flat { border: 0; }
+.verdict .v-main { border-color: var(--us); }
+.projs { grid-template-columns: 1fr; }
 .caveats { font-size: .92rem; color: var(--muted); }
 .caveats ul { max-width: 75ch; }
 footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
@@ -153,21 +160,70 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
 
 <main class="wrap">
   <header class="hero">
-    <span class="eyebrow">KvK #19 · Scouting report</span>
+    <span class="eyebrow">KvK #19 · Prep phase scouting</span>
     <h1 class="vs"><span class="k us-t">K203</span><span>vs</span><span class="k them-t">K365</span></h1>
-    <p class="lede">Two Gen 7 kingdoms with near-identical records and power. We are stronger at the very top; K365 is deeper across its lead alliances and has been growing faster.</p>
+    <p class="lede">Prep is close. K365 is growing faster and has more active players; we have the deeper hero base, leading Mystic Trial at every level of the top 100. Prep comes down to turnout and timing.</p>
     <div class="meta">
       <span>Castle day <strong>Sat 10 Oct 2026</strong> <span class="tag-unc">Estimated</span></span>
       <span>Data as of <strong>4 Oct 2026</strong></span>
     </div>
     <div class="verdict">
-      <div><span class="lbl">Prep phase</span><span class="big num">40–50%</span><span class="lbl">chance K203 wins. Slight lean K365.</span></div>
+      <div class="v-main"><span class="lbl">Prep phase</span><span class="big num">42–52%</span><span class="lbl">chance K203 wins. Near even, slight lean K365.</span></div>
+      <div><span class="lbl">Mystic Trial, top 100</span><span class="big num">+3.3%</span><span class="lbl">K203 ahead, 247,451 to 239,648.</span></div>
       <div><span class="lbl">Castle day</span><span class="big num">45–55%</span><span class="lbl">chance K203 wins. Even.</span></div>
     </div>
   </header>
 
+  <section id="scorecard">
+    <h2>Prep scorecard</h2>
+    <p class="lede">The measures that matter most for prep, strongest signal first. Troop power is listed last because it carries less weight in KvK.</p>
+    <div class="tbl-wrap"><table class="matchup score">
+      <thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
+      <tbody><tr class="key"><th scope="row">Mystic Trial, top 100 combined</th><td class="num">247,451</td><td class="num">239,648</td><td><span class="edge us">K203</span></td></tr>
+<tr class=""><th scope="row">Power gained, last 7 days <span class="tag-unc">Freshness unconfirmed</span></th><td class="num">2.9B</td><td class="num">4.4B</td><td><span class="edge them">K365</span></td></tr>
+<tr class=""><th scope="row">Town Centre upgrades, last 7 days <span class="tag-unc">Freshness unconfirmed</span></th><td class="num">117</td><td class="num">179</td><td><span class="edge them">K365</span></td></tr>
+<tr class=""><th scope="row">Governors active, last 30 days <span class="tag-unc">Freshness unconfirmed</span></th><td class="num">1,060</td><td class="num">1,418</td><td><span class="edge them">K365</span></td></tr>
+<tr class=""><th scope="row">Governors on the map</th><td class="num">1,191</td><td class="num">1,371</td><td><span class="edge them">K365</span></td></tr>
+<tr class=""><th scope="row">Research power, top 100</th><td class="num">4.6B</td><td class="num">4.1B</td><td><span class="edge us">K203</span></td></tr>
+<tr class=""><th scope="row">Hero power, top 100</th><td class="num">7.3B</td><td class="num">7.2B</td><td><span class="edge even">Even</span></td></tr>
+<tr class=""><th scope="row">Pet power, top 100</th><td class="num">2.6B</td><td class="num">2.6B</td><td><span class="edge even">Even</span></td></tr>
+<tr><th scope="row">KvK prep record</th><td class="num">16-0</td><td class="num">14-1</td><td><span class="edge us">K203</span></td></tr>
+<tr class="minor"><th scope="row">Troop power, top 100 <span class="tag-low">Less weight in KvK</span></th><td class="num">38.9B</td><td class="num">38.5B</td><td><span class="edge even">Even</span></td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section id="mystic">
+    <h2>Mystic Trial</h2>
+    <p class="lede">Mystic Trial scores reflect hero strength rather than troop count. We lead at every depth of the top 100, and the lead grows further down the rankings.</p>
+    <div class="charts">
+      <div class="chart"><h3>Average score by rank band</h3><div class="pb"><div class="pb-row">
+  <div class="pb-lbl">1–10</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:80.0%"></span></span><span class="pb-val">3198</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:79.4%"></span></span><span class="pb-val">3175</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">11–50</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:65.4%"></span></span><span class="pb-val">2617</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:63.2%"></span></span><span class="pb-val">2530</span></div>
+  </div>
+</div><div class="pb-row">
+  <div class="pb-lbl">51–100</div>
+  <div class="pb-bars">
+    <div class="pb-line"><span class="pb-name us">K203</span><span class="pb-track"><span class="pb-bar us" style="width:55.4%"></span></span><span class="pb-val">2216</span></div>
+    <div class="pb-line"><span class="pb-name them">K365</span><span class="pb-track"><span class="pb-bar them" style="width:53.4%"></span></span><span class="pb-val">2134</span></div>
+  </div>
+</div><div class="pb-axis"><div class="pb-axis-in"><span style="left:0.0%">0</span><span style="left:25.0%">1000</span><span style="left:50.0%">2000</span><span style="left:75.0%">3000</span><span style="left:100.0%">4000</span></div></div></div></div>
+      <div class="chart"><h3>Score at rank</h3><div class="tbl-wrap flat"><table class="matchup">
+        <thead><tr><th scope="col">Rank</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
+        <tbody><tr><th scope="row">#1</th><td class="num">3,513</td><td class="num">3,533</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">#5</th><td class="num">3,235</td><td class="num">3,126</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#10</th><td class="num">2,955</td><td class="num">2,994</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">#25</th><td class="num">2,683</td><td class="num">2,592</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#50</th><td class="num">2,432</td><td class="num">2,312</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#75</th><td class="num">2,193</td><td class="num">2,123</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">#100</th><td class="num">2,076</td><td class="num">2,013</td><td><span class="edge us">K203</span></td></tr></tbody></table></div></div>
+    </div>
+    <p class="note">K365's #10 scores slightly higher than ours (2,994 vs 2,955), but our top 10 average is higher. Leaderboard captured 4 Oct.</p>
+  </section>
+
   <section id="matchup">
-    <h2>The matchup</h2>
+    <h2>Kingdom profile</h2>
     <p class="lede">Real power counts heroes, gear, gems and pets, without troops.</p>
     <div class="tbl-wrap"><table class="matchup">
       <thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
@@ -312,17 +368,6 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
       <li>K365's top 4 log in more often day to day: 94% active within 24 hours against 88% for ours. ORM is our most active alliance; PRO, BR4 and SRT trail their counterparts.</li>
       <li>Further down, our HnG and BR1 were more active than K365's WYW and SDH.</li>
     </ul>
-    <h3>Kingdom-wide <span class="tag-unc">Freshness unconfirmed</span></h3>
-    <div class="tbl-wrap"><table class="matchup">
-      <thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead>
-      <tbody><tr><th scope="row">Power gained, last 7 days</th><td class="num">2.9B</td><td class="num">4.4B</td><td><span class="edge them">K365</span></td></tr>
-<tr><th scope="row">Town Centre upgrades, last 7 days</th><td class="num">117</td><td class="num">179</td><td><span class="edge them">K365</span></td></tr>
-<tr><th scope="row">Governors active, last 7 days</th><td class="num">177</td><td class="num">405</td><td><span class="edge them">K365</span></td></tr>
-<tr><th scope="row">Governors active, last 30 days</th><td class="num">1,060</td><td class="num">1,418</td><td><span class="edge them">K365</span></td></tr>
-<tr><th scope="row">Governors on the map</th><td class="num">1,191</td><td class="num">1,371</td><td><span class="edge them">K365</span></td></tr>
-<tr><th scope="row">Troop power</th><td class="num">38.9B</td><td class="num">38.5B</td><td><span class="edge even">Even</span></td></tr>
-<tr><th scope="row">Health grade</th><td class="num">D</td><td class="num">C</td><td><span class="edge them">K365</span></td></tr></tbody>
-    </table></div>
   </section>
 
   <section id="projections">
@@ -330,29 +375,31 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
     <p class="lede">The dashed outline shows the previous estimate; the solid bar shows the revised range.</p>
     <div class="projs">
       <article class="proj">
-  <header><h3>Prep phase</h3><p class="proj-range"><span class="num">40–50%</span> <span class="proj-sub">chance K203 wins</span></p></header>
-  <div class="gauge" role="img" aria-label="Previous estimate 50 to 55 percent, revised 40 to 50 percent">
+  <header><h3>Prep phase</h3><p class="proj-range"><span class="num">42–52%</span> <span class="proj-sub">chance K203 wins</span></p></header>
+  <div class="gauge" role="img" aria-label="Previous estimate 50 to 55 percent, revised 42 to 52 percent">
     <span class="g-mid"></span>
     <span class="g-old" style="left:50%;width:5%"></span>
-    <span class="g-new" style="left:40%;width:10%"></span>
+    <span class="g-new" style="left:42%;width:10%"></span>
   </div>
   <div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
   <p class="proj-was">Previous estimate: 50–55%.</p>
-  <h4>What moved it down</h4>
+  <h4>Against us</h4>
 <ul>
 <li>K365 gained <strong>4.4B</strong> of power in the last 7 days against our <strong>2.9B</strong> (+53%). Prep points come from exactly this kind of growth: building, training and research.</li>
 <li>K365 had <strong>179</strong> Town Centre upgrades in 7 days to our <strong>117</strong>, and more governors active over 30 days (1,418 vs 1,060).</li>
 <li>Prep is a whole-kingdom effort. K365 has 1,371 governors on the map to our 1,191.</li>
 </ul>
-<h4>What holds it up</h4>
+<h4>For us</h4>
 <ul>
+<li>We lead Mystic Trial at every depth of the top 100: +0.7% in ranks 1–10, +3.5% in 11–50 and +3.8% in 51–100. Our hero strength is deeper, not just stronger at the top.</li>
+<li>Our top 100 carry 12% more research power, a sign of more sustained investment.</li>
 <li>We have never lost a prep phase (16-0). K365's only loss (14-1) was its first KvK.</li>
 <li>Our top 6 alliances were at least as active as theirs in the 15 Sep snapshot (97% vs 95% active within 7 days).</li>
-<li>The kingdom-wide growth figures could not be confirmed as current. <span class="tag-unc">Unconfirmed</span></li>
 </ul>
+<p class="note">Net: K365's growth and wider player base outweigh our hero depth, but only just. The growth figures could not be confirmed as current <span class="tag-unc">Unconfirmed</span>; if they are stale, prep is closer to even.</p>
 </article>
       <article class="proj">
-  <header><h3>Castle day</h3><p class="proj-range"><span class="num">45–55%</span> <span class="proj-sub">chance K203 wins</span></p></header>
+  <header><h3>Castle day, for reference</h3><p class="proj-range"><span class="num">45–55%</span> <span class="proj-sub">chance K203 wins</span></p></header>
   <div class="gauge" role="img" aria-label="Previous estimate 45 to 55 percent, revised 45 to 55 percent">
     <span class="g-mid"></span>
     <span class="g-old" style="left:45%;width:10%"></span>
@@ -360,32 +407,24 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
   </div>
   <div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
   <p class="proj-was">Previous estimate: 45–55%.</p>
-  <h4>In our favour</h4>
-<ul>
-<li>Our top 5 players carry 1,792M real power to K365's 1,573M (+14%). Our #5 player is stronger than their #2.</li>
-<li>ORM, PRO and BR4 all have a median Town Centre of 70. K365's matching alliances sit at 70, 67 and 66.</li>
-<li>By total power including troops, ORM (43.0B) and PRO (40.8B) out-size LTR and AOS.</li>
+  <ul>
+<li>For us: our top 5 players carry 14% more real power, and ORM, PRO and BR4 all sit at Town Centre 70.</li>
+<li>Against us: K365 leads real power at each of the top 5 alliance ranks (61.3B vs 56.1B), and SCC out-sizes SRT by 5.2B.</li>
+<li>Prep and castle results line up only about 31% of the time, so a prep loss would not decide castle day.</li>
 </ul>
-<h4>Against us</h4>
-<ul>
-<li>K365 leads real power at every one of the top 5 alliance ranks: 61.3B against our 56.1B. Their hero and gear depth is spread wider.</li>
-<li>Our biggest gap is alliance #4: SCC has 32.4B to SRT's 27.2B.</li>
-<li>K365's top 4 alliances logged in more often day to day (94% active within 24h vs 88% for ours, 15 Sep snapshot).</li>
-</ul>
-<p class="note">Net: the centre stays at even. Our top-end edge and K365's depth roughly cancel. Prep and castle results line up only about 31% of the time across kingdoms, so the prep result says little about castle day.</p>
 </article>
     </div>
   </section>
 
   <section id="plan">
-    <h2>Castle-day plan for K203</h2>
-    <ol class="recs"><li><h3>Fight where we are strongest</h3><p>Build the main rallies around ORM, PRO and BR4. This TC70 core holds our top-end advantage. Keep their strongest marches on the castle and avoid spending them on secondary targets.</p></li>
-<li><h3>Cover the SCC gap</h3><p>SCC is K365&#x27;s #4 alliance and out-sizes SRT by 5.2B. Do not leave SRT to face SCC alone: pair it with reinforcements from HnG and BR1, and plan which core rally answers SCC when it commits.</p></li>
-<li><h3>Lock in attendance before Friday</h3><p>In the 15 Sep snapshot, 24h activity in PRO, BR4 and SRT was 84%, 90% and 82%, against 94–99% for LTR, AOS and ORG. Get attendance confirmed in each top-6 alliance by Fri 9 Oct, with named backups for rally leaders.</p></li>
-<li><h3>Give lower-TC members support jobs</h3><p>HnG and BR1 have median Town Centre 55 and 50. Use them to reinforce garrisons and fill rallies rather than in open-field fights against K365&#x27;s TC65–70 alliances.</p></li>
-<li><h3>Expect a stronger tail than their activity suggests</h3><p>WYW and SDH (K365 #5 and #6) were their least active alliances, but they are close to HnG and BR1 in power. Treat them as equals, not easy points.</p></li>
-<li><h3>Don&#x27;t read the castle result from prep</h3><p>K365 is likely to push hard in prep. If we lose it, castle day is still open. Prep and castle results line up only about 31% of the time.</p></li>
-<li><h3>Confirm timing in-game</h3><p>The castle date (Sat 10 Oct) is estimated from the four-week cycle. Check the in-game KvK schedule and adjust the plan if it differs.</p></li></ol>
+    <h2>Prep plan for K203</h2>
+    <ol class="recs"><li><h3>Bank speedups and resources for prep</h3><p>K365 added 4.4B of power in the last 7 days to our 2.9B. We can&#x27;t match that growth before prep, so make it count during prep: hold speedups, resources and upgrades until the matching prep day opens.</p></li>
+<li><h3>Get the whole kingdom scoring</h3><p>K365 has 180 more governors on the map and 358 more active over 30 days. Prep points come from every account. Reach beyond the top 6 alliances: share the daily targets with every alliance in K203, not only the leading ones.</p></li>
+<li><h3>Use our hero depth</h3><p>Our Mystic Trial lead is largest in ranks 51–100 (+3.8%). These mid-tier players are where we beat K365 head to head. Make sure each of them knows the daily targets and hits them, especially on hero-development days.</p></li>
+<li><h3>Time Town Centre and building completions for prep</h3><p>K365 logged 179 Town Centre upgrades in 7 days to our 117. Upgrades that finish before prep score nothing in it. Queue long builds so they complete inside the prep window.</p></li>
+<li><h3>Check standings every day</h3><p>Post the day&#x27;s score gap in alliance chat each reset and shift effort to the next day&#x27;s theme. A close day is decided in its final hours.</p></li>
+<li><h3>Keep castle day separate</h3><p>If prep goes to K365, castle day is still open. Prep and castle results line up only about 31% of the time.</p></li>
+<li><h3>Confirm the schedule in-game</h3><p>Castle day (Sat 10 Oct) and the prep days before it are estimated from the four-week cycle. Check the in-game KvK schedule.</p></li></ol>
   </section>
 
   <section class="caveats" id="caveats">
@@ -395,6 +434,7 @@ footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--lin
 <li>StratForge&#x27;s kingdom &quot;real power&quot; (2.8B / 2.7B) and &quot;top-10 total&quot; (8.3B / 8.4B) are smaller than single top alliances&#x27; real power, so the two metrics measure something narrower. They are compared like-for-like only.</li>
 <li>K203&#x27;s city and alliance counts come from a snapshot 17 days old.</li>
 <li>The castle date is an estimate from the four-week cycle (23 May, 20 Jun, 18 Jul, 15 Aug, 12 Sep).</li>
+<li>Mystic Trial, research, hero, pet and troop figures are sums over each kingdom&#x27;s top 100 leaderboard, captured 4 Oct.</li>
 <li>Projections are judgement estimates, not model output.</li></ul>
   </section>
 

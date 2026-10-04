@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T20:37:24+00:00",
+  "generated_at": "2026-10-04T20:49:04+00:00",
   "source": "MightPulse API",
   "activity_basis": "vs_now: online or last_active_at within window of generated_at; vs_snapshot: last_active_at within window of activity_snapshot_at",
   "activity_snapshot_at": "2026-09-15T10:48:20+00:00",
@@ -21,7 +21,36 @@
         "power_gain_7d": 2863529530,
         "tc_pushers_7d": 117,
         "hero_power": 1191816582,
-        "troop_power": 38882139145
+        "troop_power": 38882139145,
+        "mystic_trial": 247451,
+        "hero_total": 7292745306,
+        "hero_equip": 3359260856,
+        "governor_gear_power": 1344043680,
+        "governor_charm_power": 1654616000,
+        "pet_power": 2621701560,
+        "research_power": 4626137357,
+        "building_power": 1007042232,
+        "master_power": 1600096280,
+        "gov_power": 57150576165,
+        "boards": {
+          "mystic_trial": {
+            "captured_at": "2026-10-04T00:26:09+00:00",
+            "n": 100,
+            "total": 247451,
+            "at_rank": {
+              "1": 3513,
+              "5": 3235,
+              "10": 2955,
+              "25": 2683,
+              "50": 2432,
+              "75": 2193,
+              "100": 2076
+            },
+            "avg_1_10": 3198.1,
+            "avg_11_50": 2617.1,
+            "avg_51_100": 2215.7
+          }
+        }
       },
       "top_alliances": [
         {
@@ -32,7 +61,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 413,
+          "data_age_seconds": 1115,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -57,7 +86,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 392,
+          "data_age_seconds": 1095,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -82,7 +111,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 387,
+          "data_age_seconds": 1090,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -107,7 +136,7 @@
           "median_tc_level": 64,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 3590,
+          "data_age_seconds": 693,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -132,7 +161,7 @@
           "median_tc_level": 55,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 383,
+          "data_age_seconds": 1087,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -157,7 +186,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 378,
+          "data_age_seconds": 1082,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -203,13 +232,42 @@
         "alliance_count": 502,
         "power": 219094269628,
         "avg_power": 95716150,
-        "power_rank": 1597,
-        "activity_rank": 1760,
+        "power_rank": 1596,
+        "activity_rank": 1759,
         "health": "C",
         "power_gain_7d": 4367772128,
         "tc_pushers_7d": 179,
         "hero_power": 1161754151,
-        "troop_power": 38506828472
+        "troop_power": 38506828472,
+        "mystic_trial": 239648,
+        "hero_total": 7188440835,
+        "hero_equip": 3321919723,
+        "governor_gear_power": 1321123440,
+        "governor_charm_power": 1609768000,
+        "pet_power": 2623220040,
+        "research_power": 4148249785,
+        "building_power": 1007466920,
+        "master_power": 1660448480,
+        "gov_power": 56185549803,
+        "boards": {
+          "mystic_trial": {
+            "captured_at": "2026-10-04T00:26:09+00:00",
+            "n": 100,
+            "total": 239648,
+            "at_rank": {
+              "1": 3533,
+              "5": 3126,
+              "10": 2994,
+              "25": 2592,
+              "50": 2312,
+              "75": 2123,
+              "100": 2013
+            },
+            "avg_1_10": 3175.4,
+            "avg_11_50": 2529.8,
+            "avg_51_100": 2134.1
+          }
+        }
       },
       "top_alliances": [
         {
@@ -220,7 +278,7 @@
           "median_tc_level": 70,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 373,
+          "data_age_seconds": 1077,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -245,7 +303,7 @@
           "median_tc_level": 67,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 370,
+          "data_age_seconds": 1075,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -270,7 +328,7 @@
           "median_tc_level": 66,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 365,
+          "data_age_seconds": 1070,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -295,7 +353,7 @@
           "median_tc_level": 65,
           "members_missing_last_active": 1,
           "online_now": 0,
-          "data_age_seconds": 360,
+          "data_age_seconds": 1063,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -320,7 +378,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 2,
           "online_now": 0,
-          "data_age_seconds": 354,
+          "data_age_seconds": 1057,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
@@ -345,7 +403,7 @@
           "median_tc_level": 50,
           "members_missing_last_active": 0,
           "online_now": 0,
-          "data_age_seconds": 350,
+          "data_age_seconds": 1054,
           "vs_now": {
             "active_24h": 0,
             "active_72h": 0,
