@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>K203 vs K365 Battle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column; verdict first, detail tables scroll inside their own frames. */
+:root {
+  --bg: #F3F5F8; --surface: #FFFFFF; --line: #D9DEE6; --fg: #17202C; --muted: #5A6577;
+  --us: #2453C9; --us-soft: #DCE5FA; --them: #B5481A; --them-soft: #F6E2D7;
+  --win: #1E7A4C; --loss: #B42335; --unc-bg: #FFF2C9; --unc-fg: #6B4E00; --risk: #B42335; --risk-soft: #F8E1E4;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; --risk: #F2788A; --risk-soft: #44202A; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; --risk: #F2788A; --risk-soft: #44202A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 400 1rem/1.55 var(--f-body); margin: 0; }
+.wrap { max-width: 60rem; margin: 0 auto; padding-inline: 16px; padding-block: 2rem 4rem; display: grid; gap: 3rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: .01em; }
+h2 { font-size: 1.9rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 600; }
+h4 { font: 700 .78rem/1.3 var(--f-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1rem 0 .35rem; }
+p { margin: 0; max-width: 68ch; }
+ul { margin: 0; padding-left: 1.15rem; display: grid; gap: .4rem; max-width: 68ch; }
+strong { font-weight: 700; }
+.num { font-variant-numeric: tabular-nums; }
+.eyebrow { font: 600 .8rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+.lede { color: var(--muted); }
+.note { font-size: .92rem; color: var(--muted); }
+.us-t { color: var(--us); } .them-t { color: var(--them); }
+.hero { display: grid; gap: 1rem; }
+.vs { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2em .5em; }
+.vs .k { font-family: var(--f-display); font-weight: 700; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .92rem; }
+.meta strong { color: var(--fg); font-weight: 600; }
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.verdict > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: grid; gap: .2rem; align-content: start; min-width: 0; }
+.verdict .v-main { border-color: var(--us); }
+.verdict .big { font: 700 2.2rem/1 var(--f-display); }
+.verdict .lbl { font-size: .9rem; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: grid; gap: .6rem; align-content: start; min-width: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.25rem; }
+.card.risk { border-color: var(--risk); }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.tbl-wrap.flat { border: 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { padding: .6rem .75rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:last-child > * { border-bottom: 0; }
+thead th { font: 600 .75rem/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); white-space: nowrap; }
+tbody th { font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.cmp tbody th { font-weight: 400; min-width: 11rem; }
+.cmp tr.key > * { background: var(--us-soft); font-weight: 700; }
+.cmp tr.minor > * { color: var(--muted); }
+.colh.us { color: var(--us); } .colh.them { color: var(--them); }
+.edge { display: inline-block; font: 600 .75rem/1 var(--f-body); padding: .3rem .5rem; border-radius: 999px; white-space: nowrap; }
+.edge.us { background: var(--us-soft); color: var(--us); }
+.edge.them { background: var(--them-soft); color: var(--them); }
+.edge.even { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.tag-unc, .tag-low { display: inline-block; font: 600 .68rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .06em; padding: .25rem .4rem; border-radius: 4px; vertical-align: .1em; white-space: nowrap; }
+.tag-unc { background: var(--unc-bg); color: var(--unc-fg); }
+.tag-low { border: 1px solid var(--line); color: var(--muted); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.25rem; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
+.chart h3 { font-size: 1.15rem; }
+.pb { display: grid; gap: .6rem; }
+.pb-row { display: grid; grid-template-columns: 2.9rem 1fr; gap: .5rem; align-items: center; }
+.pb-lbl { font: 500 .78rem var(--f-data); color: var(--muted); }
+.pb-bars { display: grid; gap: 3px; min-width: 0; }
+.pb-line, .pb-axis { display: grid; grid-template-columns: 2.6rem 1fr 3.6rem; gap: .5rem; align-items: center; }
+.pb-axis { margin-left: 3.4rem; }
+.pb-name { font: 500 .74rem var(--f-data); }
+.pb-name.us { color: var(--us); } .pb-name.them { color: var(--them); }
+.pb-track { height: .7rem; background: linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0 / 25% 100%; position: relative; display: block; }
+.pb-bar { display: block; height: 100%; border-radius: 0 3px 3px 0; }
+.pb-bar.us { background: var(--us); } .pb-bar.them { background: var(--them); }
+.pb-val { font: 500 .74rem var(--f-data); text-align: right; font-variant-numeric: tabular-nums; }
+.pb-axis-in { grid-column: 2; position: relative; height: 1rem; font: 500 .65rem var(--f-data); color: var(--muted); }
+.pb-axis-in span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.pb-axis-in span:first-child { transform: none; }
+.pb-axis-in span:last-child { transform: translateX(-100%); }
+.gauge { position: relative; height: 1.1rem; border-radius: 4px; background: linear-gradient(to right, var(--them-soft), var(--surface) 50%, var(--us-soft)); border: 1px solid var(--line); margin-top: .4rem; }
+.g-mid { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--muted); }
+.g-new { position: absolute; top: 3px; bottom: 3px; background: var(--us); border-radius: 2px; opacity: .85; }
+.gauge-axis { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); }
+.proj-range { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.proj-range .num { font: 700 2.4rem/1 var(--f-display); color: var(--us); }
+ol.rec { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr)); gap: .4rem; }
+ol.rec li { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: .3rem; }
+.opp { grid-column: 1 / -1; font: 500 .72rem var(--f-data); text-align: center; color: var(--muted); }
+.res { font: 700 .8rem/1.5 var(--f-data); text-align: center; border-radius: 3px; }
+.res.W { color: var(--win); background: color-mix(in srgb, var(--win) 14%, transparent); }
+.res.L { color: var(--surface); background: var(--loss); }
+ol.recs { list-style: none; counter-reset: r; margin: 0; padding: 0; display: grid; gap: .9rem; }
+ol.recs li { counter-increment: r; display: grid; grid-template-columns: 2.2rem 1fr; gap: .15rem .75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+ol.recs li::before { content: counter(r); grid-row: span 2; font: 700 1.6rem/1 var(--f-display); color: var(--us); }
+ol.recs h3 { font-size: 1.2rem; }
+.svgchart { width: 100%; height: auto; display: block; }
+.svgchart text { fill: var(--muted); font: 500 11px var(--f-data); }
+.svgchart .grid { stroke: var(--line); stroke-width: 1; }
+.svgchart .l-us { stroke: var(--us); fill: none; stroke-width: 2.5; }
+.svgchart .l-them { stroke: var(--them); fill: none; stroke-width: 2.5; }
+.svgchart .d-us { fill: var(--us); } .svgchart .d-them { fill: var(--them); }
+.svgchart .lbl-us { fill: var(--us); font-weight: 700; } .svgchart .lbl-them { fill: var(--them); font-weight: 700; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+.sw { display: inline-block; width: .9rem; height: .9rem; border-radius: 2px; vertical-align: -.1rem; margin-right: .3rem; }
+.sw.us { background: var(--us); } .sw.them { background: var(--them); }
+.caveats { font-size: .92rem; color: var(--muted); }
+.caveats ul { max-width: 75ch; }
+footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
+a { color: var(--us); }
+:focus-visible { outline: 2px solid var(--us); outline-offset: 2px; }
+@media (max-width: 30rem) { .cmp tbody th { min-width: 8.5rem; } th, td { padding: .5rem .55rem; } }
+
+.tl .seg-c { fill: var(--us); } .tl .seg-x { fill: var(--them-soft); stroke: var(--them); stroke-width: 1; }
+.tl .seg-t-c { fill: var(--surface); font-weight: 700; } .tl .seg-t-x { fill: var(--them); font-weight: 700; }
+.tl .hold { stroke: var(--fg); stroke-width: 2; } .tl .hold-t { fill: var(--fg); }
+.sw.seg-c-sw { background: var(--us); } .sw.seg-x-sw { background: var(--them-soft); border: 1px solid var(--them); }
+.bands .tagc { font: 700 1rem var(--f-display); letter-spacing: .03em; }
+.bands .tagc.us { color: var(--us); } .bands .tagc.them { color: var(--them); }
+.bands tr.tot > * { border-top: 2px solid var(--line); font-weight: 700; }
+.why > p { max-width: 70ch; }
+.lev { display: grid; gap: .45rem; }
+.lev-row, .lev-axis { display: grid; grid-template-columns: 13rem 1fr 3.6rem; gap: .2rem .6rem; align-items: center; }
+.lev-lbl { font-size: .88rem; }
+.pb-bar.lev { background: var(--muted); }
+.lev-q .pb-bar.lev { background: var(--us); }
+.lev-q .lev-lbl { font-weight: 600; }
+@media (max-width: 36rem) {
+  .lev-row, .lev-axis { grid-template-columns: 1fr 3.6rem; }
+  .lev-lbl { grid-column: 1 / -1; }
+  .lev-axis .pb-axis-in { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <span class="eyebrow">KvK #19 · Battle day</span>
+    <h1 class="vs"><span class="k us-t">K203</span><span>vs</span><span class="k them-t">K365</span></h1>
+    <p class="lede">The castle is won by holding it. Our edge is quality: stronger top players and a deeper hero base. We need one alliance holding, all four turrets, and a city-defence plan, since no rules have been agreed.</p>
+    <div class="meta"><span>Battle <strong>Sat 10 Oct 2026, 10:00–22:00 UTC</strong> <span class="tag-unc">Estimated</span></span><span>Data as of <strong>4 Oct 2026</strong></span></div>
+    <div class="verdict">
+      <div class="v-main"><span class="lbl">Castle day</span><span class="big num">47–57%</span><span class="lbl">chance K203 wins. Close, slight lean K203.</span></div>
+      <div><span class="lbl">To win the castle</span><span class="big num">2.5 h</span><span class="lbl">continuous hold by one alliance, or the longest total hold by 17:00 UTC.</span></div>
+      <div><span class="lbl">Mystic Trial, top 100</span><span class="big num">+3.3%</span><span class="lbl">K203 ahead: the best current measure of combat quality.</span></div>
+    </div>
+  </header>
+
+  <section id="how">
+    <h2>How battle day works</h2>
+    <div class="chart"><svg class="svgchart tl" viewBox="0 0 640 92" role="img" aria-label="Battle day, 10:00 to 22:00 UTC. Cross-kingdom fighting 10 to 12, castle window 12 to 17, cross-kingdom fighting 17 to 22."><rect class="seg-x" x="12.0" y="18" width="102.7" height="34" rx="4"/><text class="seg-t-x" x="63.3" y="40" text-anchor="middle">Open</text><rect class="seg-c" x="114.7" y="18" width="256.7" height="34" rx="4"/><text class="seg-t-c" x="243.0" y="40" text-anchor="middle">Castle window</text><rect class="seg-x" x="371.3" y="18" width="256.7" height="34" rx="4"/><text class="seg-t-x" x="499.7" y="40" text-anchor="middle">Cross-kingdom fighting</text><line class="grid" x1="12.0" x2="12.0" y1="56" y2="62"/><text x="12.0" y="76" text-anchor="start">10:00</text><line class="grid" x1="114.7" x2="114.7" y1="56" y2="62"/><text x="114.7" y="76" text-anchor="middle">12:00</text><line class="grid" x1="371.3" x2="371.3" y1="56" y2="62"/><text x="371.3" y="76" text-anchor="middle">17:00</text><line class="grid" x1="628.0" x2="628.0" y1="56" y2="62"/><text x="628.0" y="76" text-anchor="end">22:00</text><line class="hold" x1="114.7" x2="243.0" y1="10" y2="10"/><text x="114.7" y="8" class="hold-t">2.5 h continuous hold wins</text></svg>
+      <div class="legend"><span><span class="sw seg-c-sw"></span>Castle window</span><span><span class="sw seg-x-sw"></span>Cross-kingdom fighting only</span></div></div>
+    <ul>
+      <li><strong>Prep decides the ground.</strong> The prep winner attacks. The fight happens in the loser's kingdom, and the winner's castle cannot be attacked.</li>
+      <li><strong>What is fought over:</strong> the King's Castle and four turrets. Turrets alone don't win, but they decide who survives on the castle.</li>
+      <li><strong>How it is won:</strong> one alliance holds the castle for 2.5 hours in a row, or has the longest total hold when the window closes. <span class="tag-unc">Some guides say 3 hours</span></li>
+      <li><strong>Losses:</strong> wounded troops go to the Infirmary. Beyond its capacity, 70% go to the Enlistment Office (recoverable) and 30% are lost until Field Triage.</li>
+      <li><strong>Kill points by tier:</strong> T6 5, T7 7, T8 9, T9 11, T10 13. Points for Truegold troops are not published.</li>
+    </ul>
+  </section>
+
+  <section id="scenarios">
+    <h2>Two ways the day can go</h2>
+    <div class="cards">
+  <div class="card"><h3 class="us-t">If we win prep</h3>
+    <ul><li>We attack K365's castle, in K365's kingdom. Our own castle is safe all day.</li>
+    <li>K365 can still teleport into K203 in the cross-kingdom windows (10:00–12:00 and 17:00–22:00 UTC) and hit our cities.</li>
+    <li>Goal: ORM takes the castle as early as possible after 12:00 and holds it for 2.5 hours, with turrets covering it.</li></ul></div>
+  <div class="card risk"><h3 class="them-t">If K365 wins prep</h3>
+    <ul><li>K365 attacks our castle, inside our kingdom. Their castle is safe, so we can only defend.</li>
+    <li>Their forces are in K203 all day, close to our cities. City defence matters most in this case.</li>
+    <li>Goal: never let one K365 alliance hold for 2.5 hours, and keep their total hold time short. Garrison the castle and all four turrets before 12:00, and counter-rally every time they take it.</li></ul></div>
+</div>
+  </section>
+
+  <section id="cities">
+    <h2>Town Centre hits</h2>
+    <p class="lede">No rules have been agreed, so K365 can hit our cities. Here is where that threat is real.</p>
+    <ul><li>A city hit only scores kill points when the two Town Centres are within 3 levels of each other. A hit outside that range still happens and still costs troops, but scores nothing.</li><li>So K365's strongest hitters (their top 6 have 171 members at TC70+) can only score on our strongest cities (TC67 and up). Those are exactly our rally and holder accounts, with 183 members at TC70+ in our top 6.</li><li>Our smaller cities give K365's big accounts no points. The real threat to them is griefing, plus K365's own small accounts: 161 members at TC55 or below in their top 6, against our 160. Most of theirs sit in WYW and SDH, which show almost no kills (0.1B between them).</li><li>K365 has 1,371 cities on the map to our 1,191, so if city fighting breaks out they have more accounts to send.</li></ul>
+    <h3 class="us-t">K203 top 6 by Town Centre level</h3>
+    <div class="tbl-wrap"><table class="bands"><thead><tr><th scope="col">Alliance</th><th scope="col" class="num">TC70+</th><th scope="col" class="num">TC65–69</th><th scope="col" class="num">TC56–64</th><th scope="col" class="num">TC55 and below</th><th scope="col" class="num">Power</th></tr></thead><tbody><tr><th scope="row" class="tagc us">ORM</th><td class="num">50</td><td class="num">33</td><td class="num">12</td><td class="num">4</td><td class="num">43.0B</td></tr><tr><th scope="row" class="tagc us">PRO</th><td class="num">50</td><td class="num">19</td><td class="num">17</td><td class="num">12</td><td class="num">40.8B</td></tr><tr><th scope="row" class="tagc us">BR4</th><td class="num">51</td><td class="num">18</td><td class="num">24</td><td class="num">4</td><td class="num">38.0B</td></tr><tr><th scope="row" class="tagc us">SRT</th><td class="num">25</td><td class="num">19</td><td class="num">18</td><td class="num">27</td><td class="num">27.2B</td></tr><tr><th scope="row" class="tagc us">HnG</th><td class="num">4</td><td class="num">8</td><td class="num">31</td><td class="num">45</td><td class="num">17.8B</td></tr><tr><th scope="row" class="tagc us">BR1</th><td class="num">3</td><td class="num">7</td><td class="num">19</td><td class="num">68</td><td class="num">15.1B</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">183</td><td class="num">104</td><td class="num">121</td><td class="num">160</td><td class="num">181.8B</td></tr></tbody></table></div>
+    <h3 class="them-t">K365 top 6 by Town Centre level</h3>
+    <div class="tbl-wrap"><table class="bands"><thead><tr><th scope="col">Alliance</th><th scope="col" class="num">TC70+</th><th scope="col" class="num">TC65–69</th><th scope="col" class="num">TC56–64</th><th scope="col" class="num">TC55 and below</th><th scope="col" class="num">Power</th></tr></thead><tbody><tr><th scope="row" class="tagc them">LTR</th><td class="num">56</td><td class="num">20</td><td class="num">15</td><td class="num">7</td><td class="num">41.3B</td></tr><tr><th scope="row" class="tagc them">AOS</th><td class="num">45</td><td class="num">23</td><td class="num">26</td><td class="num">5</td><td class="num">40.0B</td></tr><tr><th scope="row" class="tagc them">ORG</th><td class="num">39</td><td class="num">33</td><td class="num">21</td><td class="num">6</td><td class="num">38.7B</td></tr><tr><th scope="row" class="tagc them">SCC</th><td class="num">26</td><td class="num">28</td><td class="num">21</td><td class="num">20</td><td class="num">32.4B</td></tr><tr><th scope="row" class="tagc them">WYW</th><td class="num">3</td><td class="num">8</td><td class="num">16</td><td class="num">65</td><td class="num">15.3B</td></tr><tr><th scope="row" class="tagc them">SDH</th><td class="num">2</td><td class="num">6</td><td class="num">18</td><td class="num">58</td><td class="num">14.5B</td></tr><tr class="tot"><th scope="row">Top 6</th><td class="num">171</td><td class="num">118</td><td class="num">117</td><td class="num">161</td><td class="num">182.2B</td></tr></tbody></table></div>
+  </section>
+
+  <section id="rules">
+    <h2>Rules to propose to K365</h2>
+    <ul><li><strong>Propose: castle and turrets only, no city hits.</strong> A castle fight rewards quality, where we lead on Mystic Trial and top players. City hits reward the side with more active hitters, which is K365.</li><li><strong>Fallback: no zeroing.</strong> No repeat hits on the same city, and no hits on cities below an agreed Town Centre level.</li><li>Put any agreement in writing and post it in both kingdoms' channels with a named contact on each side, so a breach can be called out fast.</li><li>Prepare as if any agreement will be broken. The shield plan below applies either way.</li></ul>
+  </section>
+
+  <section id="city-plan">
+    <h2>City defence plan</h2>
+    <ol class="recs"><li><h3>Shield before prep ends</h3><p>Cities can be hit in the gap between prep and battle. Everyone without a battle-day role shields before Day 5 closes, and keeps a shield running through 22:00 UTC Saturday.</p></li><li><h3>Battle roles stay off the map</h3><p>Attacking drops your shield and starts a cooldown, so rally leaders, joiners and holders can't rely on shields. Keep their troops in rallies, garrisons and turrets, not sitting at home, and heal continuously so the Infirmary never fills.</p></li><li><h3>No gathering on battle day</h3><p>Shields don't protect troops on resource tiles or in alliance buildings. Recall gatherers before 10:00 UTC.</p></li><li><h3>Spend or protect resources</h3><p>Anything above Storehouse protection can be plundered. Spend it in prep or keep it under the protected amount.</p></li><li><h3>Punish hitters inside our kingdom</h3><p>A K365 player who teleports into K203 to hit cities leaves their city sitting in our kingdom. Each alliance names a watcher who calls hits, and a nearby rally leader goes after the hitter's city. Do this in the cross-kingdom windows, never with castle or turret troops.</p></li><li><h3>Recover after the battle</h3><p>Field Triage returns 30% of troops lost beyond the Infirmary by default. Medical Satchels add 10% and alliance Rescue Orders up to 50%, for as much as 90%. Line these up before Saturday.</p></li></ol>
+  </section>
+
+  <section id="castle-plan">
+    <h2>Castle plan</h2>
+    <p class="lede">Alliance roles below are a starting point for leadership to adjust.</p>
+    <ol class="recs"><li><h3>One alliance holds the castle</h3><p>Hold time counts per alliance, not per kingdom, so passing the castle between our alliances restarts the clock. ORM should be the holder: our largest alliance (43.0B), 50 members at TC70+, and the most active in our snapshot. If K365 knocks ORM out, retake it with an ORM-led rally. A different alliance retaking it starts that alliance's clock from zero.</p></li><li><h3>Take all four turrets</h3><p>Enemy turrets fire on the castle about every 4 minutes, speeding up to every minute, at roughly 2% casualties per turret. Our own turrets don't fire on us and give our troops +8%, +12%, +15% or +20% Lethality for 1 to 4 turrets. In our battle model a bonus that size swings a fight as much as a large troop advantage. BR4 and SRT take two turrets each; HnG and BR1 keep refilling them.</p></li><li><h3>Rally in pairs</h3><p>Send an attack rally with offensive heroes, then a garrison rally with defensive heroes about 5 seconds behind it, so the castle is refilled the moment it falls. The player with the longest march opens their rally first, so all rallies land 1 to 5 seconds apart.</p></li><li><h3>PRO runs counter-rallies</h3><p>PRO has the most combat history of our top three (9.0B kills on its roster). Its job is to rally straight onto any K365 rally that takes the castle or a turret, before their garrison settles in.</p></li><li><h3>Plan for SCC</h3><p>SCC is K365's #4 alliance and out-sizes SRT by 5.2B. Expect it on the turrets. SRT should not hold a turret alone against it: keep a PRO or BR4 counter-rally ready for whichever turret SCC hits.</p></li><li><h3>Pick joiner heroes with the right first skill</h3><p>Only the joiner's first hero's first skill counts, and only the four highest-level skills in a rally apply. Skills of the same type add together, while different types multiply, so spread them out. Attack joiners: Amane (+25% attack), Chenko (+25% lethality), Ava (−25% enemy defence), Vivian (+25% damage to the enemy). Garrison joiners: Triton (+25% defence), Ava, Alcar, Petra. Each joiner sends their highest-level option.</p></li><li><h3>Rally leaders are our biggest accounts</h3><p>The leader's own stats govern the whole rally. Our top 5 players carry 14% more real power than K365's, so put them at the front of every rally.</p></li></ol>
+  </section>
+
+  <section id="strength">
+    <h2>Strength check</h2>
+    <div class="tbl-wrap"><table class="cmp"><thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead><tbody><tr class="key"><th scope="row">Mystic Trial, top 100 combined</th><td class="num">247,451</td><td class="num">239,648</td><td><span class="edge us">K203</span></td></tr><tr class=""><th scope="row">Top 5 players, real power</th><td class="num">1,792M</td><td class="num">1,573M</td><td><span class="edge us">K203</span></td></tr><tr class=""><th scope="row">Top 5 alliances, real power</th><td class="num">56.1B</td><td class="num">61.3B</td><td><span class="edge them">K365</span></td></tr><tr class=""><th scope="row">Top 6 alliances, total power</th><td class="num">181.8B</td><td class="num">182.2B</td><td><span class="edge even">Even</span></td></tr><tr class=""><th scope="row">Top 6 members at Town Centre 70+</th><td class="num">183</td><td class="num">171</td><td><span class="edge us">K203</span></td></tr><tr class=""><th scope="row">Hero power, top 100</th><td class="num">7.3B</td><td class="num">7.2B</td><td><span class="edge even">Even</span></td></tr><tr><th scope="row">KvK castle record</th><td class="num">11-5</td><td class="num">10-5</td><td><span class="edge even">Even</span></td></tr><tr class="minor"><th scope="row">Troop power, top 100 <span class="tag-low">Less weight in KvK</span></th><td class="num">38.9B</td><td class="num">38.5B</td><td><span class="edge even">Even</span></td></tr></tbody></table></div>
+    <div class="chart why">
+      <h3>Why quality beats quantity in a fight</h3>
+      <p>Our alliance's battle simulator, calibrated on real battle reports, shows that troop count only counts under a square root, while attack and lethality multiply each other. In an otherwise even fight, <strong>+20% attack and lethality wins as decisively as twice the troops</strong> (2.4 vs 2.4 enemy losses per own loss).</p>
+      <div class="lev"><div class="lev-row"><span class="lev-lbl">+20% troops</span><span class="pb-track"><span class="pb-bar lev" style="width:47.0%"></span></span><span class="pb-val">1.9 : 1</span></div><div class="lev-row"><span class="lev-lbl">+50% troops</span><span class="pb-track"><span class="pb-bar lev" style="width:53.5%"></span></span><span class="pb-val">2.1 : 1</span></div><div class="lev-row"><span class="lev-lbl">2x troops</span><span class="pb-track"><span class="pb-bar lev" style="width:61.0%"></span></span><span class="pb-val">2.4 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">+20% attack and lethality</span><span class="pb-track"><span class="pb-bar lev" style="width:60.8%"></span></span><span class="pb-val">2.4 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">+50% attack and lethality</span><span class="pb-track"><span class="pb-bar lev" style="width:94.2%"></span></span><span class="pb-val">3.8 : 1</span></div><div class="lev-row lev-q"><span class="lev-lbl">Truegold 8 vs Truegold 5 troops</span><span class="pb-track"><span class="pb-bar lev" style="width:57.5%"></span></span><span class="pb-val">2.3 : 1</span></div><div class="lev-axis"><div class="pb-axis-in"><span style="left:0.0%">0</span><span style="left:25.0%">1</span><span style="left:50.0%">2</span><span style="left:75.0%">3</span><span style="left:100.0%">4</span></div></div></div>
+      <p class="note">Enemy losses per own loss when one side of an otherwise identical fight gets the change shown. Troop-count changes in grey, quality changes in colour. No heroes on either side.</p>
+      <p>Heroes are the biggest single multiplier. A maxed Gen 7 hero with full gear adds about <strong>+851%</strong> attack and defence and <strong>+760%</strong> lethality and health to its troop type, which roughly doubles the stats of the troops it leads. Mystic Trial, a hero combat score, tracks that strength better than troop power does.</p>
+    </div>
+  </section>
+
+  <section id="projection">
+    <h2>Castle projection</h2>
+    <div class="card"><p class="proj-range"><span class="num">47–57%</span><span class="note">chance K203 wins castle day</span></p><div class="gauge" role="img" aria-label="Castle: 47 to 57 percent chance K203 wins">
+  <span class="g-mid"></span><span class="g-new" style="left:47%;width:10%"></span>
+</div><div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div>
+      <h4>For us</h4><ul>
+        <li>Mystic Trial lead at every depth of the top 100, and 14% more real power in our top 5 players.</li>
+        <li>More of our top-6 members at TC70+ (183 vs 171).</li></ul>
+      <h4>Against us</h4><ul>
+        <li>K365 leads real power at each of the top 5 alliance ranks (61.3B vs 56.1B), and SCC out-sizes SRT.</li>
+        <li>K365 has more active players, which matters if city fighting spreads.</li></ul>
+      <p class="note">Losing prep doesn't decide the castle: across kingdoms the two results line up only about 31% of the time. It does move the fight into our kingdom.</p></div>
+  </section>
+
+  <section class="caveats" id="caveats"><h2>About the data</h2><ul><li>Battle rules come from community guides (kingshotdata.com, kingshotguide.org, kingshotmastery.com, kingshotbattlemaster.com and others). Guides disagree in places, and none states a game version. Confirm timings and the hold requirement in-game.</li><li>Whether plunder applies across kingdoms, how players return home after teleporting, and kill points for Truegold troops are not confirmed.</li><li>Town Centre levels, kills and power come from MightPulse alliance rosters (4 Oct 2026). Roster kill counts use different counting from the kingdom leaderboards, so we compare them only within the same source.</li><li>Battle-model figures come from our alliance's simulator in heroless, otherwise identical fights. It shows which stats decide combat. It does not simulate Mystic Trial or castle mechanics.</li><li>The battle date is estimated from the four-week cycle. Projections are judgement estimates.</li></ul></section>
+  <footer>Sources: MightPulse (4 Oct 2026); StratForge and Kingshot.net (early Oct 2026); community KvK guides; our alliance battle simulator. Aggregate figures only.</footer>
+</main>
+</body>
+</html>

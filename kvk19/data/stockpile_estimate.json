@@ -1,0 +1,161 @@
+{
+  "saving_window_days": 23,
+  "income_h_per_day": [
+    2.67,
+    6.67
+  ],
+  "points_per_hour": 1800,
+  "kingdoms": {
+    "203": {
+      "active_30d": [
+        1046,
+        1060
+      ],
+      "power_now": 208662314652,
+      "power_growth_since_tracking": 7799180284.14,
+      "tracking_since": "2026-09-15",
+      "step_changes": [],
+      "organic_growth": 7799180284.14,
+      "growth_per_active_m": [
+        7.2,
+        7.4
+      ],
+      "gross_hours": [
+        64155,
+        162533
+      ],
+      "banked_share": [
+        0.5,
+        0.75
+      ],
+      "banked_hours": [
+        32077,
+        121900
+      ],
+      "banked_hours_mid": 70639,
+      "prep_points": [
+        57739200,
+        219420000
+      ],
+      "prep_points_mid": 127149750,
+      "daily_series": [
+        {
+          "date": "2026-09-27",
+          "power": 204277209371,
+          "players": 3565
+        },
+        {
+          "date": "2026-09-29",
+          "power": 205490342800,
+          "players": 3576
+        },
+        {
+          "date": "2026-09-30",
+          "power": 206600043237,
+          "players": 3596
+        },
+        {
+          "date": "2026-10-01",
+          "power": 206600043237,
+          "players": 3596
+        },
+        {
+          "date": "2026-10-02",
+          "power": 207999787879,
+          "players": 3620
+        },
+        {
+          "date": "2026-10-03",
+          "power": 208209834239,
+          "players": 3626
+        },
+        {
+          "date": "2026-10-04",
+          "power": 208662314652,
+          "players": 3641
+        }
+      ]
+    },
+    "365": {
+      "active_30d": [
+        1383,
+        1418
+      ],
+      "power_now": 216233188347,
+      "power_growth_since_tracking": 7752948546.57,
+      "tracking_since": "2026-09-15",
+      "step_changes": [
+        {
+          "date": "2026-10-01",
+          "power": 4707384720,
+          "players": 102
+        }
+      ],
+      "organic_growth": 3045563826.5699997,
+      "growth_per_active_m": [
+        2.3,
+        5.5
+      ],
+      "gross_hours": [
+        84824,
+        217427
+      ],
+      "banked_share": [
+        0.6,
+        0.85
+      ],
+      "banked_hours": [
+        50894,
+        184813
+      ],
+      "banked_hours_mid": 108982,
+      "prep_points": [
+        91609920,
+        332662800
+      ],
+      "prep_points_mid": 196168035,
+      "daily_series": [
+        {
+          "date": "2026-09-27",
+          "power": 210618918227,
+          "players": 2181
+        },
+        {
+          "date": "2026-09-29",
+          "power": 211525803627,
+          "players": 2189
+        },
+        {
+          "date": "2026-09-30",
+          "power": 211525803627,
+          "players": 2189
+        },
+        {
+          "date": "2026-10-01",
+          "power": 216233188347,
+          "players": 2291
+        },
+        {
+          "date": "2026-10-02",
+          "power": 216233188347,
+          "players": 2291
+        },
+        {
+          "date": "2026-10-03",
+          "power": 216233188347,
+          "players": 2291
+        },
+        {
+          "date": "2026-10-04",
+          "power": 216233188347,
+          "players": 2291
+        }
+      ]
+    }
+  },
+  "reserve_ratio_365_vs_203": [
+    1.3,
+    1.9
+  ],
+  "reserve_ratio_mid": 1.54
+}

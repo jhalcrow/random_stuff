@@ -1,0 +1,233 @@
+<title>K203 vs K365 Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column; verdict first, detail tables scroll inside their own frames. */
+:root {
+  --bg: #F3F5F8; --surface: #FFFFFF; --line: #D9DEE6; --fg: #17202C; --muted: #5A6577;
+  --us: #2453C9; --us-soft: #DCE5FA; --them: #B5481A; --them-soft: #F6E2D7;
+  --win: #1E7A4C; --loss: #B42335; --unc-bg: #FFF2C9; --unc-fg: #6B4E00; --risk: #B42335; --risk-soft: #F8E1E4;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; --risk: #F2788A; --risk-soft: #44202A; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #10151C; --surface: #18202A; --line: #2B3644; --fg: #E6EBF2; --muted: #9AA6B8;
+  --us: #7EA2FF; --us-soft: #22325A; --them: #F2995F; --them-soft: #4A2A1A;
+  --win: #5CCB8F; --loss: #F2788A; --unc-bg: #3E3410; --unc-fg: #F3D57A; --risk: #F2788A; --risk-soft: #44202A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 400 1rem/1.55 var(--f-body); margin: 0; }
+.wrap { max-width: 60rem; margin: 0 auto; padding-inline: 16px; padding-block: 2rem 4rem; display: grid; gap: 3rem; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: .01em; }
+h2 { font-size: 1.9rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 600; }
+h4 { font: 700 .78rem/1.3 var(--f-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1rem 0 .35rem; }
+p { margin: 0; max-width: 68ch; }
+ul { margin: 0; padding-left: 1.15rem; display: grid; gap: .4rem; max-width: 68ch; }
+strong { font-weight: 700; }
+.num { font-variant-numeric: tabular-nums; }
+.eyebrow { font: 600 .8rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+.lede { color: var(--muted); }
+.note { font-size: .92rem; color: var(--muted); }
+.us-t { color: var(--us); } .them-t { color: var(--them); }
+.hero { display: grid; gap: 1rem; }
+.vs { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2em .5em; }
+.vs .k { font-family: var(--f-display); font-weight: 700; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .92rem; }
+.meta strong { color: var(--fg); font-weight: 600; }
+.verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.verdict > div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: grid; gap: .2rem; align-content: start; min-width: 0; }
+.verdict .v-main { border-color: var(--us); }
+.verdict .big { font: 700 2.2rem/1 var(--f-display); }
+.verdict .lbl { font-size: .9rem; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; display: grid; gap: .6rem; align-content: start; min-width: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.25rem; }
+.card.risk { border-color: var(--risk); }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.tbl-wrap.flat { border: 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { padding: .6rem .75rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:last-child > * { border-bottom: 0; }
+thead th { font: 600 .75rem/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); white-space: nowrap; }
+tbody th { font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.cmp tbody th { font-weight: 400; min-width: 11rem; }
+.cmp tr.key > * { background: var(--us-soft); font-weight: 700; }
+.cmp tr.minor > * { color: var(--muted); }
+.colh.us { color: var(--us); } .colh.them { color: var(--them); }
+.edge { display: inline-block; font: 600 .75rem/1 var(--f-body); padding: .3rem .5rem; border-radius: 999px; white-space: nowrap; }
+.edge.us { background: var(--us-soft); color: var(--us); }
+.edge.them { background: var(--them-soft); color: var(--them); }
+.edge.even { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.tag-unc, .tag-low { display: inline-block; font: 600 .68rem/1 var(--f-body); text-transform: uppercase; letter-spacing: .06em; padding: .25rem .4rem; border-radius: 4px; vertical-align: .1em; white-space: nowrap; }
+.tag-unc { background: var(--unc-bg); color: var(--unc-fg); }
+.tag-low { border: 1px solid var(--line); color: var(--muted); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.25rem; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; display: grid; gap: .75rem; min-width: 0; }
+.chart h3 { font-size: 1.15rem; }
+.pb { display: grid; gap: .6rem; }
+.pb-row { display: grid; grid-template-columns: 2.9rem 1fr; gap: .5rem; align-items: center; }
+.pb-lbl { font: 500 .78rem var(--f-data); color: var(--muted); }
+.pb-bars { display: grid; gap: 3px; min-width: 0; }
+.pb-line, .pb-axis { display: grid; grid-template-columns: 2.6rem 1fr 3.6rem; gap: .5rem; align-items: center; }
+.pb-axis { margin-left: 3.4rem; }
+.pb-name { font: 500 .74rem var(--f-data); }
+.pb-name.us { color: var(--us); } .pb-name.them { color: var(--them); }
+.pb-track { height: .7rem; background: linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0 / 25% 100%; position: relative; display: block; }
+.pb-bar { display: block; height: 100%; border-radius: 0 3px 3px 0; }
+.pb-bar.us { background: var(--us); } .pb-bar.them { background: var(--them); }
+.pb-val { font: 500 .74rem var(--f-data); text-align: right; font-variant-numeric: tabular-nums; }
+.pb-axis-in { grid-column: 2; position: relative; height: 1rem; font: 500 .65rem var(--f-data); color: var(--muted); }
+.pb-axis-in span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.pb-axis-in span:first-child { transform: none; }
+.pb-axis-in span:last-child { transform: translateX(-100%); }
+.gauge { position: relative; height: 1.1rem; border-radius: 4px; background: linear-gradient(to right, var(--them-soft), var(--surface) 50%, var(--us-soft)); border: 1px solid var(--line); margin-top: .4rem; }
+.g-mid { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--muted); }
+.g-new { position: absolute; top: 3px; bottom: 3px; background: var(--us); border-radius: 2px; opacity: .85; }
+.gauge-axis { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); }
+.proj-range { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.proj-range .num { font: 700 2.4rem/1 var(--f-display); color: var(--us); }
+ol.rec { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(4.3rem, 1fr)); gap: .4rem; }
+ol.rec li { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: .3rem; }
+.opp { grid-column: 1 / -1; font: 500 .72rem var(--f-data); text-align: center; color: var(--muted); }
+.res { font: 700 .8rem/1.5 var(--f-data); text-align: center; border-radius: 3px; }
+.res.W { color: var(--win); background: color-mix(in srgb, var(--win) 14%, transparent); }
+.res.L { color: var(--surface); background: var(--loss); }
+ol.recs { list-style: none; counter-reset: r; margin: 0; padding: 0; display: grid; gap: .9rem; }
+ol.recs li { counter-increment: r; display: grid; grid-template-columns: 2.2rem 1fr; gap: .15rem .75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+ol.recs li::before { content: counter(r); grid-row: span 2; font: 700 1.6rem/1 var(--f-display); color: var(--us); }
+ol.recs h3 { font-size: 1.2rem; }
+.svgchart { width: 100%; height: auto; display: block; }
+.svgchart text { fill: var(--muted); font: 500 11px var(--f-data); }
+.svgchart .grid { stroke: var(--line); stroke-width: 1; }
+.svgchart .l-us { stroke: var(--us); fill: none; stroke-width: 2.5; }
+.svgchart .l-them { stroke: var(--them); fill: none; stroke-width: 2.5; }
+.svgchart .d-us { fill: var(--us); } .svgchart .d-them { fill: var(--them); }
+.svgchart .lbl-us { fill: var(--us); font-weight: 700; } .svgchart .lbl-them { fill: var(--them); font-weight: 700; }
+.legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .85rem; color: var(--muted); align-items: center; }
+.sw { display: inline-block; width: .9rem; height: .9rem; border-radius: 2px; vertical-align: -.1rem; margin-right: .3rem; }
+.sw.us { background: var(--us); } .sw.them { background: var(--them); }
+.caveats { font-size: .92rem; color: var(--muted); }
+.caveats ul { max-width: 75ch; }
+footer { font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1rem; }
+a { color: var(--us); }
+:focus-visible { outline: 2px solid var(--us); outline-offset: 2px; }
+@media (max-width: 30rem) { .cmp tbody th { min-width: 8.5rem; } th, td { padding: .5rem .55rem; } }
+
+.rg { display: grid; gap: .7rem; }
+.rg-row, .rg-axis { display: grid; grid-template-columns: 2.6rem 1fr 3.6rem; gap: .5rem; align-items: center; }
+.rg-track { position: relative; height: 1.1rem; background: linear-gradient(to right, var(--line) 1px, transparent 1px) 0 0 / 28.57% 100%; border-radius: 3px; display: block; }
+.rg-band { position: absolute; top: 2px; bottom: 2px; border-radius: 3px; opacity: .35; }
+.rg-band.us { background: var(--us); } .rg-band.them { background: var(--them); }
+.rg-mid { position: absolute; top: -2px; bottom: -2px; width: 3px; margin-left: -1.5px; border-radius: 1px; }
+.rg-mid.us { background: var(--us); } .rg-mid.them { background: var(--them); }
+ol.steps { margin: 0; padding-left: 1.2rem; display: grid; gap: .45rem; font-size: .95rem; }
+.days td { min-width: 8rem; }
+</style>
+<main class="wrap">
+  <header class="hero">
+    <span class="eyebrow">KvK #19 · Prep phase</span>
+    <h1 class="vs"><span class="k us-t">K203</span><span>vs</span><span class="k them-t">K365</span></h1>
+    <p class="lede">K365 has more active players and has been banking speedups since KvK 18. We have the stronger accounts and the better prep record. Prep will come down to turnout and discipline.</p>
+    <div class="meta"><span>Prep <strong>Mon 5 – Fri 9 Oct 2026</strong> <span class="tag-unc">Estimated</span></span><span>Data as of <strong>4 Oct 2026</strong></span></div>
+    <div class="verdict">
+      <div class="v-main"><span class="lbl">Prep phase</span><span class="big num">42–52%</span><span class="lbl">chance K203 wins. Near even, slight lean K365.</span></div>
+      <div><span class="lbl">K365 speedup reserve vs ours</span><span class="big num">~1.5×</span><span class="lbl">Estimated range 1.3–1.9×.</span></div>
+      <div><span class="lbl">Prep rating rank, all kingdoms</span><span class="big num">#12 vs #14</span><span class="lbl">We have ranked higher in 6 of the last 8 KvKs.</span></div>
+    </div>
+  </header>
+
+  <section id="reserve">
+    <h2>What each kingdom has stored</h2>
+    <p class="lede">No source publishes speedup stockpiles, so this estimate builds them up from what each kingdom earned and spent since KvK 18. <span class="tag-unc">Estimate</span></p>
+    <div class="cards">
+      <div class="card"><h3>Estimated reserve in prep points</h3><div class="rg"><div class="rg-row"><span class="pb-name us">K203</span><span class="rg-track"><span class="rg-band us" style="left:16.5%;width:46.2%"></span><span class="rg-mid us" style="left:36.3%"></span></span><span class="pb-val">127M</span></div><div class="rg-row"><span class="pb-name them">K365</span><span class="rg-track"><span class="rg-band them" style="left:26.2%;width:68.9%"></span><span class="rg-mid them" style="left:56.0%"></span></span><span class="pb-val">196M</span></div><div class="rg-axis"><div class="pb-axis-in"><span style="left:0.0%">0M</span><span style="left:28.6%">100M</span><span style="left:57.1%">200M</span><span style="left:85.7%">300M</span></div></div></div>
+        <p class="note">Bands show the range; the marker shows the central estimate. That works out to about 67 hours of speedups per active K203 player and 78 hours per active K365 player.</p></div>
+      <div class="card"><h3>How the estimate is built</h3>
+        <ol class="steps">
+          <li><strong>Saving window.</strong> 23 days from the end of KvK 18 prep to the start of KvK 19 prep.</li>
+          <li><strong>Income.</strong> 2.67–6.67 hours of free speedups per active player per day.</li>
+          <li><strong>Players.</strong> 1,046–1,060 active in K203, 1,383–1,418 in K365.</li>
+          <li><strong>Saved share.</strong> Spending shows up as power. Since 15 Sep, each active K203 player added about 7M power against 2–6M for K365, so K365 likely kept more of its income.</li>
+          <li><strong>Points.</strong> Speedups score 30 points per minute on the days they count.</li>
+        </ol></div>
+    </div>
+    <div class="tbl-wrap"><table class="cmp">
+      <thead><tr><th scope="col">Step</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Governors active, last 30 days</th><td class="num">1,046–1,060</td><td class="num">1,383–1,418</td></tr>
+        <tr><th scope="row">Free speedups earned since KvK 18, hours</th><td class="num">64k–163k</td><td class="num">85k–217k</td></tr>
+        <tr><th scope="row">Power gained since 15 Sep</th><td class="num">7.8B</td><td class="num">3.0B + 4.7B intake</td></tr>
+        <tr><th scope="row">Power gained per active player</th><td class="num">7.4M</td><td class="num">2.3M</td></tr>
+        <tr><th scope="row">Share saved <span class="tag-unc">Assumption</span></th><td class="num">50%–75%</td><td class="num">60%–85%</td></tr>
+        <tr><th scope="row">Speedups in reserve, hours</th><td class="num">32k–122k</td><td class="num">51k–185k</td></tr>
+        <tr class="key"><th scope="row">Reserve in prep points (central)</th><td class="num">127M</td><td class="num">196M</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section id="growth">
+    <h2>Growth since KvK 18</h2>
+    <p class="lede">Power added since 15 Sep. A kingdom that is saving for prep grows slowly between KvKs.</p>
+    <div class="chart"><svg class="svgchart" viewBox="0 0 640 240" role="img" aria-label="Power gained since 15 September: K203 7.8B, K365 7.8B"><line class="grid" x1="44" x2="576" y1="210.0" y2="210.0"/><text x="38" y="214.0" text-anchor="end">0B</text><line class="grid" x1="44" x2="576" y1="161.5" y2="161.5"/><text x="38" y="165.5" text-anchor="end">2B</text><line class="grid" x1="44" x2="576" y1="113.0" y2="113.0"/><text x="38" y="117.0" text-anchor="end">4B</text><line class="grid" x1="44" x2="576" y1="64.5" y2="64.5"/><text x="38" y="68.5" text-anchor="end">6B</text><line class="grid" x1="44" x2="576" y1="16.0" y2="16.0"/><text x="38" y="20.0" text-anchor="end">8B</text><text x="44.0" y="232" text-anchor="middle">15 Sep</text><text x="380.0" y="232" text-anchor="middle">27 Sep</text><text x="576.0" y="232" text-anchor="middle">4 Oct</text><line class="grid" x1="492.0" x2="492.0" y1="16" y2="210" stroke-dasharray="3 3"/><text x="488.0" y="26" text-anchor="end">+102 accounts</text><polyline class="l-them" points="44.0,210.0 380.0,158.1 436.0,136.1 464.0,136.1 492.0,22.0 520.0,22.0 548.0,22.0 576.0,22.0"/><circle class="d-them" cx="44.0" cy="210.0" r="3"/><circle class="d-them" cx="380.0" cy="158.1" r="3"/><circle class="d-them" cx="436.0" cy="136.1" r="3"/><circle class="d-them" cx="464.0" cy="136.1" r="3"/><circle class="d-them" cx="492.0" cy="22.0" r="3"/><circle class="d-them" cx="520.0" cy="22.0" r="3"/><circle class="d-them" cx="548.0" cy="22.0" r="3"/><circle class="d-them" cx="576.0" cy="22.0" r="3"/><polyline class="l-us" points="44.0,210.0 380.0,127.2 436.0,97.8 464.0,70.9 492.0,70.9 520.0,36.9 548.0,31.8 576.0,20.9"/><circle class="d-us" cx="44.0" cy="210.0" r="3"/><circle class="d-us" cx="380.0" cy="127.2" r="3"/><circle class="d-us" cx="436.0" cy="97.8" r="3"/><circle class="d-us" cx="464.0" cy="70.9" r="3"/><circle class="d-us" cx="492.0" cy="70.9" r="3"/><circle class="d-us" cx="520.0" cy="36.9" r="3"/><circle class="d-us" cx="548.0" cy="31.8" r="3"/><circle class="d-us" cx="576.0" cy="20.9" r="3"/><text class="lbl-us" x="582.0" y="34.9">K203</text><text class="lbl-them" x="582.0" y="18.0">K365</text></svg>
+      <div class="legend"><span><span class="sw us"></span>K203</span><span><span class="sw them"></span>K365</span></div></div>
+    <p class="note">Our growth is steady and has continued into the last week. Most of K365's growth arrived in one jump on 1 Oct with about 100 new accounts. Apart from that jump, K365 grew 3.0B to our 7.8B. That fits a kingdom holding speedups for prep. Both kingdoms show 18 days of data; earlier history is not public.</p>
+  </section>
+
+  <section id="record">
+    <h2>Prep track record</h2>
+    <p class="lede">Both kingdoms win prep almost every time. Ranked against every kingdom by prep results, we have been ahead of K365 in most recent KvKs.</p>
+    <div class="charts">
+      <div class="chart"><h3>Prep rating rank, lower is better</h3><div class="tbl-wrap flat"><table class="cmp">
+        <thead><tr><th scope="col">KvK</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Better</th></tr></thead>
+        <tbody><tr><th scope="row">KvK 11</th><td class="num">51</td><td class="num">27</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">KvK 12</th><td class="num">36</td><td class="num">30</td><td><span class="edge them">K365</span></td></tr><tr><th scope="row">KvK 13</th><td class="num">18</td><td class="num">31</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">KvK 14</th><td class="num">10</td><td class="num">30</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">KvK 15</th><td class="num">9</td><td class="num">15</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">KvK 16</th><td class="num">6</td><td class="num">21</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">KvK 17</th><td class="num">11</td><td class="num">17</td><td><span class="edge us">K203</span></td></tr><tr><th scope="row">KvK 18</th><td class="num">12</td><td class="num">14</td><td><span class="edge us">K203</span></td></tr></tbody></table></div></div>
+      <div class="chart"><h3>Every KvK, prep then castle</h3>
+        <p class="note"><span class="us-t"><strong>K203</strong></span> prep 16-0, castle 11-5</p><ol class="rec"><li><span class="opp">K195</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K176</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K177</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K224</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K190</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K263</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K195</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K249</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K184</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K187</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K222</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K270</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K156</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K194</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K151</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K100</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li></ol>
+        <p class="note"><span class="them-t"><strong>K365</strong></span> prep 14-1, castle 10-5</p><ol class="rec"><li><span class="opp">K347</span><span class="res L" title="Prep loss">L</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K340</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K363</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K336</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K402</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K385</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K347</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K331</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K337</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K384</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K358</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K144</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K233</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li><li><span class="opp">K393</span><span class="res W" title="Prep win">W</span><span class="res L" title="Castle loss">L</span></li><li><span class="opp">K414</span><span class="res W" title="Prep win">W</span><span class="res W" title="Castle win">W</span></li></ol></div>
+    </div>
+  </section>
+
+  <section id="scorecard">
+    <h2>Prep scorecard</h2>
+    <div class="tbl-wrap"><table class="cmp"><thead><tr><th scope="col">Measure</th><th scope="col" class="num colh us">K203</th><th scope="col" class="num colh them">K365</th><th scope="col">Edge</th></tr></thead><tbody><tr class="key"><th scope="row">Estimated speedup reserve, prep points <span class="tag-unc">Estimate</span></th><td class="num">127M</td><td class="num">196M</td><td><span class="edge them">K365</span></td></tr><tr class=""><th scope="row">Governors active, last 30 days</th><td class="num">1,060</td><td class="num">1,418</td><td><span class="edge them">K365</span></td></tr><tr class=""><th scope="row">Town Centre upgrades, last 7 days</th><td class="num">117</td><td class="num">179</td><td><span class="edge them">K365</span></td></tr><tr class=""><th scope="row">Mystic Trial, top 100 combined</th><td class="num">247,451</td><td class="num">239,648</td><td><span class="edge us">K203</span></td></tr><tr class=""><th scope="row">Research power, top 100</th><td class="num">4.6B</td><td class="num">4.1B</td><td><span class="edge us">K203</span></td></tr><tr class=""><th scope="row">Hero power, top 100</th><td class="num">7.3B</td><td class="num">7.2B</td><td><span class="edge even">Even</span></td></tr><tr class=""><th scope="row">Governor power, top 100</th><td class="num">57.2B</td><td class="num">56.2B</td><td><span class="edge even">Even</span></td></tr><tr><th scope="row">KvK prep record</th><td class="num">16-0</td><td class="num">14-1</td><td><span class="edge us">K203</span></td></tr></tbody></table></div>
+  </section>
+
+  <section id="scoring">
+    <h2>How prep scores</h2>
+    <p class="lede">Five themed days. The kingdom with the most total points after Day 5 wins prep, and attacks on battle day. The battle is fought in the losing kingdom, and the winner's own castle cannot be attacked.</p>
+    <div class="tbl-wrap"><table class="days"><thead><tr><th scope="col">Day</th><th scope="col">Theme</th><th scope="col">What scores most</th></tr></thead><tbody><tr><th scope="row">Day 1</th><td>City Construction</td><td>Construction speedups (30 points per minute), Truegold used on buildings (2,000 each), Tempered Truegold (30,000), Intel missions (6,000)</td></tr><tr><th scope="row">Day 2</th><td>Basic Skills Up</td><td>Research speedups (30 points per minute), Hero Roulette spins (8,000), Mythic hero shards (3,040), Master Emblems (6,000)</td></tr><tr><th scope="row">Day 3</th><td>Pet Training</td><td>Advanced Taming Marks (15,000), Common Taming Marks (1,150), pet advancement (50 per point)</td></tr><tr><th scope="row">Day 4</th><td>Hero Development</td><td>Mithril (40,000), Widgets (8,000), Forgehammers (4,000), troop training (T11 75 per troop, T10 60)</td></tr><tr><th scope="row">Day 5</th><td>Power Boost</td><td>Speedups of every type (30 points per minute), Governor Gear (36 per point), plus items from earlier days</td></tr></tbody></table></div>
+    <p class="note">Each player unlocks the daily chests at 200,000 points. Values from community guides <span class="tag-unc">Check in-game</span></p>
+  </section>
+
+  <section id="projection">
+    <h2>Prep projection</h2>
+    <div class="card"><p class="proj-range"><span class="num">42–52%</span><span class="note">chance K203 wins prep</span></p><div class="gauge" role="img" aria-label="Prep: 42 to 52 percent chance K203 wins">
+  <span class="g-mid"></span><span class="g-new" style="left:42%;width:10%"></span>
+</div><div class="gauge-axis"><span>K365 favoured</span><span>Even</span><span>K203 favoured</span></div><h4>Against us</h4>
+<ul>
+<li>K365's speedup reserve is likely about <strong>1.5×</strong> ours (range 1.3–1.9×): more active players, and slower growth since KvK 18, which points to banking.</li>
+<li>K365 has 358 more governors active over 30 days. If every active account reaches the 200,000-point daily chest, that alone is about 72M points a day in K365's favour.</li>
+</ul>
+<h4>For us</h4>
+<ul>
+<li>Across all kingdoms, our prep rating has ranked above K365's in 6 of the last 8 KvKs (12 vs 14 after KvK 18).</li>
+<li>Our top 100 are slightly stronger: Mystic Trial +3.3%, research power +12%. Bigger accounts score more per day on hero, gear and training items.</li>
+<li>We have never lost a prep phase (16-0).</li>
+</ul>
+<p class="note">Net: near even with a slight lean to K365. The reserve estimate rests on assumptions, and our record says we turn a smaller base into more points.</p></div>
+  </section>
+
+  <section id="plan">
+    <h2>Prep plan for K203</h2>
+    <ol class="recs"><li><h3>Treat prep as one five-day total</h3><p>Prep is won on total points after Day 5, not on daily wins. Don't overspend to win a day by a wide margin. A point banked for a closer day is worth the same and buys more.</p></li><li><h3>Keep general speedups for Day 5</h3><p>General speedups score on Day 5 along with every other type. Hold them as the kingdom's reserve to close whatever gap is left after Day 4.</p></li><li><h3>Match each item to its day</h3><p>Construction speedups and Truegold on Day 1. Research speedups and Roulette spins on Day 2. Taming Marks on Day 3. Mithril, Widgets, Forgehammers and troop training on Day 4. Check the in-game event tab first: guides disagree on a few items.</p></li><li><h3>Get every account to the daily chest</h3><p>K365 has about 358 more active governors. Our answer is turnout: we have 3,659 governors but only 1,060 active in the last month. Message every alliance, not only the top 6, and set the 200,000-point daily chest as each member's minimum.</p></li><li><h3>Stop spending speedups now</h3><p>Our power grew 7.8B since KvK 18 to K365's 3.0B (excluding their account intake). Every speedup used before Monday is gone from the prep total. Hold everything until the matching day opens.</p></li><li><h3>Post the gap every reset</h3><p>Share the running total and the gap in every alliance chat at each daily reset, so members can see whether to push or hold.</p></li><li><h3>Shield before prep ends</h3><p>Prep decides where battle day is fought. Cities can be hit in the gap between prep and battle, so shield before Day 5 closes. The battle report covers the rest.</p></li></ol>
+  </section>
+
+  <section class="caveats" id="caveats"><h2>About the data</h2><ul><li>The speedup reserve is an estimate, not a measurement. It multiplies active players by a guide's range for free speedup income (80–200 hours a month) over the 23 days since KvK 18 prep, then assumes a share that was saved: 50–75% for K203 and 60–85% for K365, set from each kingdom's growth per active player. Paid accounts are assumed to balance out, since top-100 governor power differs by under 2%.</li><li>K365's power rose 4.7B in one day on 1 Oct, as 102 accounts joined. We treat that jump as an intake, not as spending. If it was organic growth, K365 saved less and its reserve is closer to ours.</li><li>Prep ranks are Bradley-Terry ratings from kingshotoptimizer.com, built from wins and losses against rated opponents. They are not point totals: no public source publishes prep scores.</li><li>Point values per item come from community guides (kingshotdata.com, kingshotmastery.com, kingshotguide.org) and can differ by server age or event version.</li><li>Kingdom growth and activity come from kingshotguide.org (daily since 15 Sep) and MightPulse (4 Oct 2026). Their 7-day active counts look too low against alliance activity, so this report uses 30-day actives.</li><li>The prep days (Mon 5 to Fri 9 Oct) are estimated from the four-week cycle. Projections are judgement estimates.</li></ul></section>
+  <footer>Sources: MightPulse (4 Oct 2026); kingshotguide.org daily kingdom stats; kingshotoptimizer.com KvK ratings; StratForge and Kingshot.net (early Oct 2026); community prep guides. Aggregate figures only.</footer>
+</main>

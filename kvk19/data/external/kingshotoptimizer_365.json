@@ -1,0 +1,328 @@
+{
+ "success": true,
+ "result": {
+  "id": "365",
+  "history": [
+   {
+    "kvk": 4,
+    "date": "2025-08-16",
+    "opponent": 347,
+    "prep": "L",
+    "battle": "L"
+   },
+   {
+    "kvk": 5,
+    "date": "2025-09-13",
+    "opponent": 340,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 6,
+    "date": "2025-10-11",
+    "opponent": 363,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 7,
+    "date": "2025-11-08",
+    "opponent": 336,
+    "prep": "W",
+    "battle": "L"
+   },
+   {
+    "kvk": 8,
+    "date": "2025-12-06",
+    "opponent": 402,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 9,
+    "date": "2026-01-03",
+    "opponent": 385,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 10,
+    "date": "2026-01-31",
+    "opponent": 347,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 11,
+    "date": "2026-02-28",
+    "opponent": 331,
+    "prep": "W",
+    "battle": "L"
+   },
+   {
+    "kvk": 12,
+    "date": "2026-03-28",
+    "opponent": 337,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 13,
+    "date": "2026-04-25",
+    "opponent": 384,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 14,
+    "date": "2026-05-23",
+    "opponent": 358,
+    "prep": "W",
+    "battle": "L"
+   },
+   {
+    "kvk": 15,
+    "date": "2026-06-20",
+    "opponent": 144,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 16,
+    "date": "2026-07-18",
+    "opponent": 233,
+    "prep": "W",
+    "battle": "W"
+   },
+   {
+    "kvk": 17,
+    "date": "2026-08-15",
+    "opponent": 393,
+    "prep": "W",
+    "battle": "L"
+   },
+   {
+    "kvk": 18,
+    "date": "2026-09-12",
+    "opponent": 414,
+    "prep": "W",
+    "battle": "W"
+   }
+  ],
+  "byes": [],
+  "rating_history": [
+   {
+    "kvk": 4,
+    "rating": 0.7555,
+    "rank": 333,
+    "rank_prep": 287,
+    "rank_battle": 315
+   },
+   {
+    "kvk": 5,
+    "rating": 1.0048,
+    "rank": 219,
+    "rank_prep": 267,
+    "rank_battle": 253
+   },
+   {
+    "kvk": 6,
+    "rating": 1.2619,
+    "rank": 209,
+    "rank_prep": 151,
+    "rank_battle": 259
+   },
+   {
+    "kvk": 7,
+    "rating": 1.179,
+    "rank": 293,
+    "rank_prep": 127,
+    "rank_battle": 531
+   },
+   {
+    "kvk": 8,
+    "rating": 1.4481,
+    "rank": 143,
+    "rank_prep": 74,
+    "rank_battle": 412
+   },
+   {
+    "kvk": 9,
+    "rating": 1.7832,
+    "rank": 69,
+    "rank_prep": 48,
+    "rank_battle": 234
+   },
+   {
+    "kvk": 10,
+    "rating": 2.0329,
+    "rank": 52,
+    "rank_prep": 36,
+    "rank_battle": 181
+   },
+   {
+    "kvk": 11,
+    "rating": 2.0148,
+    "rank": 74,
+    "rank_prep": 27,
+    "rank_battle": 315
+   },
+   {
+    "kvk": 12,
+    "rating": 2.3052,
+    "rank": 49,
+    "rank_prep": 30,
+    "rank_battle": 183
+   },
+   {
+    "kvk": 13,
+    "rating": 2.4673,
+    "rank": 42,
+    "rank_prep": 31,
+    "rank_battle": 130
+   },
+   {
+    "kvk": 14,
+    "rating": 2.3707,
+    "rank": 55,
+    "rank_prep": 30,
+    "rank_battle": 288
+   },
+   {
+    "kvk": 15,
+    "rating": 2.7676,
+    "rank": 30,
+    "rank_prep": 15,
+    "rank_battle": 184
+   },
+   {
+    "kvk": 16,
+    "rating": 2.9658,
+    "rank": 25,
+    "rank_prep": 21,
+    "rank_battle": 123
+   },
+   {
+    "kvk": 17,
+    "rating": 2.9293,
+    "rank": 29,
+    "rank_prep": 17,
+    "rank_battle": 208
+   },
+   {
+    "kvk": 18,
+    "rating": 3.1661,
+    "rank": 26,
+    "rank_prep": 14,
+    "rank_battle": 153
+   }
+  ],
+  "rating_history_time": [
+   {
+    "kvk": 4,
+    "rating": 0.7555,
+    "rank": 340,
+    "rank_prep": 317,
+    "rank_battle": 315
+   },
+   {
+    "kvk": 5,
+    "rating": 1.0155,
+    "rank": 213,
+    "rank_prep": 253,
+    "rank_battle": 237
+   },
+   {
+    "kvk": 6,
+    "rating": 1.2771,
+    "rank": 180,
+    "rank_prep": 140,
+    "rank_battle": 225
+   },
+   {
+    "kvk": 7,
+    "rating": 1.185,
+    "rank": 280,
+    "rank_prep": 122,
+    "rank_battle": 530
+   },
+   {
+    "kvk": 8,
+    "rating": 1.4573,
+    "rank": 130,
+    "rank_prep": 68,
+    "rank_battle": 374
+   },
+   {
+    "kvk": 9,
+    "rating": 1.7897,
+    "rank": 51,
+    "rank_prep": 37,
+    "rank_battle": 181
+   },
+   {
+    "kvk": 10,
+    "rating": 2.0225,
+    "rank": 32,
+    "rank_prep": 28,
+    "rank_battle": 98
+   },
+   {
+    "kvk": 11,
+    "rating": 1.9495,
+    "rank": 63,
+    "rank_prep": 23,
+    "rank_battle": 373
+   },
+   {
+    "kvk": 12,
+    "rating": 2.2173,
+    "rank": 33,
+    "rank_prep": 27,
+    "rank_battle": 167
+   },
+   {
+    "kvk": 13,
+    "rating": 2.3656,
+    "rank": 25,
+    "rank_prep": 29,
+    "rank_battle": 99
+   },
+   {
+    "kvk": 14,
+    "rating": 2.2166,
+    "rank": 50,
+    "rank_prep": 25,
+    "rank_battle": 331
+   },
+   {
+    "kvk": 15,
+    "rating": 2.5733,
+    "rank": 24,
+    "rank_prep": 13,
+    "rank_battle": 188
+   },
+   {
+    "kvk": 16,
+    "rating": 2.7512,
+    "rank": 18,
+    "rank_prep": 16,
+    "rank_battle": 97
+   },
+   {
+    "kvk": 17,
+    "rating": 2.6583,
+    "rank": 29,
+    "rank_prep": 13,
+    "rank_battle": 240
+   },
+   {
+    "kvk": 18,
+    "rating": 2.8492,
+    "rank": 23,
+    "rank_prep": 11,
+    "rank_battle": 157
+   }
+  ]
+ }
+}
