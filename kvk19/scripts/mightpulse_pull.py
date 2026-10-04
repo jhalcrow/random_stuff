@@ -47,7 +47,9 @@ def get(path, params=None):
             time.sleep(wait)
         _last_call = time.monotonic()
         req = urllib.request.Request(url, headers={"Authorization": "Bearer " + api_key(),
-                                                   "Accept": "application/json"})
+                                                   "Accept": "application/json",
+                                                   # Cloudflare rejects the default Python-urllib UA (error 1010).
+                                                   "User-Agent": "kvk19-scout/1.0 (python urllib)"})
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.load(r)
@@ -57,8 +59,9 @@ def get(path, params=None):
                 print(f"429 on {path}; waiting {delay:.0f}s", file=sys.stderr)
                 time.sleep(delay)
                 continue
-            # Report status + path only; never echo headers (they carry the key).
-            raise SystemExit(f"HTTP {e.code} on GET {path}") from None
+            # Report status, path and a redacted body snippet; never echo headers (they carry the key).
+            body = e.read(300).decode("utf-8", "replace").replace(api_key(), "<redacted>")
+            raise SystemExit(f"HTTP {e.code} on GET {path}: {body}") from None
     raise SystemExit(f"gave up on GET {path} after repeated 429s")
 
 
@@ -105,52 +108,76 @@ def parse_ts(v):
 
 
 def top_alliances(kid):
-    rows = find_list(get(f"/kingdoms/{kid}/ranks", {"board": "alliance_power", "limit": TOP_N}),
-                     ("rows", "items", "results"))
+    resp = get(f"/kingdoms/{kid}/ranks", {"board": "alliance_power", "limit": TOP_N})
+    rows = (resp.get("board") or {}).get("rows")  # shape confirmed by --probe: {"board": {"rows": [...]}}
     if rows is None:
         raise SystemExit(f"could not find rows in ranks response for K{kid}; run --probe")
     return [{"tag": r["abbr"], "name": r.get("name"), "score": r.get("score")} for r in rows[:TOP_N]]
 
 
-def alliance_activity(kid, tag, now):
+def fetch_roster(kid, tag):
+    """Roster stays in memory only; never written to disk."""
     resp = get(f"/alliances/{kid}/{urllib.parse.quote(tag, safe='')}", {"include": "info,roster"})
     members = find_list(resp, ("members", "roster"))
     if members is None:
         raise SystemExit(f"could not find members for K{kid} {tag}; run --probe")
+    return resp, members
+
+
+def activity(members, ref, use_online):
+    """Counts of members active within 24h/72h/7d of `ref`, and power share of 7d actives."""
     windows = {"24h": 1, "72h": 3, "7d": 7}
     counts = dict.fromkeys(windows, 0)
     total_power = power_7d = 0
-    unknown_ts = 0
     for m in members:
         p = m.get("power") or 0
         total_power += p
         ts = parse_ts(m.get("last_active_at"))
-        if m.get("online"):
+        if use_online and m.get("online"):
             age_days = 0.0
         elif ts is None:
-            unknown_ts += 1
             continue
         else:
-            age_days = (now - ts).total_seconds() / 86400
+            age_days = (ref - ts).total_seconds() / 86400
         for w, d in windows.items():
             if age_days <= d:
                 counts[w] += 1
         if age_days <= 7:
             power_7d += p
     n = len(members)
-    tcs = [m["town_center_level"] for m in members if isinstance(m.get("town_center_level"), (int, float))]
     return {
-        "tag": tag,
-        "members": n,
         "active_24h": counts["24h"],
         "active_72h": counts["72h"],
         "active_7d": counts["7d"],
         "active_7d_pct": round(100 * counts["7d"] / n, 1) if n else None,
-        "total_power": total_power,
         "power_share_active_7d_pct": round(100 * power_7d / total_power, 1) if total_power else None,
-        "median_tc_level": sorted(tcs)[len(tcs) // 2] if tcs else None,
-        "members_missing_last_active": unknown_ts,
     }
+
+
+def alliance_summary(tag, resp, members, now, anchor):
+    tcs = sorted(m["town_center_level"] for m in members if isinstance(m.get("town_center_level"), (int, float)))
+    return {
+        "tag": tag,
+        "members": len(members),
+        "member_count_reported": resp.get("member_count"),
+        "total_power": sum(m.get("power") or 0 for m in members),
+        "median_tc_level": tcs[len(tcs) // 2] if tcs else None,
+        "members_missing_last_active": sum(parse_ts(m.get("last_active_at")) is None for m in members),
+        "online_now": sum(bool(m.get("online")) for m in members),
+        "data_age_seconds": resp.get("age_seconds"),
+        "vs_now": activity(members, now, use_online=True),
+        "vs_snapshot": activity(members, anchor, use_online=False),
+    }
+
+
+def totals(alliances, key):
+    t = {f: sum(a[key][f] for a in alliances) for f in ("active_24h", "active_72h", "active_7d")}
+    n = sum(a["members"] for a in alliances)
+    pw = sum(a["total_power"] for a in alliances)
+    p7 = sum(a["total_power"] * (a[key]["power_share_active_7d_pct"] or 0) / 100 for a in alliances)
+    t["active_7d_pct"] = round(100 * t["active_7d"] / n, 1) if n else None
+    t["power_share_active_7d_pct"] = round(100 * p7 / pw, 1) if pw else None
+    return t
 
 
 def probe():
@@ -161,7 +188,7 @@ def probe():
     ranks = get(f"/kingdoms/{kid}/ranks", {"board": "alliance_power", "limit": 2})
     print(f"== /kingdoms/{kid}/ranks")
     print(json.dumps(shape(ranks), indent=2))
-    rows = find_list(ranks, ("rows", "items", "results")) or []
+    rows = (ranks.get("board") or {}).get("rows") or []
     if rows and "abbr" in rows[0]:
         tag = rows[0]["abbr"]
         a = get(f"/alliances/{kid}/{urllib.parse.quote(tag, safe='')}", {"include": "info,roster"})
@@ -183,24 +210,39 @@ def main():
         probe()
         return
     now = datetime.now(timezone.utc)
+    kingdoms, rosters = {}, {}
+    for kid in KINGDOMS:
+        k = get(f"/kingdoms/{kid}")["kingdom"]  # shape confirmed by --probe
+        kingdoms[kid] = {f: k.get(f) for f in KINGDOM_FIELDS}
+        rosters[kid] = [(a, *fetch_roster(kid, a["tag"])) for a in top_alliances(kid)]
+    # last_active_at may lag far behind "now" (seen: frozen at 15 Sep while responses say fresh).
+    # Anchor a second set of windows on the newest timestamp seen across all rosters.
+    all_ts = [t for rs in rosters.values() for _, _, ms in rs for m in ms
+              if (t := parse_ts(m.get("last_active_at")))]
+    anchor = max(all_ts)
+    lag_days = (now - anchor).total_seconds() / 86400
     out = {"generated_at": now.isoformat(timespec="seconds"),
-           "source": "MightPulse API (data up to 1h old)",
-           "activity_basis": "online now or last_active_at within window",
+           "source": "MightPulse API",
+           "activity_basis": "vs_now: online or last_active_at within window of generated_at; "
+                             "vs_snapshot: last_active_at within window of activity_snapshot_at",
+           "activity_snapshot_at": anchor.isoformat(timespec="seconds"),
+           "activity_lag_days": round(lag_days, 1),
+           "activity_stale": lag_days > 1,
            "kingdoms": {}}
     for kid in KINGDOMS:
-        k = unwrap(get(f"/kingdoms/{kid}"))
-        kingdom = {f: k.get(f) for f in KINGDOM_FIELDS}
         alliances = []
-        for a in top_alliances(kid):
-            row = alliance_activity(kid, a["tag"], now)
+        for a, resp, members in rosters[kid]:
+            row = alliance_summary(a["tag"], resp, members, now, anchor)
             row["rank_score"] = a["score"]
             alliances.append(row)
-        tot = lambda f: sum(a[f] for a in alliances)
-        top = {f: tot(f) for f in ("members", "active_24h", "active_72h", "active_7d", "total_power")}
-        p7 = sum(a["total_power"] * (a["power_share_active_7d_pct"] or 0) / 100 for a in alliances)
-        top["active_7d_pct"] = round(100 * top["active_7d"] / top["members"], 1) if top["members"] else None
-        top["power_share_active_7d_pct"] = round(100 * p7 / top["total_power"], 1) if top["total_power"] else None
-        out["kingdoms"][str(kid)] = {"kingdom": kingdom, "top_alliances": alliances, "top6_totals": top}
+        top = {"members": sum(a["members"] for a in alliances),
+               "total_power": sum(a["total_power"] for a in alliances),
+               "vs_now": totals(alliances, "vs_now"),
+               "vs_snapshot": totals(alliances, "vs_snapshot")}
+        out["kingdoms"][str(kid)] = {"kingdom": kingdoms[kid], "top_alliances": alliances, "top6_totals": top}
+    if out["activity_stale"]:
+        print(f"WARNING: newest last_active_at is {lag_days:.1f} days old; vs_now counts are not meaningful",
+              file=sys.stderr)
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(out, indent=2) + "\n")
     print(f"wrote {OUT}")

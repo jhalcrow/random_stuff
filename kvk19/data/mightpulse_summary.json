@@ -1,0 +1,386 @@
+{
+  "generated_at": "2026-10-04T20:33:17+00:00",
+  "source": "MightPulse API",
+  "activity_basis": "vs_now: online or last_active_at within window of generated_at; vs_snapshot: last_active_at within window of activity_snapshot_at",
+  "activity_snapshot_at": "2026-09-15T10:48:20+00:00",
+  "activity_lag_days": 19.4,
+  "activity_stale": true,
+  "kingdoms": {
+    "203": {
+      "kingdom": {
+        "player_count": 3659,
+        "located": 1191,
+        "active_7d": 177,
+        "active_30d": 1060,
+        "alliance_count": 405,
+        "power": 209089731814,
+        "avg_power": 57143955,
+        "power_rank": 2268,
+        "activity_rank": 2226,
+        "health": "D",
+        "power_gain_7d": 2863529530,
+        "tc_pushers_7d": 117,
+        "hero_power": 1191816582,
+        "troop_power": 38882139145
+      },
+      "top_alliances": [
+        {
+          "tag": "ORM",
+          "members": 99,
+          "member_count_reported": 99,
+          "total_power": 42970769947,
+          "median_tc_level": 70,
+          "members_missing_last_active": 0,
+          "online_now": 0,
+          "data_age_seconds": 166,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 97,
+            "active_72h": 99,
+            "active_7d": 99,
+            "active_7d_pct": 100.0,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 43417486861
+        },
+        {
+          "tag": "PRO",
+          "members": 98,
+          "member_count_reported": 98,
+          "total_power": 40793851396,
+          "median_tc_level": 70,
+          "members_missing_last_active": 1,
+          "online_now": 0,
+          "data_age_seconds": 146,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 82,
+            "active_72h": 91,
+            "active_7d": 96,
+            "active_7d_pct": 98.0,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 40647061149
+        },
+        {
+          "tag": "BR4",
+          "members": 97,
+          "member_count_reported": 97,
+          "total_power": 37965862579,
+          "median_tc_level": 70,
+          "members_missing_last_active": 1,
+          "online_now": 0,
+          "data_age_seconds": 141,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 87,
+            "active_72h": 92,
+            "active_7d": 92,
+            "active_7d_pct": 94.8,
+            "power_share_active_7d_pct": 96.6
+          },
+          "rank_score": 37215903775
+        },
+        {
+          "tag": "SRT",
+          "members": 89,
+          "member_count_reported": 89,
+          "total_power": 27182157278,
+          "median_tc_level": 64,
+          "members_missing_last_active": 2,
+          "online_now": 0,
+          "data_age_seconds": 3344,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 73,
+            "active_72h": 84,
+            "active_7d": 85,
+            "active_7d_pct": 95.5,
+            "power_share_active_7d_pct": 99.4
+          },
+          "rank_score": 27147052598
+        },
+        {
+          "tag": "HnG",
+          "members": 88,
+          "member_count_reported": 88,
+          "total_power": 17809955139,
+          "median_tc_level": 55,
+          "members_missing_last_active": 0,
+          "online_now": 0,
+          "data_age_seconds": 137,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 61,
+            "active_72h": 78,
+            "active_7d": 87,
+            "active_7d_pct": 98.9,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 17781232479
+        },
+        {
+          "tag": "BR1",
+          "members": 97,
+          "member_count_reported": 97,
+          "total_power": 15067800647,
+          "median_tc_level": 50,
+          "members_missing_last_active": 2,
+          "online_now": 0,
+          "data_age_seconds": 133,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 66,
+            "active_72h": 81,
+            "active_7d": 91,
+            "active_7d_pct": 93.8,
+            "power_share_active_7d_pct": 96.1
+          },
+          "rank_score": 15117743342
+        }
+      ],
+      "top6_totals": {
+        "members": 568,
+        "total_power": 181790396986,
+        "vs_now": {
+          "active_24h": 0,
+          "active_72h": 0,
+          "active_7d": 0,
+          "active_7d_pct": 0.0,
+          "power_share_active_7d_pct": 0.0
+        },
+        "vs_snapshot": {
+          "active_24h": 466,
+          "active_72h": 525,
+          "active_7d": 550,
+          "active_7d_pct": 96.8,
+          "power_share_active_7d_pct": 98.9
+        }
+      }
+    },
+    "365": {
+      "kingdom": {
+        "player_count": 2357,
+        "located": 1371,
+        "active_7d": 405,
+        "active_30d": 1418,
+        "alliance_count": 502,
+        "power": 219094269628,
+        "avg_power": 95716150,
+        "power_rank": 1597,
+        "activity_rank": 1760,
+        "health": "C",
+        "power_gain_7d": 4367772128,
+        "tc_pushers_7d": 179,
+        "hero_power": 1161754151,
+        "troop_power": 38506828472
+      },
+      "top_alliances": [
+        {
+          "tag": "LTR",
+          "members": 98,
+          "member_count_reported": 98,
+          "total_power": 41259590526,
+          "median_tc_level": 70,
+          "members_missing_last_active": 2,
+          "online_now": 0,
+          "data_age_seconds": 126,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 94,
+            "active_72h": 96,
+            "active_7d": 96,
+            "active_7d_pct": 98.0,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 42067629746
+        },
+        {
+          "tag": "AOS",
+          "members": 99,
+          "member_count_reported": 99,
+          "total_power": 40028790667,
+          "median_tc_level": 67,
+          "members_missing_last_active": 0,
+          "online_now": 0,
+          "data_age_seconds": 124,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 98,
+            "active_72h": 99,
+            "active_7d": 99,
+            "active_7d_pct": 100.0,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 40344359187
+        },
+        {
+          "tag": "ORG",
+          "members": 99,
+          "member_count_reported": 99,
+          "total_power": 38735630982,
+          "median_tc_level": 66,
+          "members_missing_last_active": 1,
+          "online_now": 0,
+          "data_age_seconds": 119,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 94,
+            "active_72h": 97,
+            "active_7d": 98,
+            "active_7d_pct": 99.0,
+            "power_share_active_7d_pct": 100.0
+          },
+          "rank_score": 37422468596
+        },
+        {
+          "tag": "SCC",
+          "members": 95,
+          "member_count_reported": 95,
+          "total_power": 32368776096,
+          "median_tc_level": 65,
+          "members_missing_last_active": 1,
+          "online_now": 0,
+          "data_age_seconds": 113,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 83,
+            "active_72h": 91,
+            "active_7d": 94,
+            "active_7d_pct": 98.9,
+            "power_share_active_7d_pct": 99.7
+          },
+          "rank_score": 32655160837
+        },
+        {
+          "tag": "WYW",
+          "members": 92,
+          "member_count_reported": 92,
+          "total_power": 15276191781,
+          "median_tc_level": 50,
+          "members_missing_last_active": 2,
+          "online_now": 0,
+          "data_age_seconds": 107,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 54,
+            "active_72h": 67,
+            "active_7d": 72,
+            "active_7d_pct": 78.3,
+            "power_share_active_7d_pct": 84.1
+          },
+          "rank_score": 15343783275
+        },
+        {
+          "tag": "SDH",
+          "members": 84,
+          "member_count_reported": 84,
+          "total_power": 14527694814,
+          "median_tc_level": 50,
+          "members_missing_last_active": 0,
+          "online_now": 0,
+          "data_age_seconds": 103,
+          "vs_now": {
+            "active_24h": 0,
+            "active_72h": 0,
+            "active_7d": 0,
+            "active_7d_pct": 0.0,
+            "power_share_active_7d_pct": 0.0
+          },
+          "vs_snapshot": {
+            "active_24h": 51,
+            "active_72h": 70,
+            "active_7d": 80,
+            "active_7d_pct": 95.2,
+            "power_share_active_7d_pct": 96.8
+          },
+          "rank_score": 14481655040
+        }
+      ],
+      "top6_totals": {
+        "members": 567,
+        "total_power": 182196674866,
+        "vs_now": {
+          "active_24h": 0,
+          "active_72h": 0,
+          "active_7d": 0,
+          "active_7d_pct": 0.0,
+          "power_share_active_7d_pct": 0.0
+        },
+        "vs_snapshot": {
+          "active_24h": 474,
+          "active_72h": 520,
+          "active_7d": 539,
+          "active_7d_pct": 95.1,
+          "power_share_active_7d_pct": 98.4
+        }
+      }
+    }
+  }
+}

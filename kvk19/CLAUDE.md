@@ -61,3 +61,16 @@ K203 is stronger at the very top; K365 is deeper in its lead alliances.
 - `scripts/mightpulse_pull.py`: pulls kingdom + top-6 alliance activity.
   `--probe` prints response shapes only (keys/types, no values); the default run
   writes aggregates to `data/mightpulse_summary.json`.
+
+## MightPulse findings (pull of 4 Oct 2026)
+- Real response shapes: `/kingdoms/{kid}` -> `{"kingdom": {...}}`; ranks ->
+  `{"board": {"rows": [...]}}`; alliance -> top-level `members` list with
+  `last_active_at` as Unix seconds (float). Rank rows and rosters also carry
+  leader/player identity fields: never persist those.
+- Cloudflare blocks the default Python-urllib User-Agent (error 1010); the script
+  sends its own UA.
+- **`last_active_at` is stale:** the newest value across all 12 top alliances is
+  2026-09-15 10:48 UTC (~19 days old) and nobody shows `online`, although responses
+  claim `fresh`. Live 24h/72h/7d counts are therefore all 0 and meaningless.
+  The summary also reports activity anchored to that 15 Sep snapshot (`vs_snapshot`).
+  Kingdom-level `active_7d` may share the same staleness (unconfirmed).
