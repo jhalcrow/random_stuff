@@ -12,8 +12,19 @@ value.  Greedy by value per Dust, buying any prerequisite levels as part of the 
 """
 import json, sys
 T = json.load(open('tree.json'))
-VAL = {('cav','lethality'):1.97/3, ('cav','attack'):1.54/3, ('inf','health'):0.68/3, ('inf','defense'):0.63/3,
-       ('inf','lethality'):0.05/3, ('inf','attack'):0.05/3, ('cav','health'):0.04/3, ('cav','defense'):0.03/3}
+# +9% combined kill-ratio gain per stat, from the gear.py scenarios re-run with archers in the
+# player's marches: the mean of (rally 50/20/30, garrison 60/15/25) and (rally 40/20/40,
+# garrison 50/20/30).  The player fields archers at least as heavily as cavalry; the earlier
+# 60/40/0 weights (PRESET=noarch) gave archer stats zero value and over-weighted cavalry.
+PRESETS = {
+    'archers': {('inf','health'):0.975, ('inf','defense'):0.935, ('cav','lethality'):0.33, ('cav','attack'):0.31,
+                ('arch','health'):0.29, ('arch','defense'):0.275, ('arch','lethality'):0.16, ('arch','attack'):0.15,
+                ('cav','health'):0.035, ('cav','defense'):0.03, ('inf','lethality'):0.03, ('inf','attack'):0.025},
+    'noarch':  {('cav','lethality'):1.97, ('cav','attack'):1.54, ('inf','health'):0.68, ('inf','defense'):0.63,
+                ('inf','lethality'):0.05, ('inf','attack'):0.05, ('cav','health'):0.04, ('cav','defense'):0.03},
+}
+import os
+VAL = {k: v / 3 for k, v in PRESETS[os.environ.get('PRESET', 'archers')].items()}
 NAMES = {'inf':['Auric Mauls','Auric Plating','Auric Destruction','Golden Shield'],
          'cav':['Truegold Lances','Golden Mantle','True Shock','Golden Horseshoes'],
          'arch':['Auric Arrowheads','Auric Pauldrons','Golden Bows','Auric Bracers']}
@@ -62,7 +73,6 @@ def plan(budget):
     while True:
         best = None
         for nm in meta:
-            if meta[nm][0] == 'arch': continue
             b = bundle(nm, state)
             if not b: continue
             d = sum(cost(*x)[0] for x in b); v = sum(VAL.get(meta[x[0]][:2], 0) for x in b)
@@ -79,5 +89,5 @@ if __name__ == '__main__':
     budget = int(sys.argv[1]) if len(sys.argv) > 1 else 6438
     steps, spent, temp, hrs, val = plan(budget)
     for nm, lv, d, t, h, cum, v in steps:
-        print(f'  {nm:24s} -> L{lv:<2d}  {d:4d} Dust  {t} Temp  {h:3d}h   cum {cum:6,d}   {"value" if v > 0.05 else "gate "} {v:.3f}')
+        print(f'  {nm:24s} -> L{lv:<2d}  {d:4d} Dust  {t} Temp  {h:3d}h   cum {cum:6,d}   {"value" if v > 0.02 else "gate "} {v:.3f}')
     print(f'TOTAL budget {budget:,}: {len(steps)} levels, {spent:,} Dust, {temp} Tempered, {hrs:,} base hours ({hrs/24:.0f} days), value {val:.2f}')
