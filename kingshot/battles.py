@@ -280,12 +280,12 @@ BATTLES = [
             'his': [('Celestial Sustenance', 1, None), ('Art of War', 1, 22), ('Unyielding Shield', 5, None),
                     ('Ava row 1', 1, None), ('Ava row 2', 1, None), ('Ava row 3', 1, None), ('Ambusher', 1, None),
                     ('Ice Zone', 1, 431), ('Avalanche', 1, None), ('Ambush', 1, None), ('Volley', 1, None)]},
-      note='Panels include the special bonuses (the report says so). Widgets: neither special list shows '
-           'one, and my health lines equal my lethality lines, so Charles\' +15%% defender-health widget '
-           'is not in the panel. Scored with widgets off (the convention for every fight); defender '
-           'widgets on gives k 0.93 against 1.20 off, and both bands hold the observation. Avalanche 1 and '
+      note='Panels include the special bonuses (the report says so) but NOT widgets: the player '
+           'confirms his defender widgets were live (defending the middle, all three at level 10), '
+           'yet his health lines equal his lethality lines, so Charles\' +15%% health sits outside the '
+           'panel. Scored with the widgets added on top (allfights.MY_WIDGETS). Avalanche 1 and '
            'Boom Boom 4 at .50 date the fight at ~4-6 rounds; the engine says 4. ONE Ice Zone strike booked '
-           '431 kills (~1,230 casualties, a third of my losses) where the engine attributes ~69 per trigger '
+           '431 kills (~1,230 casualties, a third of my losses) where the engine attributes ~85 per trigger '
            'against my infantry -- about what a strike on my ARCHERS would do. One trigger; a flag, not a finding.'),
 ]
 

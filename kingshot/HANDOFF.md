@@ -138,13 +138,18 @@ alone: 0.91 against 1.51). Linear stays; the 10k ladder (linear 0.272, reciproca
 the only evidence the other way.
 
 **First fight near parity: Eternity's Reach, [PRO]Mer Vell defending against [EOS]Silly Matey**
-(199,610 attacking 269,532, ~4 rounds, a real opponent). k **1.21** with widgets off, as every
-fight is scored; **0.93** with Mer Vell's defender widgets on. Both 90% bands (~2,000-7,000) hold
-the observed 3,425, and the clock matches (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
+(199,610 attacking 269,532, ~4 rounds, a real opponent). The player confirms his **defender
+widgets were live** (defending the middle, all at level 10), yet his health lines equal his
+lethality lines: **widgets are not in the Stat Bonuses panel** and must be added on top
+(`allfights.MY_WIDGETS`). Scored that way, **k 0.95**, inside a 90% band of ~2,000-7,000, with
+the clock matching (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
+*Conflict to resolve:* `reports.py` (the 2026-09-08 solo/rally pair) reads a +15% RALLY widget
+as present in a rally panel. Either rally and defender widgets display differently or that
+reading was something else. It matters whenever a rally is scored from its report panel.
 This is the regime the castle valuations live in, previously untested. One kill row disagrees:
 a single Ice Zone strike booked 431 kills, 5× what the engine attributes against his front-line
 infantry and roughly what a strike on his *archers* would do -- while against Narses Ice Zone
-ran 0.59. One trigger; recorded as a flag. Twenty-one fights: rms **0.164**.
+ran 0.59. One trigger; recorded as a flag. Twenty-one fights: rms **0.160**.
 
 Remaining outliers: Terry 10k all-infantry 1.53, Terry 20k 1.28, Narses 1000 heroless 1.24,
 Narses 500 solo 0.81, pure-archer 5k 0.82, Sophia no-cavalry 0.80.

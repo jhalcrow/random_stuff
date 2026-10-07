@@ -167,8 +167,8 @@ FIGHTS = [
      round(8_142 * 2.855)),
     # ETERNITY'S REACH, account [PRO]Mer Vell, defending against [EOS]Silly Matey.  A real opponent
     # near PARITY (199,610 vs 269,532), ~4 rounds.  I won; my casualties 1,199 + 2,226 measure his
-    # output.  Both panels as displayed (they include the special bonuses).  Widgets off, as for
-    # every fight here; with my defender widgets on the engine gives k 0.93 instead of ~1.2.
+    # output.  Both panels as displayed (they include the special bonuses).  My defender widgets
+    # were live (confirmed) and sit outside the panel -- see MY_WIDGETS.
     ('ER Mer Vell defends',
      {'inf': dict(attack=2654.2, defense=2490.8, lethality=2345.7, health=2341.5),
       'cav': dict(attack=2629.2, defense=2453.2, lethality=2300.9, health=2301.1),
@@ -224,6 +224,13 @@ MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
              'ER Mer Vell defends': ['Charles', 'Ava', 'Wee & Woo']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
+# MY WIDGETS, per fight.  Widgets are NOT in the Stat Bonuses panel: in the Eternity's Reach
+# defence the player confirms his defender widgets were live (he was defending the middle, all
+# three at level 10), yet his panel's health lines equal his lethality lines -- Charles' +15%
+# health is not in them.  So a widget that fires is added on top of the panel.  Every other fight
+# here is a solo attack, where neither rally nor defender widgets fire, so they stay at 0.
+MY_WIDGETS = {'ER Mer Vell defends': 1.0}
+
 ENEMY_TROOP_ABILITIES = {
     # The heroless report shows his TG2 rows DIRECTLY: one cavalry ability (Ambusher, 25 triggers)
     # and one archer (7), with the infantry section blank on his side.  No longer a guess.
@@ -255,7 +262,8 @@ def score(n=200, seed=1234):
         vals = []
         for _ in range(n):
             a = Side('A', mp, dict(mt), heroes=MY_HEROES.get(lbl, DEFAULT_MY_HEROES), role=mr,
-                     joiners=[], hero_stats=False, tier=11, tg=8, widget_default=0.0)
+                     joiners=[], hero_stats=False, tier=11, tg=8,
+                     widget_default=MY_WIDGETS.get(lbl, 0.0))
             d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
                      joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
                      troop_abilities=ENEMY_TROOP_ABILITIES.get(lbl, {}),

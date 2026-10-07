@@ -71,7 +71,8 @@ def run(lbl, n=200, seed=7):
     narses = lbl in allfights.ENEMY_NO_REFORGE
     for _ in range(n):
         a = Side('A', mp, dict(mt), heroes=allfights.MY_HEROES.get(lbl, allfights.DEFAULT_MY_HEROES),
-                 role=mr, joiners=[], hero_stats=False, tier=11, tg=8, widget_default=0.0)
+                 role=mr, joiners=[], hero_stats=False, tier=11, tg=8,
+                 widget_default=allfights.MY_WIDGETS.get(lbl, 0.0))
         d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
                  joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
                  troop_abilities=allfights.ENEMY_TROOP_ABILITIES.get(lbl, {}),
