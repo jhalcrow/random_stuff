@@ -59,22 +59,31 @@ LABELS = {'1000 NO HEROES': 'Narses 1000 NO HEROES', '500 NO HEROES': 'Narses 50
           '500 YANG ONLY': 'Narses 500 YANG ONLY', '500 CHARLES ONLY': 'Narses 500 CHARLES ONLY',
           '500 SOPHIA ONLY': 'Narses 500 SOPHIA ONLY', '500 SOPHIA 100/250/150': 'Narses 500 SOPHIA 100/250/150',
           '1000 SOPHIA no cavalry': 'Narses 1000 SOPHIA no cav', '500 CHARLES+SOPHIA': 'Narses 500 CHARLES+SOPHIA',
-          '500 vs NARSES + LONG FEI': 'Narses 500 + LONG FEI', '500 TRIO vs TRIO': 'Narses 500 TRIO vs TRIO'}
+          '500 vs NARSES + LONG FEI': 'Narses 500 + LONG FEI', '500 TRIO vs TRIO': 'Narses 500 TRIO vs TRIO',
+          'ER Mer Vell defends vs Silly Matey': 'ER Mer Vell defends'}
 
 
 def run(lbl, n=200, seed=7):
+    """Same Side construction as allfights.score, so the two can never disagree about a fight."""
     ATTR.clear(); TRIG.clear()
     rng = random.Random(seed)
     _, mp, mt, mr, ep, et, tier, etg, eh, side, obs = next(f for f in allfights.FIGHTS if f[0] == lbl)
+    narses = lbl in allfights.ENEMY_NO_REFORGE
     for _ in range(n):
         a = Side('A', mp, dict(mt), heroes=allfights.MY_HEROES.get(lbl, allfights.DEFAULT_MY_HEROES),
                  role=mr, joiners=[], hero_stats=False, tier=11, tg=8, widget_default=0.0)
-        d = Side('D', ep, dict(et), heroes=eh, role='garrison', joiners=[], hero_stats=False,
-                 tier=tier, tg=etg, widget_default=0.0,
+        d = Side('D', ep, dict(et), heroes=eh, role=('solo' if mr == 'garrison' else 'garrison'),
+                 joiners=[], hero_stats=False, tier=tier, tg=etg, widget_default=0.0,
                  troop_abilities=allfights.ENEMY_TROOP_ABILITIES.get(lbl, {}),
-                 troop_reforges=set(), skill_levels=allfights.NARSES_LEVELS)
-        battle_mc_diag(a, d, rng)
-    return {k: v / n for k, v in ATTR.items()}, {k: v / n for k, v in TRIG.items()}
+                 troop_reforges=(set() if narses else None),
+                 skill_levels=(allfights.NARSES_LEVELS if narses else {}))
+        if mr == 'garrison':
+            battle_mc_diag(d, a, rng)
+        else:
+            battle_mc_diag(a, d, rng)
+    flip = {'mine': 'his', 'his': 'mine'} if mr == 'garrison' else {'mine': 'mine', 'his': 'his'}
+    return ({(flip[w], k): v / n for (w, k), v in ATTR.items()},
+            {(flip[w], k): v / n for (w, k), v in TRIG.items()})
 
 
 def main():

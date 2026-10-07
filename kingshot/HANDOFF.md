@@ -137,6 +137,15 @@ Defence form re-checked on the corrected set: linear 0.163, reciprocal 0.422 (th
 alone: 0.91 against 1.51). Linear stays; the 10k ladder (linear 0.272, reciprocal 0.047) is still
 the only evidence the other way.
 
+**First fight near parity: Eternity's Reach, [PRO]Mer Vell defending against [EOS]Silly Matey**
+(199,610 attacking 269,532, ~4 rounds, a real opponent). k **1.21** with widgets off, as every
+fight is scored; **0.93** with Mer Vell's defender widgets on. Both 90% bands (~2,000-7,000) hold
+the observed 3,425, and the clock matches (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
+This is the regime the castle valuations live in, previously untested. One kill row disagrees:
+a single Ice Zone strike booked 431 kills, 5× what the engine attributes against his front-line
+infantry and roughly what a strike on his *archers* would do -- while against Narses Ice Zone
+ran 0.59. One trigger; recorded as a flag. Twenty-one fights: rms **0.164**.
+
 Remaining outliers: Terry 10k all-infantry 1.53, Terry 20k 1.28, Narses 1000 heroless 1.24,
 Narses 500 solo 0.81, pure-archer 5k 0.82, Sophia no-cavalry 0.80.
 

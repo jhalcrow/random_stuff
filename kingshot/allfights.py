@@ -165,6 +165,20 @@ FIGHTS = [
       'arch':dict(attack=474.3, defense=467.2, lethality=311.3, health=243.9)},
      {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'him',
      round(8_142 * 2.855)),
+    # ETERNITY'S REACH, account [PRO]Mer Vell, defending against [EOS]Silly Matey.  A real opponent
+    # near PARITY (199,610 vs 269,532), ~4 rounds.  I won; my casualties 1,199 + 2,226 measure his
+    # output.  Both panels as displayed (they include the special bonuses).  Widgets off, as for
+    # every fight here; with my defender widgets on the engine gives k 0.93 instead of ~1.2.
+    ('ER Mer Vell defends',
+     {'inf': dict(attack=2654.2, defense=2490.8, lethality=2345.7, health=2341.5),
+      'cav': dict(attack=2629.2, defense=2453.2, lethality=2300.9, health=2301.1),
+      'arch':dict(attack=2650.6, defense=2473.4, lethality=2313.8, health=2305.3)},
+     {'inf': 89_844, 'cav': 89_844, 'arch': 89_844}, 'garrison',
+     {'inf': dict(attack=1130.4, defense=1039.2, lethality=951.7, health=953.2),
+      'cav': dict(attack=1266.8, defense=1136.8, lethality=885.9, health=822.1),
+      'arch':dict(attack=1278.2, defense=1100.7, lethality=1080.0, health=907.7)},
+     {'inf': 66_537, 'cav': 66_537, 'arch': 66_536}, {'inf': 11, 'cav': 10, 'arch': 11}, 8,
+     ['Long Fei', 'Ava', 'Yang'], 'me', 3_425),
 ]
 
 
@@ -206,7 +220,8 @@ MY_HEROES = {'Narses 1000 NO HEROES': [], 'Narses 500 NO HEROES': [],
              'Narses 500 SOPHIA 100/250/150': ['Sophia'],
              'Narses 1000 SOPHIA no cav': ['Sophia'],
              'Narses 500 CHARLES+SOPHIA': ['Charles', 'Sophia'],
-             'Narses 500 + LONG FEI': []}
+             'Narses 500 + LONG FEI': [],
+             'ER Mer Vell defends': ['Charles', 'Ava', 'Wee & Woo']}
 DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 
 ENEMY_TROOP_ABILITIES = {

@@ -251,6 +251,42 @@ BATTLES = [
            'a units error; x 2.855 gives 23,245 against a simulated ~23,000. ICE ZONE FIRED 41 TIMES FOR 686 KILLS WITH ZERO ARCHERS while '
            'Avalanche correctly collapsed to 1 -- unexplained, and its tooltip says "Yang\'s '
            'archers". Terror Deathblow 45 dates the fight at ~90 rounds against the simulator 172.'),
+
+ # ETERNITY'S REACH -- a different account ([PRO]Mer Vell) and a real opponent, NOT a controlled
+ # test.  The first fight in the set near PARITY (199,610 attacking 269,532) and the first that
+ # ends in ~4 rounds -- the regime the castle valuations live in.  He attacked; I defended and won.
+ dict(mail='223407018950635', when='2026-10 (reported 2026-10-07)', label='ER Mer Vell defends vs Silly Matey',
+      me=dict(heroes=['Charles', 'Ava', 'Wee & Woo'], troops={'inf': 89_844, 'cav': 89_844, 'arch': 89_844},
+              tiers={'inf': 11, 'cav': 11, 'arch': 11}, tg=8,
+              panel={'inf': (2654.2, 2490.8, 2345.7, 2341.5),
+                     'cav': (2629.2, 2453.2, 2300.9, 2301.1),
+                     'arch': (2650.6, 2473.4, 2313.8, 2305.3)},
+              injured=1_199, lightly=2_226, losses=0, residents=266_107),
+      him=dict(heroes=['Long Fei', 'Ava', 'Yang'], troops={'inf': 66_537, 'cav': 66_537, 'arch': 66_536},
+               tiers={'inf': 11, 'cav': 10, 'arch': 11}, tg=8,
+               panel={'inf': (1130.4, 1039.2, 951.7, 953.2),
+                      'cav': (1266.8, 1136.8, 885.9, 822.1),
+                      'arch': (1278.2, 1100.7, 1080.0, 907.7)},
+               injured=69_864, lightly=129_746, losses=0, residents=0),
+      outcome='victory', uncensored='me', observed=3_425,
+      special={'me': dict(squads=20.0, enemy_attack=-20.0, enemy_defense=-20.0, pet_enemy_def=-10.0,
+                          pet_enemy_leth=-5.0, pet_enemy_hp=-5.0, pet_skill=10.0),
+               'him': dict(pet_enemy_def=-6.0, pet_enemy_leth=-5.0, pet_enemy_hp=-5.0,
+                           pet_skill_atk=7.0, pet_skill_other=5.0)},
+      rows={'mine': [('Intimidation', 1, None), ('Iron Bodies', 1, None), ('Great Justice', 1, None),
+                     ('Unyielding Shield', 3, None),
+                     ('Ava row 1', 1, None), ('Ava row 2', 1, None), ('Ava row 3', 1, None), ('Ambusher', 1, None),
+                     ('Artillerymen', 1, None), ('Chain Shelling', 1, None), ('Boom Boom', 4, None)],
+            'his': [('Celestial Sustenance', 1, None), ('Art of War', 1, 22), ('Unyielding Shield', 5, None),
+                    ('Ava row 1', 1, None), ('Ava row 2', 1, None), ('Ava row 3', 1, None), ('Ambusher', 1, None),
+                    ('Ice Zone', 1, 431), ('Avalanche', 1, None), ('Ambush', 1, None), ('Volley', 1, None)]},
+      note='Panels include the special bonuses (the report says so). Widgets: neither special list shows '
+           'one, and my health lines equal my lethality lines, so Charles\' +15%% defender-health widget '
+           'is not in the panel. Scored with widgets off (the convention for every fight); defender '
+           'widgets on gives k 0.93 against 1.20 off, and both bands hold the observation. Avalanche 1 and '
+           'Boom Boom 4 at .50 date the fight at ~4-6 rounds; the engine says 4. ONE Ice Zone strike booked '
+           '431 kills (~1,230 casualties, a third of my losses) where the engine attributes ~69 per trigger '
+           'against my infantry -- about what a strike on my ARCHERS would do. One trigger; a flag, not a finding.'),
 ]
 
 
