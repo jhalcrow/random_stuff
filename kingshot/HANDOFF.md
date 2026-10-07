@@ -137,7 +137,7 @@ Defence form re-checked on the corrected set: linear 0.163, reciprocal 0.422 (th
 alone: 0.91 against 1.51). Linear stays; the 10k ladder (linear 0.272, reciprocal 0.047) is still
 the only evidence the other way.
 
-**First fight near parity: Eternity's Reach, [PRO]Mer Vell defending against [EOS]Silly Matey**
+**First fight near parity: Eternity's Reach, [PRO]Mer Vell (the player's own account) defending against [EOS]Silly Matey**
 (199,610 attacking 269,532, ~4 rounds, a real opponent). The player confirms his **defender
 widgets were live** (defending the middle, all at level 10), yet his health lines equal his
 lethality lines: **widgets are not in the Stat Bonuses panel** and must be added on top
@@ -145,7 +145,8 @@ lethality lines: **widgets are not in the Stat Bonuses panel** and must be added
 the clock matching (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
 *Skill levels are invisible on a report* (raised by the player). Every real-opponent fight assumes
 max expedition skills on both sides, and each level moves the answer 15-20%: in this fight his
-L5/L4/L3 gives k 0.93/0.78/0.65 with mine at L5, and mine at L4 gives 1.15 against his L5. So it
+L5/L4/L3 gives k 0.93/0.78/0.65 with mine at L5, and mine at L4 gives 1.15 against his L5. Mer Vell is the player, so his own levels can be
+supplied; Silly Matey's cannot. As it stands it
 pins the *difference* in levels, not the engine -- a weak test, and the reason the Narses fights
 (levels known: Long Fei 4, Jabel 5, Rosa 4) carry the calibration. In the Terry and opponent-2
 fights lower enemy levels make the fit *worse* (Terry 20k 1.28 → 1.58 at L4), so assumed-max is

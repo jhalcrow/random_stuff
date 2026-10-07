@@ -252,8 +252,10 @@ BATTLES = [
            'Avalanche correctly collapsed to 1 -- unexplained, and its tooltip says "Yang\'s '
            'archers". Terror Deathblow 45 dates the fight at ~90 rounds against the simulator 172.'),
 
- # ETERNITY'S REACH -- a different account ([PRO]Mer Vell) and a real opponent, NOT a controlled
- # test.  The first fight in the set near PARITY (199,610 attacking 269,532) and the first that
+ # ETERNITY'S REACH -- [PRO]Mer Vell IS THE PLAYER (confirmed); the same account as Belisarius on
+ # the evidence of the report: the same Lv.100 master and skill set (one skill Lv.11 -> 13) and the
+ # same governor gear with the ring and mace since raised to T4.  The OPPONENT is real, so this is
+ # NOT a controlled test.  The first fight in the set near PARITY (199,610 attacking 269,532) and the first that
  # ends in ~4 rounds -- the regime the castle valuations live in.  He attacked; I defended and won.
  dict(mail='223407018950635', when='2026-10 (reported 2026-10-07)', label='ER Mer Vell defends vs Silly Matey',
       me=dict(heroes=['Charles', 'Ava', 'Wee & Woo'], troops={'inf': 89_844, 'cav': 89_844, 'arch': 89_844},
