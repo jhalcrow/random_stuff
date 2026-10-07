@@ -230,6 +230,9 @@ DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 # health is not in them.  So a widget that fires is added on top of the panel.  Every other fight
 # here is a solo attack, where neither rally nor defender widgets fire, so they stay at 0.
 MY_WIDGETS = {'ER Mer Vell defends': 1.0}
+# SKILL LEVELS ARE NOT ON THE REPORT.  Every non-Narses fight assumes max expedition skills on both
+# sides; each level moves k 15-20% (ER defence: his L5/L4/L3 -> 0.93/0.78/0.65).  Real-opponent
+# fights therefore test the level DIFFERENCE as much as the engine.
 
 ENEMY_TROOP_ABILITIES = {
     # The heroless report shows his TG2 rows DIRECTLY: one cavalry ability (Ambusher, 25 triggers)

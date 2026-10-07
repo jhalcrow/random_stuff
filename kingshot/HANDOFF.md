@@ -143,6 +143,13 @@ widgets were live** (defending the middle, all at level 10), yet his health line
 lethality lines: **widgets are not in the Stat Bonuses panel** and must be added on top
 (`allfights.MY_WIDGETS`). Scored that way, **k 0.95**, inside a 90% band of ~2,000-7,000, with
 the clock matching (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
+*Skill levels are invisible on a report* (raised by the player). Every real-opponent fight assumes
+max expedition skills on both sides, and each level moves the answer 15-20%: in this fight his
+L5/L4/L3 gives k 0.93/0.78/0.65 with mine at L5, and mine at L4 gives 1.15 against his L5. So it
+pins the *difference* in levels, not the engine -- a weak test, and the reason the Narses fights
+(levels known: Long Fei 4, Jabel 5, Rosa 4) carry the calibration. In the Terry and opponent-2
+fights lower enemy levels make the fit *worse* (Terry 20k 1.28 → 1.58 at L4), so assumed-max is
+their best case and cannot explain their residuals.
 *Conflict to resolve:* `reports.py` (the 2026-09-08 solo/rally pair) reads a +15% RALLY widget
 as present in a rally panel. Either rally and defender widgets display differently or that
 reading was something else. It matters whenever a rally is scored from its report panel.
