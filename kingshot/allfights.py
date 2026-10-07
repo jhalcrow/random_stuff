@@ -150,6 +150,21 @@ FIGHTS = [
       'cav': dict(attack=217.3, defense=206.7, lethality=160.8, health=158.6),
       'arch':dict(attack=239.1, defense=232.0, lethality=176.8, health=177.2)},
      {'inf': 27_866, 'cav': 27_877, 'arch': 27_877}, 10, 2, ['Long Fei'], 'him', 4_206),
+    # FULL TRIO vs FULL TRIO.  I am wiped, so HIS casualties are the observable -- and the report
+    # gives them only as the KILLS FIELD, 8,142, which counts the Injured bucket alone (35% of
+    # casualties; checked on Terry's defence, 3,408 = 0.35 x 9,734).  Casualties = 8,142 x 2.855.
+    # It was left out of this file, and called a 2.8x residual elsewhere, because 8,142 was read
+    # as a casualty total.
+    ('Narses 500 TRIO vs TRIO',
+     {'inf': dict(attack=1952.8, defense=1936.2, lethality=1805.7, health=1802.9),
+      'cav': dict(attack=1820.7, defense=1804.7, lethality=1727.4, health=1729.6),
+      'arch':dict(attack=1823.5, defense=1804.4, lethality=1745.5, health=1740.1)},
+     {'inf': 300, 'cav': 200, 'arch': 0}, 'solo',
+     {'inf': dict(attack=520.9, defense=514.3, lethality=251.4, health=294.6),
+      'cav': dict(attack=356.1, defense=345.5, lethality=259.4, health=227.3),
+      'arch':dict(attack=474.3, defense=467.2, lethality=311.3, health=243.9)},
+     {'inf': 61_785, 'cav': 24_714, 'arch': 37_071}, 10, 2, ['Long Fei', 'Jabel', 'Rosa'], 'him',
+     round(8_142 * 2.855)),
 ]
 
 
@@ -181,7 +196,8 @@ NARSES_WIDGETS = {'Long Fei': 0.0, 'Rosa': 0.0, 'Jabel': 0.1}
 
 
 ENEMY_NO_REFORGE = {'Narses 1000 NO HEROES', 'Narses 500 NO HEROES', 'Narses 500 YANG ONLY', 'Narses 500 CHARLES ONLY', 'Narses 500 SOPHIA ONLY', 'Narses 500 SOPHIA 100/250/150', 'Narses 1000 SOPHIA no cav', 'Narses 500 CHARLES+SOPHIA', 'Narses 500 + LONG FEI', 'Narses pure-arch 5k', 'Narses mixed atk 10k', 'Narses mixed def 5k',
-                    'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf'}
+                    'Narses inf+arch 1k', 'Narses 500 solo', 'Narses 1500 pure inf',
+                    'Narses 500 TRIO vs TRIO'}
 
 # My own lineup is Charles / Sophia / Yang in every fight EXCEPT the heroless one, where the
 # report reads "Vacant" in all three slots on both sides.
@@ -212,6 +228,8 @@ ENEMY_TROOP_ABILITIES = {
     'Narses inf+arch 1k':    {'inf': 0},
     'Narses 500 solo':       {'inf': 0},
     'Narses 1500 pure inf':  {'inf': 0},
+    # His rows in the trio report: one cavalry ability (Ambusher) and one archer (6 triggers).
+    'Narses 500 TRIO vs TRIO': {'inf': 0, 'cav': 0, 'arch': 1},
 }
 
 

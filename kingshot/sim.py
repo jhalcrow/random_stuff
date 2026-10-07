@@ -432,6 +432,9 @@ def _split_effects(effs):
     return flat, procs
 
 
+COLLAPSE_IF_ABSENT = {'Avalanche', 'Terror Deathblow'}
+
+
 def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
     """Monte Carlo battle: chance skills are rolled once per round at squad level, periodic skills
     fire on their schedule.  Same engine as battle() otherwise."""
@@ -515,6 +518,15 @@ def battle_mc(a: Side, d: Side, rng, max_rounds=5000):
                             if counts.get(t, 0) <= 0:
                                 continue
                         elif start.get(t, 0) > 0 and counts.get(t, 0) <= 0:
+                            continue
+                        elif start.get(t, 0) <= 0 and nm.split(':', 1)[1] in COLLAPSE_IF_ABSENT:
+                            # ...except the skills the reports show COLLAPSING to "1" when that
+                            # type was never brought: Avalanche with zero archers (trio fight)
+                            # and Terror Deathblow with zero cavalry (Sophia no-cav fight).  Ice
+                            # Zone, Ambush and Arcane Pact keep firing in the same reports.
+                            # Avalanche is scoped 'all', so firing it anyway handed a no-archer
+                            # march +100% on every type every fourth round.  Read off the trigger
+                            # rows, not fitted: rms over twenty fights 0.186 -> 0.160.
                             continue
                     out.append((kind, v, scope, nm))
                 return out

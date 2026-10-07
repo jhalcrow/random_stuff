@@ -3125,3 +3125,29 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # Read the ORDER, not the numbers.  Ratings stay soft while the defence-coefficient form is an
 # open split verdict; the attacker-size ratio that makes the matrix informative fell from 2.0
 # to 1.25 with the fixes, which is itself a substantive shift in modelled attack/defence balance.
+
+
+# --------------------------------- REVIEW OF EVERY REPORT, 2026-10-07
+# 1. THE TRIO FIGHT'S 8,142 IS THE KILLS FIELD.  The skull on a summary line counts only the
+#    Injured bucket, 35.0% of casualties -- this file's own header says so (WOUND_SCALE 2.855),
+#    and the screenshots re-confirm it: Terry's defence, skull 3,408 = 0.35 x 9,734; Terry
+#    all-archer, skull 633 = 0.35 x 1,808.  The trio was the only fight scored on a skull.  His
+#    casualties were 8,142 x 2.855 = 23,245; the engine gives ~21,000-23,000, k 0.91-0.99, clock
+#    96-99 rounds against ~90.  "The calibration breaks", the 2.8x residual, "his output ~2x under-
+#    modelled with three heroes" and the two-rules contradiction it fed are all RETRACTED.
+#    The other enemy-loss observations were checked against their overviews by OCR: Terry 9,734,
+#    937, 1,808, 22,570 and opponent-2 15,224 are all full casualty totals.
+# 2. THE KILLS COLUMN IS A PER-STRIKE MEASUREMENT (killrows.py).  Same 35% convention.  Assault
+#    Lance median 0.97 of the engine per trigger over eight fights; Howling Wind 1.07-1.11 in the
+#    heroless, Yang, no-cavalry and Long Fei fights.  Those strikes are base cavalry and archer
+#    damage, so the damage core, front-line targeting and sqrt(n x army_min) are confirmed per
+#    strike, independently of every loss total.  Yang's Ice Zone (0.59) and Avalanche (0.80) are
+#    high per strike but fire more often than modelled; their totals land.
+# 3. AVALANCHE AND TERROR DEATHBLOW COLLAPSE WHEN THEIR TYPE WAS NEVER BROUGHT (both read "1"),
+#    while Ice Zone, Ambush and Arcane Pact keep firing.  The engine fired Avalanche anyway, and
+#    it is scoped 'all'.  sim.COLLAPSE_IF_ABSENT; twenty fights rms 0.186 -> 0.160.  Silencing
+#    EVERY absent-type hero skill instead scores 0.300 and swings the single-type fights from too
+#    high to too low, so the rule really is skill-by-skill, as the trigger rows say.
+# 4. Defence form on the corrected twenty: linear 0.163, reciprocal 0.422.  Linear stays.
+# 5. The ladder's losses are overview totals ("15 + 26 = 41"), not skulls -- it is clean, and the
+#    defence-form split against it stands.

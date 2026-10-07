@@ -22,6 +22,11 @@ contain hero expedition stats, hero gear and research, which is why every fight 
 hero_stats=False against the panel rather than reconstructing it.  Widgets are NOT in the panel --
 they are Special Bonuses applied afterwards.
 
+KILLS.  Every "kills" number the game prints -- the skull on the summary line AND the Kills column
+of the Battle Details rows -- counts only the Injured bucket, which is 35.0% of casualties in every
+report from either side.  Total casualties = kills x 2.855.  Only the Battle Overview's Injured +
+Lightly Injured + Losses is a casualty total.
+
 TRIGGER ROWS are the Battle Details panel, in displayed order, as (name, triggers, kills).  Rows
 that fired ZERO times are omitted by the game, so row position is not a stable index.  A
 scope-gated skill whose troop type is absent shows 1, not 0 (measured on Avalanche and on Terror
@@ -228,7 +233,7 @@ BATTLES = [
               injured=None, lightly=None, losses=None, residents=0, wiped=500),
       him=dict(heroes=['Long Fei','Jabel','Rosa'], troops=LARGE, panel=NARSES_TRIO,
                injured=None, lightly=None, losses=None, residents=None, total=8_142),
-      outcome='defeat', uncensored='him', observed=8_142,
+      outcome='defeat', uncensored='him', kills_field=8_142, observed=round(8_142 * 2.855),
       rows={'mine': [('Intimidation', 1, None), ('Iron Bodies', 1, None), ('Great Justice', 1, None),
                      ('Unyielding Shield', 145, None),
                      ('Arcane Pact', 31, None), ('Terror Deathblow', 45, None),
@@ -240,7 +245,10 @@ BATTLES = [
                     ('Rally Flag', 37, None), ("Hero's Domain", 147, 30), ('Youthful Rage', 1, None),
                     ('Ambusher', 21, None), ('Rosa row 1', 40, None)]},
       note='Casualty split not captured (only the summary line, 500 troops / 8,142 kills / '
-           '-23,625 power). ICE ZONE FIRED 41 TIMES FOR 686 KILLS WITH ZERO ARCHERS while '
+           '-23,625 power).  8,142 IS THE KILLS FIELD, NOT CASUALTIES: the skull counts only the '
+           'Injured bucket, 35%% of casualties (Terry defence: skull 3,408 = 0.35 x 9,734; Terry '
+           'all-archer: 633 = 0.35 x 1,808).  Scoring it as casualties made a 2.8x residual out of '
+           'a units error; x 2.855 gives 23,245 against a simulated ~23,000. ICE ZONE FIRED 41 TIMES FOR 686 KILLS WITH ZERO ARCHERS while '
            'Avalanche correctly collapsed to 1 -- unexplained, and its tooltip says "Yang\'s '
            'archers". Terror Deathblow 45 dates the fight at ~90 rounds against the simulator 172.'),
 ]
