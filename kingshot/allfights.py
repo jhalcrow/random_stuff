@@ -230,6 +230,9 @@ DEFAULT_MY_HEROES = ['Charles', 'Sophia', 'Yang']
 # health is not in them.  So a widget that fires is added on top of the panel.  Every other fight
 # here is a solo attack, where neither rally nor defender widgets fire, so they stay at 0.
 MY_WIDGETS = {'ER Mer Vell defends': 1.0}
+# Silly Matey's skills: ALL LEVEL 5 (confirmed by the player).  My Charles is level 5 (tooltips,
+# reports.py).  My Ava and Wee & Woo are unconfirmed; scored at max.  With Charles pinned they
+# barely matter: Ava/Wee & Woo at 5/5 -> k 0.95, 4/4 -> 1.07, 5/3 -> 1.10.
 # SKILL LEVELS ARE NOT ON THE REPORT.  Every non-Narses fight assumes max expedition skills on both
 # sides; each level moves k 15-20% (ER defence: his L5/L4/L3 -> 0.93/0.78/0.65).  Real-opponent
 # fights therefore test the level DIFFERENCE as much as the engine.

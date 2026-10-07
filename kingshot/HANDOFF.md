@@ -145,8 +145,10 @@ lethality lines: **widgets are not in the Stat Bonuses panel** and must be added
 the clock matching (engine 4 rounds; Avalanche 1, Boom Boom 4 at .50).
 *Skill levels are invisible on a report* (raised by the player). Every real-opponent fight assumes
 max expedition skills on both sides, and each level moves the answer 15-20%: in this fight his
-L5/L4/L3 gives k 0.93/0.78/0.65 with mine at L5, and mine at L4 gives 1.15 against his L5. Mer Vell is the player, so his own levels can be
-supplied; Silly Matey's cannot. As it stands it
+L5/L4/L3 gives k 0.93/0.78/0.65 with mine at L5, and mine at L4 gives 1.15 against his L5. Mer Vell is the player, and the player confirms Silly
+Matey had every skill at level 5. My Charles is level 5 (tooltips), and with him pinned my Ava
+and Wee & Woo barely move it (5/5 → 0.95, 4/4 → 1.07). So the fight now scores 0.95-1.10 on
+known levels, inside a ±38% luck band. As it stands it
 pins the *difference* in levels, not the engine -- a weak test, and the reason the Narses fights
 (levels known: Long Fei 4, Jabel 5, Rosa 4) carry the calibration. In the Terry and opponent-2
 fights lower enemy levels make the fit *worse* (Terry 20k 1.28 → 1.58 at L4), so assumed-max is
