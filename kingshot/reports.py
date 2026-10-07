@@ -3151,3 +3151,26 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # 4. Defence form on the corrected twenty: linear 0.163, reciprocal 0.422.  Linear stays.
 # 5. The ladder's losses are overview totals ("15 + 26 = 41"), not skulls -- it is clean, and the
 #    defence-form split against it stands.
+
+
+# --------------------------------- ELO RERUN, CURRENT ENGINE (2026-10-07)
+# Same 7x7 round-robin, 300 battles a pairing, ATT_SIZE 1.25 (mean attacker win rate 54%, so the
+# fit is informative).  Three seeds agree within ~20 points on every lineup.
+#          1942  DEFENSE  Charles / Sophia / Wee & Woo  60/15/25     (1929 on 2026-09-10)
+#          1893  ATTACK   Charles / Ava / Yang  45/30/25             (1881)
+#          1766  ATTACK   Charles / Ava / Wee & Woo  40/35/25        (1755)
+#          1719  ATTACK   Charles / Sophia / Yang  60/40/0           (1861)  <- the one real move
+#          1580  DEFENSE  Charles / Sophia / Wee & Woo  35/65/0      (1576)
+#          1539  DEFENSE  Charles / Jabel / Wee & Woo  60/15/25      (1538)
+#          1517  ATTACK   Triton / Thrud / Yang  50/20/30            (1524)
+#          1477  DEFENSE  Charles / Ava / Wee & Woo  35/25/40        (1432)
+#          1433  DEFENSE  Triton / Sophia / Vivian  60/15/25         (1431)
+#          1393  ATTACK   Amadeus / Ava / Wee & Woo  50/20/30        (1418)
+#          1331  DEFENSE  Long Fei / Sophia / Wee & Woo  40/60/0     (1339)
+#          1288  ATTACK   Charles / Sophia / Marlin  55/45/0         (1284)
+#          1106  ATTACK   Charles / Sophia / Wee & Woo  55/45/0      (1080)
+#          1018  DEFENSE  Alcar / Sophia / Wee & Woo  40/60/0        (952)
+# The only engine change since September is COLLAPSE_IF_ABSENT: Avalanche no longer fires in a
+# march with zero archers.  Charles/Sophia/Yang 60/40/0 brings Yang with no archers, so it loses
+# Avalanche's +100% every fourth round and drops ~145 points, from 2nd to 3rd attack.  Every other
+# lineup moved within seed noise.  Yang belongs in a march that carries archers.

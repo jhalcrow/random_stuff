@@ -95,19 +95,13 @@ def bradley_terry(players, games, iters=2000):
 
 if __name__ == '__main__':
     print(f'{N} Monte Carlo battles per pairing, {SIZE:,} troops each side, attacker stats x{ATT_SCALE}, defender stats x{DEF_SCALE}\n')
-    print(f'  CALIBRATION: hero skills scaled offensive x{_CAL[0]:.2f}, defensive x{_CAL[1]:.2f}.')
-    print('  Measured across nine controlled fights against one heroless target and validated OUT')
-    print('  OF SAMPLE twice -- on a two-hero march it was not fitted on, and on a fight whose only')
-    print('  hero was the OPPONENT\'s.  Over nineteen measured fights it takes rms log err from')
-    print('  0.613 to 0.395.  It is two constants with no mechanism, so treat any single rating as')
-    print('  soft; but it is ASYMMETRIC, so unlike a uniform error it does NOT cancel out of a')
-    print('  relative ranking -- it demotes proc-heavy lineups against defensive ones.  Set')
-    print('  HERO_CAL_OFF=1.0 HERO_CAL_DEF=1.0 to see the raw model instead.')
-    print('  STILL UNVALIDATED: this file runs Side() with hero_stats=True and widget_default=1.0')
-    print('  against USER_STATS, a configuration no report has checked; allfights.py validates the')
-    print('  opposite one (reported panel, both switches off).  The calibration touches only skill')
-    print('  effects, so it does not interact with that -- but the base stats it sits on are')
-    print(f'  unverified.  Attacker fields {ATT_SIZE:g}x the garrison\'s troops (ATT_SIZE).')
+    print('  RAW ENGINE, zero fitted constants: twenty-one measured fights, rms log err 0.160')
+    print('  (allfights.py).  Mirror stats on both sides (USER_STATS, the 2026-09-07 panel); since')
+    print('  both sides share it, its staleness cancels out of the ranking.  Rally widgets on the')
+    print('  attacker, defender widgets on the garrison, added on top of the panel as the ER defence')
+    print('  report showed.  Joiner skills and the parity regime are the least-validated parts:')
+    print('  every calibration fight but one was a solo march.  Read the ORDER, not the numbers.')
+    print(f'  Attacker fields {ATT_SIZE:g}x the garrison\'s troops (ATT_SIZE).')
     # Some lineups here contain heroes whose magnitudes were read off an opponent's under-levelled
     # account.  Belisarius' own heroes are all maxed, so those lineups are UNDER-rated below.
     used = {h for _, hs, _ in ATTACKERS + DEFENDERS for h in hs} & UNDERLEVELLED
