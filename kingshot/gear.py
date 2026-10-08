@@ -37,8 +37,8 @@ CHARM_TABLE = {12: (580, 600, 59.0), 13: (610, 780, 63.0), 14: (645, 960, 67.0),
                15: (685, 1140, 71.0), 16: (730, 1320, 75.0), 17: (780, 1500, 79.0),
                18: (835, 1680, 83.0)}
 CHARM_STEP = 4.0
-# your charms, 2026-09-11: infantry all 16, cavalry all 14, archer a mix of 14 and 15
-CHARMS = {'inf': [16]*6, 'cav': [14]*6, 'arch': [14]*3 + [15]*3}
+# your charms, 2026-10-08: infantry all 16, cavalry all 15, archer all 15
+CHARMS = {'inf': [16]*6, 'cav': [15]*6, 'arch': [15]*6}
 BUDGET = dict(satin=3_600_000, threads=41_190, av=6_460)
 MAX_STEPS = 4
 RALLY = 1_900_000
