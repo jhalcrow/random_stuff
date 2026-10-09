@@ -3188,3 +3188,16 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # allfights.py.  At that strength the fight is close to a coin flip.
 # Ratio search (5% grid, 100 runs): 50/15/35 best at both x1.05 and x1.07 (he loses 133k / 124k, win
 # 42% / 21%), against 50/20/30's 131k / 117k (37% / 14%).  Extremes collapse (any single type ~20k).
+
+
+# --------------------------------- MAGMA ASSAILANT (Mystic Trial stage, 2026-10-08 20:57:01)
+# 150,000 at 50/20/30, my troops shown as Lv 10.0 here (the trial sets tier), vs 150,000 at 40/30/30 of the
+# same special shield/lance/crossbow troops as Mad Scholar.  Event panel: mine inf 1483.7/1497.1/283/283,
+# cav 1357.3/1370.7/283/283, arch 1431.0/1444.4/283/283; his attack/defense 1517.0, lethality/health 268.0.
+# DEFEAT: I lost 150,000, he lost 124,072.  Rows: Ambusher 8 vs 11, archer ability 4 vs 7.
+# CROSS-CHECK: standard T10 base stats have me winning 85%; the replay matches at his strength x~1.03,
+# against x~1.07 for Mad Scholar.  One factor of x1.05 fits BOTH stages within one sd -- the same special
+# troops come out the same strength in two independent stages with different panels and tiers.
+# Ratio search (5% grid, 100 runs): best band 50-60 inf / 10-15 cav / 30-35 arch.  For WINNING the stage,
+# 55/15/30 is top or tied-top at both strengths (win 42% at x1.03, 17% at x1.05) against 50/20/30's
+# 26% / 7%.  50/15/35 maximises his losses (132k / 121k).
