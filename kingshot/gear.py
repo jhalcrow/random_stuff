@@ -39,7 +39,7 @@ CHARM_TABLE = {12: (580, 600, 59.0), 13: (610, 780, 63.0), 14: (645, 960, 67.0),
 CHARM_STEP = 4.0
 # your charms, 2026-10-08: infantry all 16, cavalry all 15, archer all 15
 CHARMS = {'inf': [16]*6, 'cav': [15]*6, 'arch': [15]*6}
-BUDGET = dict(satin=3_600_000, threads=41_190, av=6_460)
+BUDGET = dict(satin=2_638_439, threads=31_202, av=4_908)     # 2026-10-08 Governor Gear screen
 MAX_STEPS = 4
 RALLY = 1_900_000
 ENEMY_SCALE = 0.9
