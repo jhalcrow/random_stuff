@@ -3174,3 +3174,17 @@ NARSES_ED20 = with_special(NARSES, e_def=20.0)
 # march with zero archers.  Charles/Sophia/Yang 60/40/0 brings Yang with no archers, so it loses
 # Avalanche's +100% every fourth round and drops ~145 points, from 2nd to 3rd attack.  Every other
 # lineup moved within seed noise.  Yang belongs in a march that carries archers.
+
+
+# --------------------------------- MAD SCHOLAR (event, 2026-10-08 20:50:46) -- ratio advice, NOT calibration
+# Mer Vell attacked an event NPC: 205,200 at 50/20/30 (T11) vs Mad Scholar 150,000 at 40/30/30 ("Lv 10.0",
+# special shield/lance/crossbow troops).  No heroes either side.  Event "Bonus Details" panel replaces the
+# normal one: mine inf 317.5/326.5/302.5/311.5, cav and arch 317.5/317.5/302.5/302.5; his 403.0 on all.
+# DEFEAT: I lost 205,200 (all as Losses), he lost 120,839.  Rows: Ambusher 10 vs 17, archer ability 4 vs 5,
+# and no Assault Lance on my cavalry -- so Truegold abilities look stripped in this event.
+# With standard T10 base stats the engine has me WINNING 93% (he loses ~149k): his special troops are
+# stronger than T10.  His base stats are unknown, so his attack and health were scaled until the replay
+# matched (x1.05-1.10) -- a measurement of an unknown, not a patch on the engine -- and NOT added to
+# allfights.py.  At that strength the fight is close to a coin flip.
+# Ratio search (5% grid, 100 runs): 50/15/35 best at both x1.05 and x1.07 (he loses 133k / 124k, win
+# 42% / 21%), against 50/20/30's 131k / 117k (37% / 14%).  Extremes collapse (any single type ~20k).
