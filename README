@@ -8,3 +8,7 @@ ngram_markov
 
 mondrian
       Some functions implementing the Mondrian Process
+
+robot_maze
+	Generates a printable robot-shaped maze for kids, plus an answer key.
+	Run `python3 robot_maze.py [seed]` for a new maze.
